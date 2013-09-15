@@ -11,21 +11,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.brsanthu.common.googleanalytics;
+package com.brsanthu.googleanalytics;
 
-import java.io.Closeable;
-import java.io.IOException;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.image.ColorModel;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -35,56 +34,41 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class  for sending data to google analytics
  */
-public class GoogleAnalytics implements Closeable{
+public class GoogleAnalytics {
 
 	private static final Charset UTF8 = Charset.forName("UTF-8");
-	private static final String HTTP_URL = "http://www.google-analytics.com/collect";
-	private static final String HTTPS_URL = "https://www.google-analytics.com/collect";
-	private final static Random random = new Random((long) (Math.random() * Long.MAX_VALUE));
+	private static Logger logger = LoggerFactory.getLogger(GoogleAnalytics.class);
 
+	private Config config = null;
 	private Request defaultRequest = null;
-	private AtomicBoolean enabled = new AtomicBoolean(true);
-	private int maxThreads = 1;
-	private boolean useHttps = true;
 	private HttpClient httpClient = new DefaultHttpClient();
 
-	public GoogleAnalytics() {
-		this(new Request());
+	public GoogleAnalytics(String trackingId) {
+		this(trackingId, null, null);
 	}
 
 	public GoogleAnalytics(String trackingId, String appName, String appVersion) {
-		defaultRequest = new Request();
-		defaultRequest.setTrackingId(trackingId);
-		defaultRequest.setAppName(appName);
-		defaultRequest.setAppVersion(appVersion);
+		this(new Config(), new Request(null, trackingId, appName, appVersion));
 	}
 
-	public GoogleAnalytics(Request defaultRequest) {
+	public GoogleAnalytics(Config config, Request defaultRequest) {
+		this.config = config;
 		this.defaultRequest = defaultRequest;
+		populateSystemParameters(config, defaultRequest);
+	}
+
+	public Config getConfig() {
+		return config;
 	}
 
 	public HttpClient getHttpClient() {
 		return httpClient;
-	}
-
-	public int getMaxThreads() {
-		return maxThreads;
-	}
-
-	public void setMaxThreads(int threads) {
-		this.maxThreads = threads;
-	}
-
-	public void setEnabled(boolean enabled) {
-		this.enabled.set(enabled);
-	}
-
-	public boolean isEnabled() {
-		return this.enabled.get();
 	}
 
 	public Request getDefaultRequest() {
@@ -94,15 +78,15 @@ public class GoogleAnalytics implements Closeable{
 	public Response send(Request request) {
 		Response response = new Response();
 
-		if (!enabled.get() ) {
+		if (!config.isEnabled()) {
 			return response;
 		}
 
 		try {
 			//Combine request with default parms.
-			Map<String, String> parms = request.getParameters();
-			Map<String, String> defaultParms = defaultRequest.getParameters();
-			for (String parm : defaultParms.keySet()) {
+			Map<Parameter, String> parms = request.getParameters();
+			Map<Parameter, String> defaultParms = defaultRequest.getParameters();
+			for (Parameter parm : defaultParms.keySet()) {
 				String value = parms.get(parm);
 				String defaultValue = defaultParms.get(parm);
 				if (isEmpty(value) && !isEmpty(defaultValue)) {
@@ -110,12 +94,10 @@ public class GoogleAnalytics implements Closeable{
 				}
 			}
 
-			request.validate();
-
-			HttpPost httpPost = new HttpPost(useHttps?HTTPS_URL:HTTP_URL);
+			HttpPost httpPost = new HttpPost(config.getUrl());
 			List<NameValuePair> postParms = new ArrayList<NameValuePair>();
-			for (String key : parms.keySet()) {
-				postParms.add(new BasicNameValuePair(key, parms.get(key)));
+			for (Parameter key : parms.keySet()) {
+				postParms.add(new BasicNameValuePair(key.getName(), parms.get(key)));
 			}
 			httpPost.setEntity(new UrlEncodedFormEntity(postParms, UTF8));
 
@@ -131,7 +113,7 @@ public class GoogleAnalytics implements Closeable{
 	}
 
 	public Future<Response> post(final Request request) {
-		if (!enabled.get() ) {
+		if (!config.isEnabled()) {
 			return null;
 		}
 
@@ -159,7 +141,37 @@ public class GoogleAnalytics implements Closeable{
     	return value == null || value.trim().length() == 0;
     }
 
-	public void close() throws IOException {
+	public void close() {
 		getExecutor().shutdownNow();
+	}
+
+	protected Request populateSystemParameters(Config config2, Request defaultRequest) {
+		try {
+			if (isEmpty(defaultRequest.userLanguage())) {
+			    String region = System.getProperty("user.region");
+			    if (isEmpty(region)) {
+			        region = System.getProperty("user.country");
+			    }
+			    defaultRequest.userLanguage(System.getProperty("user.language") + "-" + region);
+			}
+
+			if (isEmpty(defaultRequest.documentEncoding())) {
+				defaultRequest.documentEncoding(System.getProperty("file.encoding"));
+			}
+
+			if (isEmpty(defaultRequest.screenResolution())) {
+				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+				defaultRequest.screenResolution(((int) screenSize.getWidth()) + "x" + ((int) screenSize.getHeight()));
+			}
+
+			if (isEmpty(defaultRequest.screenColors())) {
+				ColorModel colorModel = Toolkit.getDefaultToolkit().getColorModel();
+				defaultRequest.screenColors(colorModel.toString());
+			}
+		} catch (Exception e) {
+			logger.warn("Exception while deriving the System properties for request " + defaultRequest, e);
+		}
+
+		return defaultRequest;
 	}
 }

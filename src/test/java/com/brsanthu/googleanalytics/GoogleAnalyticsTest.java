@@ -1,6 +1,10 @@
-package com.brsanthu.common.googleanalytics;
+package com.brsanthu.googleanalytics;
 
 import org.junit.Test;
+
+import com.brsanthu.googleanalytics.GoogleAnalytics;
+import com.brsanthu.googleanalytics.Request;
+import com.brsanthu.googleanalytics.Response;
 
 
 public class GoogleAnalyticsTest {
