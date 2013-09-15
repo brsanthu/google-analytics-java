@@ -15,7 +15,7 @@ package com.brsanthu.googleanalytics;
 
 public class Response {
 
-	private int statusCode;
+	private int statusCode = 200;
 	private String body;
 
 	public void setStatusCode(int statusCode) {
@@ -39,11 +39,6 @@ public class Response {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Response [statusCode=");
 		builder.append(statusCode);
-		builder.append(", ");
-		if (body != null) {
-			builder.append("body=");
-			builder.append(body);
-		}
 		builder.append("]");
 		return builder.toString();
 	}

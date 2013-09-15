@@ -16,6 +16,8 @@ package com.brsanthu.googleanalytics;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.image.ColorModel;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,16 +25,22 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,11 +51,11 @@ import org.slf4j.LoggerFactory;
 public class GoogleAnalytics {
 
 	private static final Charset UTF8 = Charset.forName("UTF-8");
-	private static Logger logger = LoggerFactory.getLogger(GoogleAnalytics.class);
+	private static final Logger logger = LoggerFactory.getLogger(GoogleAnalytics.class);
 
 	private Config config = null;
 	private Request defaultRequest = null;
-	private HttpClient httpClient = new DefaultHttpClient();
+	private HttpClient httpClient = null;
 
 	public GoogleAnalytics(String trackingId) {
 		this(trackingId, null, null);
@@ -58,9 +66,35 @@ public class GoogleAnalytics {
 	}
 
 	public GoogleAnalytics(Config config, Request defaultRequest) {
+		if (config.isDeriveSystemProperties()) {
+			populateSystemParameters(defaultRequest);
+		}
+
+		logger.info("Initializing Google Analytics with config=" + config + " and defaultRequest=" + defaultRequest);
+
 		this.config = config;
 		this.defaultRequest = defaultRequest;
-		populateSystemParameters(config, defaultRequest);
+
+		httpClient = createHttpClient();
+	}
+
+	private HttpClient createHttpClient() {
+		DefaultHttpClient hc = new DefaultHttpClient();
+		if (isNotEmpty(config.getUserAgent())) {
+			hc.getParams().setParameter(CoreProtocolPNames.USER_AGENT, config.getUserAgent());
+		}
+
+		if (config.getProxy() != null && config.getProxy() != Proxy.NO_PROXY) {
+			hc.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, config.getProxy());
+			InetSocketAddress address = (InetSocketAddress) config.getProxy().address();
+
+			if (isNotEmpty(config.getProxyUserName())) {
+				hc.getCredentialsProvider().setCredentials(new AuthScope(address.getHostName(), address.getPort()),
+						new UsernamePasswordCredentials(config.getProxyUserName(), config.getProxyPassword()));
+			}
+		}
+
+		return hc;
 	}
 
 	public Config getConfig() {
@@ -75,9 +109,16 @@ public class GoogleAnalytics {
 		return defaultRequest;
 	}
 
+	public void setDefaultRequest(Request defaultRequest) {
+		this.defaultRequest = defaultRequest;
+	}
+
+	public void setHttpClient(HttpClient httpClient) {
+		this.httpClient = httpClient;
+	}
+
 	public Response send(Request request) {
 		Response response = new Response();
-
 		if (!config.isEnabled()) {
 			return response;
 		}
@@ -106,7 +147,7 @@ public class GoogleAnalytics {
 			response.setBody(EntityUtils.toString(httpResponse.getEntity(), UTF8));
 
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			logger.warn("Exception while sending the Google Analytics tracker request " + request, e);
 		}
 
 		return response;
@@ -133,11 +174,15 @@ public class GoogleAnalytics {
     private static class ExecutorDelegate {
     	private static ThreadPoolExecutor executor = null;
 		static {
-			executor = new ThreadPoolExecutor(0, 1, 5, TimeUnit.MINUTES, new LinkedBlockingDeque<Runnable>());
+			executor = new ThreadPoolExecutor(0, 1, 5, TimeUnit.MINUTES, new LinkedBlockingDeque<Runnable>(), new GoogleAnalyticsThreadFactory());
 		}
     }
 
-    private boolean isEmpty(String value) {
+	private boolean isNotEmpty(String value) {
+		return !isEmpty(value);
+	}
+
+	private boolean isEmpty(String value) {
     	return value == null || value.trim().length() == 0;
     }
 
@@ -145,7 +190,7 @@ public class GoogleAnalytics {
 		getExecutor().shutdownNow();
 	}
 
-	protected Request populateSystemParameters(Config config2, Request defaultRequest) {
+	protected Request populateSystemParameters(Request defaultRequest) {
 		try {
 			if (isEmpty(defaultRequest.userLanguage())) {
 			    String region = System.getProperty("user.region");
@@ -174,4 +219,16 @@ public class GoogleAnalytics {
 
 		return defaultRequest;
 	}
+}
+
+class GoogleAnalyticsThreadFactory implements ThreadFactory {
+    private final AtomicInteger threadNumber = new AtomicInteger(1);
+    private final String namePrefix = "googleanalytics-thread-";
+
+    public Thread newThread(Runnable r) {
+        Thread thread = new Thread(Thread.currentThread().getThreadGroup(), r, namePrefix + threadNumber.getAndIncrement(), 0);
+        thread.setDaemon(true);
+        thread.setPriority(Thread.MIN_PRIORITY);
+        return thread;
+    }
 }
