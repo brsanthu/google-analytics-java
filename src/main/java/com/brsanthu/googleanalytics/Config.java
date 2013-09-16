@@ -13,7 +13,6 @@
  */
 package com.brsanthu.googleanalytics;
 
-import java.net.Proxy;
 
 public class Config {
 	private boolean enabled = true;
@@ -23,7 +22,8 @@ public class Config {
 	private String httpUrl = "http://www.google-analytics.com/collect";
 	private String httpsUrl = "https://www.google-analytics.com/collect";
 	private String userAgent = null;
-	private Proxy proxy = Proxy.NO_PROXY;
+	private String proxyHost = null;
+	private int proxyPort = 0;
 	private String proxyUserName = null;
 	private String proxyPassword = null;
 	private boolean deriveSystemProperties = true;
@@ -46,11 +46,17 @@ public class Config {
 	public void setProxyPassword(String proxyPassword) {
 		this.proxyPassword = proxyPassword;
 	}
-	public Proxy getProxy() {
-		return proxy;
+	public String getProxyHost() {
+		return proxyHost;
 	}
-	public void setProxy(Proxy proxy) {
-		this.proxy = proxy;
+	public void setProxyHost(String proxyHost) {
+		this.proxyHost = proxyHost;
+	}
+	public int getProxyPort() {
+		return proxyPort;
+	}
+	public void setProxyPort(int proxyPort) {
+		this.proxyPort = proxyPort;
 	}
 	public String getUserAgent() {
 		return userAgent;
@@ -125,11 +131,14 @@ public class Config {
 			builder.append(userAgent);
 			builder.append(", ");
 		}
-		if (proxy != null) {
-			builder.append("proxy=");
-			builder.append(proxy);
+		if (proxyHost != null) {
+			builder.append("proxyHost=");
+			builder.append(proxyHost);
 			builder.append(", ");
 		}
+		builder.append("proxyPort=");
+		builder.append(proxyPort);
+		builder.append(", ");
 		if (proxyUserName != null) {
 			builder.append("proxyUserName=");
 			builder.append(proxyUserName);
@@ -138,7 +147,10 @@ public class Config {
 		if (proxyPassword != null) {
 			builder.append("proxyPassword=");
 			builder.append(mask(proxyPassword));
+			builder.append(", ");
 		}
+		builder.append("deriveSystemProperties=");
+		builder.append(deriveSystemProperties);
 		builder.append("]");
 		return builder.toString();
 	}

@@ -16,8 +16,7 @@ package com.brsanthu.googleanalytics;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.image.ColorModel;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,17 +29,20 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.http.HttpResponse;
+import org.apache.http.HttpHost;
 import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.params.ConnRoutePNames;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,8 +56,8 @@ public class GoogleAnalytics {
 	private static final Logger logger = LoggerFactory.getLogger(GoogleAnalytics.class);
 
 	private Config config = null;
-	private Request defaultRequest = null;
-	private HttpClient httpClient = null;
+	private Request request = null;
+	private CloseableHttpClient httpClient = null;
 
 	public GoogleAnalytics(String trackingId) {
 		this(trackingId, null, null);
@@ -65,37 +67,43 @@ public class GoogleAnalytics {
 		this(new Config(), new Request(null, trackingId, appName, appVersion));
 	}
 
-	public GoogleAnalytics(Config config, Request defaultRequest) {
+	public GoogleAnalytics(Config config, Request request) {
 		if (config.isDeriveSystemProperties()) {
-			populateSystemParameters(defaultRequest);
+			populateSystemParameters(request);
 		}
 
-		logger.info("Initializing Google Analytics with config=" + config + " and defaultRequest=" + defaultRequest);
+		logger.info("Initializing Google Analytics with config=" + config + " and defaultRequest=" + request);
 
 		this.config = config;
-		this.defaultRequest = defaultRequest;
+		this.request = request;
 
-		httpClient = createHttpClient();
+		httpClient = createHttpClient(config);
 	}
 
-	private HttpClient createHttpClient() {
-		DefaultHttpClient hc = new DefaultHttpClient();
+	private CloseableHttpClient createHttpClient(Config config) {
+		PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager();
+		connManager.setDefaultMaxPerRoute(config.getMaxThreads());
+
+		HttpClientBuilder builder = HttpClients.custom().setConnectionManager(connManager);
+
 		if (isNotEmpty(config.getUserAgent())) {
-			hc.getParams().setParameter(CoreProtocolPNames.USER_AGENT, config.getUserAgent());
+			builder.setUserAgent(config.getUserAgent());
 		}
 
-		if (config.getProxy() != null && config.getProxy() != Proxy.NO_PROXY) {
-			hc.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, config.getProxy());
-			InetSocketAddress address = (InetSocketAddress) config.getProxy().address();
+		if (isNotEmpty(config.getProxyHost())) {
+			builder.setProxy(new HttpHost(config.getProxyHost(), config.getProxyPort()));
 
 			if (isNotEmpty(config.getProxyUserName())) {
-				hc.getCredentialsProvider().setCredentials(new AuthScope(address.getHostName(), address.getPort()),
+				BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+				credentialsProvider.setCredentials(new AuthScope(config.getProxyHost(), config.getProxyPort()),
 						new UsernamePasswordCredentials(config.getProxyUserName(), config.getProxyPassword()));
+				builder.setDefaultCredentialsProvider(credentialsProvider);
 			}
 		}
 
-		return hc;
+		return builder.build();
 	}
+
 
 	public Config getConfig() {
 		return config;
@@ -106,27 +114,29 @@ public class GoogleAnalytics {
 	}
 
 	public Request getDefaultRequest() {
-		return defaultRequest;
+		return request;
 	}
 
-	public void setDefaultRequest(Request defaultRequest) {
-		this.defaultRequest = defaultRequest;
+	public void setDefaultRequest(Request request) {
+		this.request = request;
 	}
 
 	public void setHttpClient(HttpClient httpClient) {
-		this.httpClient = httpClient;
+		this.httpClient = (CloseableHttpClient) httpClient;
 	}
 
-	public Response send(Request request) {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public Response send(AbstractRequest abstractRequest) {
 		Response response = new Response();
 		if (!config.isEnabled()) {
 			return response;
 		}
 
+		CloseableHttpResponse httpResponse = null;
 		try {
 			//Combine request with default parms.
-			Map<Parameter, String> parms = request.getParameters();
-			Map<Parameter, String> defaultParms = defaultRequest.getParameters();
+			Map<Parameter, String> parms = abstractRequest.getParameters();
+			Map<Parameter, String> defaultParms = request.getParameters();
 			for (Parameter parm : defaultParms.keySet()) {
 				String value = parms.get(parm);
 				String defaultValue = defaultParms.get(parm);
@@ -135,32 +145,40 @@ public class GoogleAnalytics {
 				}
 			}
 
-			HttpPost httpPost = new HttpPost(config.getUrl());
+			HttpPost httpPost;
+			httpPost = new HttpPost(config.getUrl());
 			List<NameValuePair> postParms = new ArrayList<NameValuePair>();
 			for (Parameter key : parms.keySet()) {
 				postParms.add(new BasicNameValuePair(key.getName(), parms.get(key)));
 			}
 			httpPost.setEntity(new UrlEncodedFormEntity(postParms, UTF8));
 
-			HttpResponse httpResponse = httpClient.execute(httpPost);
+			httpResponse = (CloseableHttpResponse) httpClient.execute(httpPost);
 			response.setStatusCode(httpResponse.getStatusLine().getStatusCode());
 			response.setBody(EntityUtils.toString(httpResponse.getEntity(), UTF8));
 
 		} catch (Exception e) {
-			logger.warn("Exception while sending the Google Analytics tracker request " + request, e);
+			logger.warn("Exception while sending the Google Analytics tracker request " + abstractRequest, e);
+		} finally {
+			try {
+				httpResponse.close();
+			} catch (Exception e2) {
+				//ignore
+			}
 		}
 
 		return response;
 	}
 
-	public Future<Response> post(final Request request) {
+	@SuppressWarnings("rawtypes")
+	public Future<Response> post(final AbstractRequest abstractRequest) {
 		if (!config.isEnabled()) {
 			return null;
 		}
 
 		Future<Response> future = getExecutor().submit(new Callable<Response>() {
 			public Response call() throws Exception {
-				return send(request);
+				return send(abstractRequest);
 			}
 		});
 		return future;
@@ -187,37 +205,47 @@ public class GoogleAnalytics {
     }
 
 	public void close() {
-		getExecutor().shutdownNow();
+		try {
+			getExecutor().shutdown();
+		} catch (Exception e) {
+			//ignore
+		}
+
+		try {
+			httpClient.close();
+		} catch (IOException e) {
+			//ignore
+		}
 	}
 
-	protected Request populateSystemParameters(Request defaultRequest) {
+	protected Request populateSystemParameters(Request request) {
 		try {
-			if (isEmpty(defaultRequest.userLanguage())) {
+			if (isEmpty(request.userLanguage())) {
 			    String region = System.getProperty("user.region");
 			    if (isEmpty(region)) {
 			        region = System.getProperty("user.country");
 			    }
-			    defaultRequest.userLanguage(System.getProperty("user.language") + "-" + region);
+			    request.userLanguage(System.getProperty("user.language") + "-" + region);
 			}
 
-			if (isEmpty(defaultRequest.documentEncoding())) {
-				defaultRequest.documentEncoding(System.getProperty("file.encoding"));
+			if (isEmpty(request.documentEncoding())) {
+				request.documentEncoding(System.getProperty("file.encoding"));
 			}
 
-			if (isEmpty(defaultRequest.screenResolution())) {
+			if (isEmpty(request.screenResolution())) {
 				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-				defaultRequest.screenResolution(((int) screenSize.getWidth()) + "x" + ((int) screenSize.getHeight()));
+				request.screenResolution(((int) screenSize.getWidth()) + "x" + ((int) screenSize.getHeight()));
 			}
 
-			if (isEmpty(defaultRequest.screenColors())) {
+			if (isEmpty(request.screenColors())) {
 				ColorModel colorModel = Toolkit.getDefaultToolkit().getColorModel();
-				defaultRequest.screenColors(colorModel.toString());
+				request.screenColors(colorModel.toString());
 			}
 		} catch (Exception e) {
-			logger.warn("Exception while deriving the System properties for request " + defaultRequest, e);
+			logger.warn("Exception while deriving the System properties for request " + request, e);
 		}
 
-		return defaultRequest;
+		return request;
 	}
 }
 

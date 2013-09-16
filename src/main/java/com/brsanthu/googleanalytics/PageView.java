@@ -13,6 +13,8 @@
  */
 package com.brsanthu.googleanalytics;
 
-public class PageView extends Request {
-
+public class PageView extends AbstractRequest<PageView> {
+	public PageView() {
+		super("pageView");
+	}
 }

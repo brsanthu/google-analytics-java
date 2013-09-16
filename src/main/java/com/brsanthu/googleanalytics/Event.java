@@ -13,7 +13,12 @@
  */
 package com.brsanthu.googleanalytics;
 
-public class Event extends Request {
+import static com.brsanthu.googleanalytics.Parameter.EVENT_ACTION;
+import static com.brsanthu.googleanalytics.Parameter.EVENT_CATEGORY;
+import static com.brsanthu.googleanalytics.Parameter.EVENT_LABEL;
+import static com.brsanthu.googleanalytics.Parameter.EVENT_VALUE;
+
+public class Event extends AbstractRequest<Event> {
 
 	public Event (String eventCategory, String eventAction) {
 		this(eventCategory, eventAction, null, null);
@@ -25,5 +30,166 @@ public class Event extends Request {
 		eventAction(eventAction);
 		eventLabel(eventAction);
 		eventValue(eventValue);
+	}
+
+	/**
+	 * <h2 id="events">Event Tracking</h2>
+	 * <div class="ind">
+	 * 	<p>
+	 * 		Optional.
+	 * 	</p>
+	 * 	<p>Specifies the event category. Must not be empty.</p>
+	 * 	<table>
+	 * 		<tbody>
+	 * 			<tr>
+	 * 				<th>Parameter</th>
+	 * 				<th>Value Type</th>
+	 * 				<th>Default Value</th>
+	 * 				<th>Max Length</th>
+	 * 				<th>Supported Hit Types</th>
+	 * 			</tr>
+	 * 			<tr>
+	 * 				<td><code>ec</code></td>
+	 * 				<td>text</td>
+	 * 				<td><span class="none">None</span>
+	 * 				</td>
+	 * 				<td>150 Bytes
+	 * 				</td>
+	 * 				<td>event</td>
+	 * 			</tr>
+	 * 		</tbody>
+	 * 	</table>
+	 * 	<div>
+	 * 		Example value: <code>Category</code><br>
+	 * 		Example usage: <code>ec=Category</code>
+	 * 	</div>
+	 * </div>
+	 */
+	public Event eventCategory(String value) {
+		setString(EVENT_CATEGORY, value);
+	   	return this;
+	}
+	public String eventCategory() {
+		return getString(EVENT_CATEGORY);
+	}
+
+	/**
+	 * <div class="ind">
+	 * 	<p>
+	 * 		Optional.
+	 * 	</p>
+	 * 	<p>Specifies the event action.  Must not be empty.</p>
+	 * 	<table>
+	 * 		<tbody>
+	 * 			<tr>
+	 * 				<th>Parameter</th>
+	 * 				<th>Value Type</th>
+	 * 				<th>Default Value</th>
+	 * 				<th>Max Length</th>
+	 * 				<th>Supported Hit Types</th>
+	 * 			</tr>
+	 * 			<tr>
+	 * 				<td><code>ea</code></td>
+	 * 				<td>text</td>
+	 * 				<td><span class="none">None</span>
+	 * 				</td>
+	 * 				<td>500 Bytes
+	 * 				</td>
+	 * 				<td>event</td>
+	 * 			</tr>
+	 * 		</tbody>
+	 * 	</table>
+	 * 	<div>
+	 * 		Example value: <code>Action</code><br>
+	 * 		Example usage: <code>ea=Action</code>
+	 * 	</div>
+	 * </div>
+	 */
+	public Event eventAction(String value) {
+		setString(EVENT_ACTION, value);
+	   	return this;
+	}
+	public String eventAction() {
+		return getString(EVENT_ACTION);
+	}
+
+	/**
+	 * <div class="ind">
+	 * 	<p>
+	 * 		Optional.
+	 * 	</p>
+	 * 	<p>Specifies the event label.</p>
+	 * 	<table>
+	 * 		<tbody>
+	 * 			<tr>
+	 * 				<th>Parameter</th>
+	 * 				<th>Value Type</th>
+	 * 				<th>Default Value</th>
+	 * 				<th>Max Length</th>
+	 * 				<th>Supported Hit Types</th>
+	 * 			</tr>
+	 * 			<tr>
+	 * 				<td><code>el</code></td>
+	 * 				<td>text</td>
+	 * 				<td><span class="none">None</span>
+	 * 				</td>
+	 * 				<td>500 Bytes
+	 * 				</td>
+	 * 				<td>event</td>
+	 * 			</tr>
+	 * 		</tbody>
+	 * 	</table>
+	 * 	<div>
+	 * 		Example value: <code>Label</code><br>
+	 * 		Example usage: <code>el=Label</code>
+	 * 	</div>
+	 * </div>
+	 */
+	public Event eventLabel(String value) {
+		setString(EVENT_LABEL, value);
+	   	return this;
+	}
+	public String eventLabel() {
+		return getString(EVENT_LABEL);
+	}
+
+	/**
+	 * <div class="ind">
+	 * 	<p>
+	 * 		Optional.
+	 * 	</p>
+	 * 	<p>Specifies the event value. Values must be non-negative.</p>
+	 * 	<table>
+	 * 		<tbody>
+	 * 			<tr>
+	 * 				<th>Parameter</th>
+	 * 				<th>Value Type</th>
+	 * 				<th>Default Value</th>
+	 * 				<th>Max Length</th>
+	 * 				<th>Supported Hit Types</th>
+	 * 			</tr>
+	 * 			<tr>
+	 * 				<td><code>ev</code></td>
+	 * 				<td>integer</td>
+	 * 				<td><span class="none">None</span>
+	 * 				</td>
+	 * 				<td><span class="none">None</span>
+	 * 				</td>
+	 * 				<td>event</td>
+	 * 			</tr>
+	 * 		</tbody>
+	 * 	</table>
+	 * 	<div>
+	 * 		Example value: <code>55</code><br>
+	 * 		Example usage: <code>ev=55</code>
+	 * 	</div>
+	 * </div>
+	 */
+	public Event eventValue(Integer value) {
+		setInteger(EVENT_VALUE, value);
+	   	return this;
+	}
+	public Integer eventValue() {
+		return getInteger(EVENT_VALUE);
 	}
 }
