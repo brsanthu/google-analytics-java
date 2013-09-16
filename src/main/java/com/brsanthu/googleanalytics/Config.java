@@ -13,7 +13,15 @@
  */
 package com.brsanthu.googleanalytics;
 
-
+/**
+ * Properties that can be configured in this library. These would include any properties that are required to process the
+ * tracking request or enhance the tracking request (but not specified in measurement protocol like User agent).
+ *
+ * Most of the properties are initialization level and request level. If a property is initialization level, it should be set at the time
+ * of the GoogleAnalytics object initialization. If a property is request level, then it can be set any time and it will be effective.
+ *
+ * @author Santhosh Kumar
+ */
 public class Config {
 	private boolean enabled = true;
 	private int maxThreads = 1;
@@ -23,87 +31,179 @@ public class Config {
 	private String httpsUrl = "https://www.google-analytics.com/collect";
 	private String userAgent = null;
 	private String proxyHost = null;
-	private int proxyPort = 0;
+	private int proxyPort = 80;
 	private String proxyUserName = null;
 	private String proxyPassword = null;
-	private boolean deriveSystemProperties = true;
+	private boolean deriveSystemParameters = true;
 
-	public boolean isDeriveSystemProperties() {
-		return deriveSystemProperties;
+	public boolean isDeriveSystemParameters() {
+		return deriveSystemParameters;
 	}
-	public void setDeriveSystemProperties(boolean deriveSystemProperties) {
-		this.deriveSystemProperties = deriveSystemProperties;
+
+	/**
+	 * If true, derives the system properties (User Language, Region, Country, Screen Size, Color Depth, and File encoding) and adds to
+	 * the default request.
+	 *
+	 * <p>This is <strong>initialization</strong> level configuration (must be set while creating GoogleAnalytics object).</p>
+	 */
+	public Config setDeriveSystemParameters(boolean deriveSystemProperties) {
+		this.deriveSystemParameters = deriveSystemProperties;
+		return this;
 	}
+
 	public String getProxyUserName() {
 		return proxyUserName;
 	}
-	public void setProxyUserName(String proxyUserName) {
+
+	/**
+	 * Sets the user name which should be used to authenticate to the proxy server. This is applicable only if {@link #setProxyHost(String)} is not empty.
+	 *
+	 * <p>This is <strong>initialization</strong> level configuration (must be set while creating GoogleAnalytics object).</p>
+	 */
+	public Config setProxyUserName(String proxyUserName) {
 		this.proxyUserName = proxyUserName;
+		return this;
 	}
+
 	public String getProxyPassword() {
 		return proxyPassword;
 	}
-	public void setProxyPassword(String proxyPassword) {
+
+	/**
+	 * Sets the password which should be used to authenticate to the proxy server. This is applicable only if {@link #setProxyHost(String)} and {@link #setProxyUserName(String)} is not empty.
+	 *
+	 * <p>This is <strong>initialization</strong> level configuration (must be set while creating GoogleAnalytics object).</p>
+	 */
+	public Config setProxyPassword(String proxyPassword) {
 		this.proxyPassword = proxyPassword;
+		return this;
 	}
 	public String getProxyHost() {
 		return proxyHost;
 	}
-	public void setProxyHost(String proxyHost) {
+
+	/**
+	 * Sets the host name of the proxy server, to connect to Google analytics.
+	 *
+	 * <p>This is <strong>initialization</strong> level configuration (must be set while creating GoogleAnalytics object).</p>
+	 */
+	public Config setProxyHost(String proxyHost) {
 		this.proxyHost = proxyHost;
+		return this;
 	}
 	public int getProxyPort() {
 		return proxyPort;
 	}
-	public void setProxyPort(int proxyPort) {
+
+	/**
+	 * Sets the host name of the proxy server, to connect to Google analytics.
+	 *
+	 * <p>This is <strong>initialization</strong> level configuration (must be set while creating GoogleAnalytics object).</p>
+	 */
+	public Config setProxyPort(int proxyPort) {
 		this.proxyPort = proxyPort;
+		return this;
 	}
 	public String getUserAgent() {
 		return userAgent;
 	}
-	public void setUserAgent(String userAgent) {
+
+	/**
+	 * Sets the user agent string that should be sent while making the http request. Default is Apache Http Client's user agent,
+	 * which looks something similar to this. <code>Apache-HttpClient/release (java 1.5)</code>
+	 *
+	 * <p>This is <strong>initialization</strong> level configuration (must be set while creating GoogleAnalytics object).</p>
+	 */
+	public Config setUserAgent(String userAgent) {
 		this.userAgent = userAgent;
+		return this;
 	}
 	public boolean isEnabled() {
 		return enabled;
 	}
-	public void setEnabled(boolean enabled) {
+
+	/**
+	 * Enables or disables the GoogleAnalytics posting. If disabled, library will continue to accept the send/post requests but silently skips
+	 * sending the event and returns successful response. Default is <code>false</code>.
+	 *
+	 * <p>This is <strong>request</strong> level configuration (can be changed any time).</p>
+	 */
+	public Config setEnabled(boolean enabled) {
 		this.enabled = enabled;
+		return this;
 	}
+
+	/**
+	 * Maximum threads to use to process the asynchronous event posting and Http client connection pooling. Default is 1.
+	 *
+	 * <p>This is <strong>initialization</strong> level configuration (must be set while creating GoogleAnalytics object).</p>
+	 */
 	public int getMaxThreads() {
 		return maxThreads;
 	}
-	public void setMaxThreads(int maxThreads) {
+	public Config setMaxThreads(int maxThreads) {
 		this.maxThreads = maxThreads;
+		return this;
 	}
 	public boolean isUseHttps() {
 		return useHttps;
 	}
-	public void setUseHttps(boolean useHttps) {
+
+	/**
+	 * Instructs to use https url to send the events. Default is true.
+	 *
+	 * <p>This is <strong>request</strong> level configuration (can be changed any time).</p>
+	 */
+	public Config setUseHttps(boolean useHttps) {
 		this.useHttps = useHttps;
+		return this;
 	}
 	public boolean isValidate() {
 		return validate;
 	}
-	public void setValidate(boolean validate) {
+
+	/**
+	 * If set, validates the request before sending to Google Analytics. If any errors found, GoogleAnalyticsException will be thrown with details.
+	 * Default is false. Note that, if you are sending the event in async mode, then request is always validated and logged to log file as warnings irrespective
+	 * of this flag.
+	 *
+	 * <p>This is <strong>request</strong> level configuration (can be changed any time).</p>
+	 */
+	public Config setValidate(boolean validate) {
 		this.validate = validate;
+		return this;
 	}
 	public String getHttpUrl() {
 		return httpUrl;
 	}
-	public void setHttpUrl(String httpUrl) {
+
+	/**
+	 * URL to use when posting the event in http mode. This url is Google Analytics service url and usually not updated by the clients.
+	 *
+	 * <p>This is <strong>request</strong> level configuration (can be changed any time).</p>
+	 */
+	public Config setHttpUrl(String httpUrl) {
 		this.httpUrl = httpUrl;
+		return this;
 	}
 	public String getHttpsUrl() {
 		return httpsUrl;
 	}
-	public void setHttpsUrl(String httpsUrl) {
+
+	/**
+	 * URL to use when posting the event in https mode. This url is Google Analytics service url and usually not updated by the clients.
+	 *
+	 * <p>This is <strong>request</strong> level configuration (can be changed any time).</p>
+	 */
+	public Config setHttpsUrl(String httpsUrl) {
 		this.httpsUrl = httpsUrl;
+		return this;
 	}
 
-	public String getUrl() {
+	String getUrl() {
 		return useHttps?httpsUrl:httpUrl;
 	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -149,8 +249,8 @@ public class Config {
 			builder.append(mask(proxyPassword));
 			builder.append(", ");
 		}
-		builder.append("deriveSystemProperties=");
-		builder.append(deriveSystemProperties);
+		builder.append("deriveSystemParameters=");
+		builder.append(deriveSystemParameters);
 		builder.append("]");
 		return builder.toString();
 	}

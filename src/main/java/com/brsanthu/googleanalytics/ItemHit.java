@@ -14,16 +14,17 @@
 package com.brsanthu.googleanalytics;
 
 import static com.brsanthu.googleanalytics.Parameter.CURRENCY_CODE;
-import static com.brsanthu.googleanalytics.Parameter.TRANSACTION_AFFILIATION;
+import static com.brsanthu.googleanalytics.Parameter.ITEM_CATEGORY;
+import static com.brsanthu.googleanalytics.Parameter.ITEM_CODE;
+import static com.brsanthu.googleanalytics.Parameter.ITEM_NAME;
+import static com.brsanthu.googleanalytics.Parameter.ITEM_PRICE;
+import static com.brsanthu.googleanalytics.Parameter.ITEM_QUANTITY;
 import static com.brsanthu.googleanalytics.Parameter.TRANSACTION_ID;
-import static com.brsanthu.googleanalytics.Parameter.TRANSACTION_REVENUE;
-import static com.brsanthu.googleanalytics.Parameter.TRANSACTION_SHIPPING;
-import static com.brsanthu.googleanalytics.Parameter.TRANSACTION_TAX;
 
-public class Transaction extends AbstractRequest<Transaction> {
+public class ItemHit extends AbstractRequest<ItemHit> {
 
-	public Transaction() {
-		super("transaction");
+	public ItemHit() {
+		super("item");
 	}
 
 	/**
@@ -60,7 +61,7 @@ public class Transaction extends AbstractRequest<Transaction> {
 	 * 	</div>
 	 * </div>
 	 */
-	public Transaction txId(String value) {
+	public ItemHit txId(String value) {
 		setString(TRANSACTION_ID, value);
 	   	return this;
 	}
@@ -71,9 +72,9 @@ public class Transaction extends AbstractRequest<Transaction> {
 	/**
 	 * <div class="ind">
 	 * 	<p>
-	 * 		Optional.
+	 * 		<strong>Required for item hit type.</strong>
 	 * 	</p>
-	 * 	<p>Specifies the affiliation or store name.</p>
+	 * 	<p>Specifies the item name.</p>
 	 * 	<table>
 	 * 		<tbody>
 	 * 			<tr>
@@ -84,28 +85,28 @@ public class Transaction extends AbstractRequest<Transaction> {
 	 * 				<th>Supported Hit Types</th>
 	 * 			</tr>
 	 * 			<tr>
-	 * 				<td><code>ta</code></td>
+	 * 				<td><code>in</code></td>
 	 * 				<td>text</td>
 	 * 				<td><span class="none">None</span>
 	 * 				</td>
 	 * 				<td>500 Bytes
 	 * 				</td>
-	 * 				<td>transaction</td>
+	 * 				<td>item</td>
 	 * 			</tr>
 	 * 		</tbody>
 	 * 	</table>
 	 * 	<div>
-	 * 		Example value: <code>Member</code><br>
-	 * 		Example usage: <code>ta=Member</code>
+	 * 		Example value: <code>Shoe</code><br>
+	 * 		Example usage: <code>in=Shoe</code>
 	 * 	</div>
 	 * </div>
 	 */
-	public Transaction txAffiliation(String value) {
-		setString(TRANSACTION_AFFILIATION, value);
+	public ItemHit itemName(String value) {
+		setString(ITEM_NAME, value);
 	   	return this;
 	}
-	public String txAffiliation() {
-		return getString(TRANSACTION_AFFILIATION);
+	public String itemName() {
+		return getString(ITEM_NAME);
 	}
 
 	/**
@@ -113,7 +114,7 @@ public class Transaction extends AbstractRequest<Transaction> {
 	 * 	<p>
 	 * 		Optional.
 	 * 	</p>
-	 * 	<p>Specifies the total revenue associated with the transaction. This value should include any shipping or tax costs.</p>
+	 * 	<p>Specifies the price for a single item / unit.</p>
 	 * 	<table>
 	 * 		<tbody>
 	 * 			<tr>
@@ -124,68 +125,28 @@ public class Transaction extends AbstractRequest<Transaction> {
 	 * 				<th>Supported Hit Types</th>
 	 * 			</tr>
 	 * 			<tr>
-	 * 				<td><code>tr</code></td>
+	 * 				<td><code>ip</code></td>
 	 * 				<td>currency</td>
 	 * 				<td><code>0</code>
 	 * 				</td>
 	 * 				<td><span class="none">None</span>
 	 * 				</td>
-	 * 				<td>transaction</td>
-	 * 			</tr>
-	 * 		</tbody>
-	 * 	</table>
-	 * 	<div>
-	 * 		Example value: <code>15.47</code><br>
-	 * 		Example usage: <code>tr=15.47</code>
-	 * 	</div>
-	 * </div>
-	 */
-	public Transaction txRevenue(Double value) {
-		setDouble(TRANSACTION_REVENUE, value);
-	   	return this;
-	}
-	public Double txRevenue() {
-		return getDouble(TRANSACTION_REVENUE);
-	}
-
-	/**
-	 * <div class="ind">
-	 * 	<p>
-	 * 		Optional.
-	 * 	</p>
-	 * 	<p>Specifies the total shipping cost of the transaction.</p>
-	 * 	<table>
-	 * 		<tbody>
-	 * 			<tr>
-	 * 				<th>Parameter</th>
-	 * 				<th>Value Type</th>
-	 * 				<th>Default Value</th>
-	 * 				<th>Max Length</th>
-	 * 				<th>Supported Hit Types</th>
-	 * 			</tr>
-	 * 			<tr>
-	 * 				<td><code>ts</code></td>
-	 * 				<td>currency</td>
-	 * 				<td><code>0</code>
-	 * 				</td>
-	 * 				<td><span class="none">None</span>
-	 * 				</td>
-	 * 				<td>transaction</td>
+	 * 				<td>item</td>
 	 * 			</tr>
 	 * 		</tbody>
 	 * 	</table>
 	 * 	<div>
 	 * 		Example value: <code>3.50</code><br>
-	 * 		Example usage: <code>ts=3.50</code>
+	 * 		Example usage: <code>ip=3.50</code>
 	 * 	</div>
 	 * </div>
 	 */
-	public Transaction txShipping(Double value) {
-		setDouble(TRANSACTION_SHIPPING, value);
+	public ItemHit itemPrice(Double value) {
+		setDouble(ITEM_PRICE, value);
 	   	return this;
 	}
-	public Double txShipping() {
-		return getDouble(TRANSACTION_SHIPPING);
+	public Double itemPrice() {
+		return getDouble(ITEM_PRICE);
 	}
 
 	/**
@@ -193,7 +154,7 @@ public class Transaction extends AbstractRequest<Transaction> {
 	 * 	<p>
 	 * 		Optional.
 	 * 	</p>
-	 * 	<p>Specifies the total tax of the transaction.</p>
+	 * 	<p>Specifies the number of items purchased.</p>
 	 * 	<table>
 	 * 		<tbody>
 	 * 			<tr>
@@ -204,28 +165,109 @@ public class Transaction extends AbstractRequest<Transaction> {
 	 * 				<th>Supported Hit Types</th>
 	 * 			</tr>
 	 * 			<tr>
-	 * 				<td><code>tt</code></td>
-	 * 				<td>currency</td>
+	 * 				<td><code>iq</code></td>
+	 * 				<td>integer</td>
 	 * 				<td><code>0</code>
 	 * 				</td>
 	 * 				<td><span class="none">None</span>
 	 * 				</td>
-	 * 				<td>transaction</td>
+	 * 				<td>item</td>
 	 * 			</tr>
 	 * 		</tbody>
 	 * 	</table>
 	 * 	<div>
-	 * 		Example value: <code>11.20</code><br>
-	 * 		Example usage: <code>tt=11.20</code>
+	 * 		Example value: <code>4</code><br>
+	 * 		Example usage: <code>iq=4</code>
 	 * 	</div>
 	 * </div>
 	 */
-	public Transaction txTax(Double value) {
-		setDouble(TRANSACTION_TAX, value);
+	public ItemHit itemQuantity(Integer value) {
+		setInteger(ITEM_QUANTITY, value);
 	   	return this;
 	}
-	public Double txTax() {
-		return getDouble(TRANSACTION_TAX);
+	public Integer itemQuantity() {
+		return getInteger(ITEM_QUANTITY);
+	}
+
+	/**
+	 * <div class="ind">
+	 * 	<p>
+	 * 		Optional.
+	 * 	</p>
+	 * 	<p>Specifies the SKU or item code.</p>
+	 * 	<table>
+	 * 		<tbody>
+	 * 			<tr>
+	 * 				<th>Parameter</th>
+	 * 				<th>Value Type</th>
+	 * 				<th>Default Value</th>
+	 * 				<th>Max Length</th>
+	 * 				<th>Supported Hit Types</th>
+	 * 			</tr>
+	 * 			<tr>
+	 * 				<td><code>ic</code></td>
+	 * 				<td>text</td>
+	 * 				<td><span class="none">None</span>
+	 * 				</td>
+	 * 				<td>500 Bytes
+	 * 				</td>
+	 * 				<td>item</td>
+	 * 			</tr>
+	 * 		</tbody>
+	 * 	</table>
+	 * 	<div>
+	 * 		Example value: <code>SKU47</code><br>
+	 * 		Example usage: <code>ic=SKU47</code>
+	 * 	</div>
+	 * </div>
+	 */
+	public ItemHit itemCode(String value) {
+		setString(ITEM_CODE, value);
+	   	return this;
+	}
+	public String itemCode() {
+		return getString(ITEM_CODE);
+	}
+
+	/**
+	 * <div class="ind">
+	 * 	<p>
+	 * 		Optional.
+	 * 	</p>
+	 * 	<p>Specifies the category that the item belongs to.</p>
+	 * 	<table>
+	 * 		<tbody>
+	 * 			<tr>
+	 * 				<th>Parameter</th>
+	 * 				<th>Value Type</th>
+	 * 				<th>Default Value</th>
+	 * 				<th>Max Length</th>
+	 * 				<th>Supported Hit Types</th>
+	 * 			</tr>
+	 * 			<tr>
+	 * 				<td><code>iv</code></td>
+	 * 				<td>text</td>
+	 * 				<td><span class="none">None</span>
+	 * 				</td>
+	 * 				<td>500 Bytes
+	 * 				</td>
+	 * 				<td>item</td>
+	 * 			</tr>
+	 * 		</tbody>
+	 * 	</table>
+	 * 	<div>
+	 * 		Example value: <code>Blue</code><br>
+	 * 		Example usage: <code>iv=Blue</code>
+	 * 	</div>
+	 * </div>
+	 */
+	public ItemHit itemCategory(String value) {
+		setString(ITEM_CATEGORY, value);
+	   	return this;
+	}
+
+	public String itemCategory() {
+		return getString(ITEM_CATEGORY);
 	}
 
 	/**
@@ -260,7 +302,7 @@ public class Transaction extends AbstractRequest<Transaction> {
 	 * 	</div>
 	 * </div>
 	 */
-	public Transaction currencyCode(String value) {
+	public ItemHit currencyCode(String value) {
 		setString(CURRENCY_CODE, value);
 	   	return this;
 	}

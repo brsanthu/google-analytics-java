@@ -14,7 +14,8 @@ https://github.com/nhnopensource/universal-analytics-java
 * Cannot specify default parameters
 
 https://github.com/siddii/jgoogleanalytics
-*
+* Implements Legacy Google Analytics protocol
+* Doesn't use the Executor Service
 
 https://code.google.com/p/jgoogleanalyticstracker/
 *
@@ -22,11 +23,12 @@ https://code.google.com/p/jgoogleanalyticstracker/
 This library implements the measurement protocol with following features.
 
 * Supports all parameters and hit types.
-* Default parameters, which would be used for each request
+* Able to configure default parameters, which would be used for each request
 * Type safe data types as appropriate (String, Integer, Double and Boolean)
 * Convenient hit specific request types for easy construction
 * Synchronous or Asynchronous Event Processing
 * Asynchronous processing uses Java Concurrent Executor Service
+* Uses the latest Apache Http Client for high performing event posting
 * Enable or disable the event posting with single configuration value
 * Supports Event posting via Proxy
 * Gathers some basic information from the underlying Jvm (File Encoding, User Language, Screen Size, Color Depth etc)

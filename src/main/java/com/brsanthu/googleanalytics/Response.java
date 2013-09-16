@@ -14,9 +14,7 @@
 package com.brsanthu.googleanalytics;
 
 public class Response {
-
 	private int statusCode = 200;
-	private String body;
 
 	public void setStatusCode(int statusCode) {
 		this.statusCode = statusCode;
@@ -24,14 +22,6 @@ public class Response {
 
 	public int getStatusCode() {
 		return statusCode;
-	}
-
-	public void setBody(String body) {
-		this.body = body;
-	}
-
-	public String getBody() {
-		return body;
 	}
 
 	@Override

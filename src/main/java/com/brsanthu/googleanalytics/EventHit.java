@@ -18,13 +18,13 @@ import static com.brsanthu.googleanalytics.Parameter.EVENT_CATEGORY;
 import static com.brsanthu.googleanalytics.Parameter.EVENT_LABEL;
 import static com.brsanthu.googleanalytics.Parameter.EVENT_VALUE;
 
-public class Event extends AbstractRequest<Event> {
+public class EventHit extends AbstractRequest<EventHit> {
 
-	public Event (String eventCategory, String eventAction) {
+	public EventHit (String eventCategory, String eventAction) {
 		this(eventCategory, eventAction, null, null);
 	}
 
-	public Event (String eventCategory, String eventAction, String eventLabel, Integer eventValue) {
+	public EventHit (String eventCategory, String eventAction, String eventLabel, Integer eventValue) {
 		super("event");
 		eventCategory(eventCategory);
 		eventAction(eventAction);
@@ -65,7 +65,7 @@ public class Event extends AbstractRequest<Event> {
 	 * 	</div>
 	 * </div>
 	 */
-	public Event eventCategory(String value) {
+	public EventHit eventCategory(String value) {
 		setString(EVENT_CATEGORY, value);
 	   	return this;
 	}
@@ -105,7 +105,7 @@ public class Event extends AbstractRequest<Event> {
 	 * 	</div>
 	 * </div>
 	 */
-	public Event eventAction(String value) {
+	public EventHit eventAction(String value) {
 		setString(EVENT_ACTION, value);
 	   	return this;
 	}
@@ -145,7 +145,7 @@ public class Event extends AbstractRequest<Event> {
 	 * 	</div>
 	 * </div>
 	 */
-	public Event eventLabel(String value) {
+	public EventHit eventLabel(String value) {
 		setString(EVENT_LABEL, value);
 	   	return this;
 	}
@@ -185,7 +185,7 @@ public class Event extends AbstractRequest<Event> {
 	 * 	</div>
 	 * </div>
 	 */
-	public Event eventValue(Integer value) {
+	public EventHit eventValue(Integer value) {
 		setInteger(EVENT_VALUE, value);
 	   	return this;
 	}

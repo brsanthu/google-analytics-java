@@ -17,9 +17,13 @@ import static com.brsanthu.googleanalytics.Parameter.SOCIAL_ACTION;
 import static com.brsanthu.googleanalytics.Parameter.SOCIAL_ACTION_TARGET;
 import static com.brsanthu.googleanalytics.Parameter.SOCIAL_NETWORK;
 
-public class Social extends AbstractRequest<Social> {
-	public Social() {
+public class SocialHit extends AbstractRequest<SocialHit> {
+
+	public SocialHit(String socialNetwork, String socialAction, String socialTarget) {
 		super("social");
+		socialAction(socialAction);
+		socialNetwork(socialNetwork);
+		socialActionTarget(socialTarget);
 	}
 
 	/**
@@ -54,7 +58,7 @@ public class Social extends AbstractRequest<Social> {
 	 * 	</div>
 	 * </div>
 	 */
-	public Social socialNetwork(String value) {
+	public SocialHit socialNetwork(String value) {
 		setString(SOCIAL_NETWORK, value);
 	   	return this;
 	}
@@ -94,7 +98,7 @@ public class Social extends AbstractRequest<Social> {
 	 * 	</div>
 	 * </div>
 	 */
-	public Social socialAction(String value) {
+	public SocialHit socialAction(String value) {
 		setString(SOCIAL_ACTION, value);
 	   	return this;
 	}
@@ -134,7 +138,7 @@ public class Social extends AbstractRequest<Social> {
 	 * 	</div>
 	 * </div>
 	 */
-	public Social socialActionTarget(String value) {
+	public SocialHit socialActionTarget(String value) {
 		setString(SOCIAL_ACTION_TARGET, value);
 	   	return this;
 	}

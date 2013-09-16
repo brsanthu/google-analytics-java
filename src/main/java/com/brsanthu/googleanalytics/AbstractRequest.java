@@ -1360,11 +1360,11 @@ public abstract class AbstractRequest<T> {
 	 * 	</div>
 	 * </div>
 	 */
-	public T documentLocationUrl(String value) {
+	public T documentUrl(String value) {
 		setString(DOCUMENT_LOCATION_URL, value);
 	   	return (T) this;
 	}
-	public String documentLocationUrl() {
+	public String documentUrl() {
 		return getString(DOCUMENT_LOCATION_URL);
 	}
 

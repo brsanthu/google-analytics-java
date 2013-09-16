@@ -24,8 +24,8 @@ import static com.brsanthu.googleanalytics.Parameter.USER_TIMING_LABEL;
 import static com.brsanthu.googleanalytics.Parameter.USER_TIMING_TIME;
 import static com.brsanthu.googleanalytics.Parameter.USER_TIMING_VARIABLE_NAME;
 
-public class Timing extends AbstractRequest<Timing> {
-	public Timing() {
+public class TimingHit extends AbstractRequest<TimingHit> {
+	public TimingHit() {
 		super("timing");
 	}
 
@@ -61,7 +61,7 @@ public class Timing extends AbstractRequest<Timing> {
 	 * 	</div>
 	 * </div>
 	 */
-	public Timing userTimingCategory(String value) {
+	public TimingHit userTimingCategory(String value) {
 		setString(USER_TIMING_CATEGORY, value);
 	   	return this;
 	}
@@ -101,7 +101,7 @@ public class Timing extends AbstractRequest<Timing> {
 	 * 	</div>
 	 * </div>
 	 */
-	public Timing userTimingVariableName(String value) {
+	public TimingHit userTimingVariableName(String value) {
 		setString(USER_TIMING_VARIABLE_NAME, value);
 	   	return this;
 	}
@@ -141,7 +141,7 @@ public class Timing extends AbstractRequest<Timing> {
 	 * 	</div>
 	 * </div>
 	 */
-	public Timing userTimingTime(Integer value) {
+	public TimingHit userTimingTime(Integer value) {
 		setInteger(USER_TIMING_TIME, value);
 	   	return this;
 	}
@@ -181,7 +181,7 @@ public class Timing extends AbstractRequest<Timing> {
 	 * 	</div>
 	 * </div>
 	 */
-	public Timing userTimingLabel(String value) {
+	public TimingHit userTimingLabel(String value) {
 		setString(USER_TIMING_LABEL, value);
 	   	return this;
 	}
@@ -221,7 +221,7 @@ public class Timing extends AbstractRequest<Timing> {
 	 * 	</div>
 	 * </div>
 	 */
-	public Timing pageLoadTime(Integer value) {
+	public TimingHit pageLoadTime(Integer value) {
 		setInteger(PAGE_LOAD_TIME, value);
 	   	return this;
 	}
@@ -261,7 +261,7 @@ public class Timing extends AbstractRequest<Timing> {
 	 * 	</div>
 	 * </div>
 	 */
-	public Timing dnsTime(Integer value) {
+	public TimingHit dnsTime(Integer value) {
 		setInteger(DNS_TIME, value);
 	   	return this;
 	}
@@ -301,7 +301,7 @@ public class Timing extends AbstractRequest<Timing> {
 	 * 	</div>
 	 * </div>
 	 */
-	public Timing pageDownloadTime(Integer value) {
+	public TimingHit pageDownloadTime(Integer value) {
 		setInteger(PAGE_DOWNLOAD_TIME, value);
 	   	return this;
 	}
@@ -341,7 +341,7 @@ public class Timing extends AbstractRequest<Timing> {
 	 * 	</div>
 	 * </div>
 	 */
-	public Timing redirectResponseTime(Integer value) {
+	public TimingHit redirectResponseTime(Integer value) {
 		setInteger(REDIRECT_RESPONSE_TIME, value);
 	   	return this;
 	}
@@ -381,7 +381,7 @@ public class Timing extends AbstractRequest<Timing> {
 	 * 	</div>
 	 * </div>
 	 */
-	public Timing tcpConnectTime(Integer value) {
+	public TimingHit tcpConnectTime(Integer value) {
 		setInteger(TCP_CONNECT_TIME, value);
 	   	return this;
 	}
@@ -421,7 +421,7 @@ public class Timing extends AbstractRequest<Timing> {
 	 * 	</div>
 	 * </div>
 	 */
-	public Timing serverResponseTime(Integer value) {
+	public TimingHit serverResponseTime(Integer value) {
 		setInteger(SERVER_RESPONSE_TIME, value);
 	   	return this;
 	}

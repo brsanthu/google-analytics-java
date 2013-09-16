@@ -13,8 +13,20 @@
  */
 package com.brsanthu.googleanalytics;
 
-public class PageView extends AbstractRequest<PageView> {
-	public PageView() {
-		super("pageView");
+public class AppViewHit extends AbstractRequest<AppViewHit> {
+	public AppViewHit() {
+		this(null);
 	}
+
+	public AppViewHit(String contentDescription) {
+		this(null, null, contentDescription);
+	}
+
+	public AppViewHit(String applicationName, String applicationVersion, String contentDescription) {
+		super("appView");
+		applicationName(applicationName);
+		applicationVersion(applicationVersion);
+		contentDescription(contentDescription);
+	}
+
 }

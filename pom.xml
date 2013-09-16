@@ -141,5 +141,11 @@
 			<version>14.0.1</version>
 		</dependency>
  -->
- </dependencies>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.0.13</version>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
 </project>
