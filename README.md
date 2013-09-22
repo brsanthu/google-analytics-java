@@ -10,6 +10,7 @@ Even though the version reads 1.0.0, library is still being fine tuned. Most of 
 it is safe to be used in your projects. More work is around adding documentation, Maven Central Push and unit testing.
 
 To get a build, do
+
 	git clone https://github.com/brsanthu/google-analytics-java.git
 	mvn install
 
