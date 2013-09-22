@@ -1,6 +1,5 @@
 Java API for Google Analytics Measurement Protocol
 ==================================================
-
 Java API for Google Analytics Measurement Protocol (part of Universal Analytics). This library
 is released under liberal Apache Open source License 2.0
 
@@ -26,6 +25,9 @@ This library implements the measurement protocol with following features.
 * Logging uses SLF4J api
 * Gathers basic stats (number of events posted for each hit type) if requested in the configuration.
 * Implementation is Thread Safe
+* Jar files are OSGi ready, so could be used with Eclipse
+* Build against Java 1.6
+* Complete Measurement Protocol parameter information is made available as Javadocs
 
 Examples
 -------------
@@ -33,8 +35,12 @@ Examples
 	GoogleAnalytics ga = new GoogleAnalytics("UA-12345678-1");
 	ga.post(new PageView("https://www.google.com", "Google Search"));
 
+Or
+
 	GoogleAnalytics ga = new GoogleAnalytics("UA-12345678-1");
 	ga.postAsync(new PageView("https://www.google.com", "Google Search"));
+
+Or
 
 	GoogleAnalytics ga = new GoogleAnalytics("UA-12345678-1");
 	ga.postAsync(new RequestProvider() {
@@ -46,16 +52,16 @@ Examples
 Other Implementations
 ---------------------
 
-There are few Java implementation of Google Analytics api, but found some issues with each of them.
+There are few Java implementation of Google Analytics api, but found some issues (or protocol mismatch) with each of them.
 
 https://github.com/nhnopensource/universal-analytics-java
-* Doesn't implement all parameters
+* Doesn't implement all parameters of Measurement Protocol.
 * Cannot specify default parameters
+* Only one unit test case and coverage is very minimal
+* Uses Legacy Apache Http Client (3.x)
+
+https://code.google.com/p/jgoogleanalyticstracker/
+* Implements Legacy Google Analytics protocol
 
 https://github.com/siddii/jgoogleanalytics
 * Implements Legacy Google Analytics protocol
-* Doesn't use the Executor Service
-
-https://code.google.com/p/jgoogleanalyticstracker/
-*
-
