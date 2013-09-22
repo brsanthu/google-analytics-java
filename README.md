@@ -6,6 +6,13 @@ is released under liberal Apache Open source License 2.0
 Google Analytics Measurement Protocol is new tracking protocol, which will replace the legacy Tracking protocol.
 This protocol is documented at https://developers.google.com/analytics/devguides/collection/protocol/v1/
 
+Even though the version reads 1.0.0, library is still being fine tuned. Most of the API is finalized and so
+it is safe to be used in your projects. More work is around adding documentation, Maven Central Push and unit testing.
+
+To get a build, do
+	git clone https://github.com/brsanthu/google-analytics-java.git
+	mvn install
+
 Features
 --------------
 This library implements the measurement protocol with following features.
