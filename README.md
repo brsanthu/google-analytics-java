@@ -1,5 +1,5 @@
 Java API for Google Analytics Measurement Protocol
-==================================================
+---------------------------------------------------
 Java API for Google Analytics Measurement Protocol (part of Universal Analytics). This library
 is released under liberal Apache Open source License 2.0
 
