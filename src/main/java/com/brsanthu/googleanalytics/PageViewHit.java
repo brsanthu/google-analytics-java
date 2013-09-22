@@ -18,14 +18,14 @@ public class PageViewHit extends AbstractRequest<PageViewHit> {
 		this(null, null, null);
 	}
 
-	public PageViewHit(String documentUrl, String documentTitle) {
-		this(documentUrl, documentTitle, null);
+	public PageViewHit(String url, String title) {
+		this(url, title, null);
 	}
 
-	public PageViewHit(String documentUrl, String documentTitle, String contentDescription) {
+	public PageViewHit(String url, String title, String description) {
 		super("pageView");
-		documentUrl(documentUrl);
-		documentTitle(documentTitle);
-		contentDescription(contentDescription);
+		documentUrl(url);
+		documentTitle(title);
+		contentDescription(description);
 	}
 }

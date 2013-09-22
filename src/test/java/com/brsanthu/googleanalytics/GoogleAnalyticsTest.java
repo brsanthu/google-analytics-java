@@ -15,13 +15,13 @@ public class GoogleAnalyticsTest {
 
 	@Test
 	public void testPageView() throws Exception {
-		ga.send(new PageViewHit("http://www.google.com", "Search"));
+		ga.post(new PageViewHit("http://www.google.com", "Search"));
 	}
 
 	@Test
 	public void testSocial() throws Exception {
-		ga.send(new SocialHit("Facebook", "Like", "https://www.google.com"));
-		ga.send(new SocialHit("Google+", "Post", "It is a comment"));
-		ga.send(new SocialHit("Twitter", "Repost", "Post"));
+		ga.post(new SocialHit("Facebook", "Like", "https://www.google.com"));
+		ga.post(new SocialHit("Google+", "Post", "It is a comment"));
+		ga.post(new SocialHit("Twitter", "Repost", "Post"));
 	}
 }

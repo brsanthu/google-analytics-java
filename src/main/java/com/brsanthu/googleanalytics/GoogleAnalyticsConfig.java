@@ -36,7 +36,15 @@ public class GoogleAnalyticsConfig {
 	private String proxyUserName = null;
 	private String proxyPassword = null;
 	private boolean deriveSystemParameters = true;
+	private boolean gatherStats = true;
 
+	public boolean isGatherStats() {
+		return gatherStats;
+	}
+
+	public void setGatherStats(boolean gatherStats) {
+		this.gatherStats = gatherStats;
+	}
 
 	public String getThreadNameFormat() {
 		return threadNameFormat;

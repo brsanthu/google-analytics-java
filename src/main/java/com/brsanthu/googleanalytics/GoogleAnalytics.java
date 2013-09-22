@@ -61,6 +61,7 @@ public class GoogleAnalytics {
 	private GoogleAnalyticsRequest defaultRequest = null;
 	private CloseableHttpClient httpClient = null;
 	private ThreadPoolExecutor executor = null;
+	private GoogleAnalyticsStats stats = new GoogleAnalyticsStats();
 
 	public GoogleAnalytics(String trackingId) {
 		this(new GoogleAnalyticsConfig(), new GoogleAnalyticsRequest().trackingId(trackingId));
@@ -111,7 +112,7 @@ public class GoogleAnalytics {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public GoogleAnalyticsResponse send(AbstractRequest request) {
+	public GoogleAnalyticsResponse post(AbstractRequest request) {
 		GoogleAnalyticsResponse response = new GoogleAnalyticsResponse();
 		if (!config.isEnabled()) {
 			return response;
@@ -144,6 +145,10 @@ public class GoogleAnalytics {
 			response.setStatusCode(httpResponse.getStatusLine().getStatusCode());
 			EntityUtils.consumeQuietly(httpResponse.getEntity());
 
+			if (config.isGatherStats()) {
+				gatherStats(request);
+			}
+
 		} catch (Exception e) {
 			logger.warn("Exception while sending the Google Analytics tracker request " + request, e);
 		} finally {
@@ -157,28 +162,64 @@ public class GoogleAnalytics {
 		return response;
 	}
 
-	public Future<GoogleAnalyticsResponse> sendAsync(final RequestProvider requestProvider) {
+	private void gatherStats(@SuppressWarnings("rawtypes") AbstractRequest request) {
+		String hitType = request.getString(GoogleAnalyticsParameter.HIT_TYPE);
+
+		if ("pageView".equalsIgnoreCase(hitType)) {
+			stats.pageViewHit();
+
+		} else if ("appView".equalsIgnoreCase(hitType)) {
+			stats.appViewHit();
+
+		} else if ("event".equalsIgnoreCase(hitType)) {
+			stats.eventHit();
+
+		} else if ("item".equalsIgnoreCase(hitType)) {
+			stats.itemHit();
+
+		} else if ("transaction".equalsIgnoreCase(hitType)) {
+			stats.transactionHit();
+
+		} else if ("social".equalsIgnoreCase(hitType)) {
+			stats.socialHit();
+
+		} else if ("timing".equalsIgnoreCase(hitType)) {
+			stats.timingHit();
+		}
+	}
+
+	public Future<GoogleAnalyticsResponse> postAsync(final RequestProvider requestProvider) {
 		if (!config.isEnabled()) {
 			return null;
 		}
 
 		Future<GoogleAnalyticsResponse> future = getExecutor().submit(new Callable<GoogleAnalyticsResponse>() {
 			public GoogleAnalyticsResponse call() throws Exception {
-				return send(requestProvider.getRequest());
+				try {
+					@SuppressWarnings("rawtypes")
+					AbstractRequest request = requestProvider.getRequest();
+					if (request != null) {
+						return post(request);
+					}
+				} catch (Exception e) {
+					logger.warn("Request Provider (" + requestProvider +") thrown exception " + e.toString() + " and hence nothing is posted to GA.");
+				}
+
+				return null;
 			}
 		});
 		return future;
 	}
 
 	@SuppressWarnings("rawtypes")
-	public Future<GoogleAnalyticsResponse> sendAsync(final AbstractRequest request) {
+	public Future<GoogleAnalyticsResponse> postAsync(final AbstractRequest request) {
 		if (!config.isEnabled()) {
 			return null;
 		}
 
 		Future<GoogleAnalyticsResponse> future = getExecutor().submit(new Callable<GoogleAnalyticsResponse>() {
 			public GoogleAnalyticsResponse call() throws Exception {
-				return send(request);
+				return post(request);
 			}
 		});
 		return future;
@@ -307,6 +348,14 @@ public class GoogleAnalytics {
 
 	protected ThreadFactory createThreadFactory() {
 		return new GoogleAnalyticsThreadFactory(config.getThreadNameFormat());
+	}
+
+	public GoogleAnalyticsStats getStats() {
+		return stats;
+	}
+
+	public void resetStats() {
+		stats = new GoogleAnalyticsStats();
 	}
 }
 
