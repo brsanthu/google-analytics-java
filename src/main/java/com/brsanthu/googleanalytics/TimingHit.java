@@ -13,16 +13,16 @@
  */
 package com.brsanthu.googleanalytics;
 
-import static com.brsanthu.googleanalytics.Parameter.DNS_TIME;
-import static com.brsanthu.googleanalytics.Parameter.PAGE_DOWNLOAD_TIME;
-import static com.brsanthu.googleanalytics.Parameter.PAGE_LOAD_TIME;
-import static com.brsanthu.googleanalytics.Parameter.REDIRECT_RESPONSE_TIME;
-import static com.brsanthu.googleanalytics.Parameter.SERVER_RESPONSE_TIME;
-import static com.brsanthu.googleanalytics.Parameter.TCP_CONNECT_TIME;
-import static com.brsanthu.googleanalytics.Parameter.USER_TIMING_CATEGORY;
-import static com.brsanthu.googleanalytics.Parameter.USER_TIMING_LABEL;
-import static com.brsanthu.googleanalytics.Parameter.USER_TIMING_TIME;
-import static com.brsanthu.googleanalytics.Parameter.USER_TIMING_VARIABLE_NAME;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DNS_TIME;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.PAGE_DOWNLOAD_TIME;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.PAGE_LOAD_TIME;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.REDIRECT_RESPONSE_TIME;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SERVER_RESPONSE_TIME;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TCP_CONNECT_TIME;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_TIMING_CATEGORY;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_TIMING_LABEL;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_TIMING_TIME;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_TIMING_VARIABLE_NAME;
 
 public class TimingHit extends AbstractRequest<TimingHit> {
 	public TimingHit() {

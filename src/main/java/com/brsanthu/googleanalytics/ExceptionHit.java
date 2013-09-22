@@ -13,8 +13,8 @@
  */
 package com.brsanthu.googleanalytics;
 
-import static com.brsanthu.googleanalytics.Parameter.EXCEPTION_DESCRIPTION;
-import static com.brsanthu.googleanalytics.Parameter.EXCEPTION_FATAL;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EXCEPTION_DESCRIPTION;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EXCEPTION_FATAL;
 
 public class ExceptionHit extends AbstractRequest<ExceptionHit> {
 

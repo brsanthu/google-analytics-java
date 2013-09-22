@@ -1,12 +1,12 @@
 package com.brsanthu.googleanalytics.internal;
 
-import com.brsanthu.googleanalytics.Parameter;
+import com.brsanthu.googleanalytics.GoogleAnalyticsParameter;
 
 public class ParameterGetterSetterGenerator {
 
 	public static void main(String[] args) {
-		Parameter[] enumConstants = Parameter.class.getEnumConstants();
-		for (Parameter parameter : enumConstants) {
+		GoogleAnalyticsParameter[] enumConstants = GoogleAnalyticsParameter.class.getEnumConstants();
+		for (GoogleAnalyticsParameter parameter : enumConstants) {
 			String methodName = null;//CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, parameter.toString());
 			String constName = parameter.toString();
 

@@ -1,47 +1,47 @@
 package com.brsanthu.googleanalytics;
 
-import static com.brsanthu.googleanalytics.Parameter.CURRENCY_CODE;
-import static com.brsanthu.googleanalytics.Parameter.DNS_TIME;
-import static com.brsanthu.googleanalytics.Parameter.EVENT_ACTION;
-import static com.brsanthu.googleanalytics.Parameter.EVENT_CATEGORY;
-import static com.brsanthu.googleanalytics.Parameter.EVENT_LABEL;
-import static com.brsanthu.googleanalytics.Parameter.EVENT_VALUE;
-import static com.brsanthu.googleanalytics.Parameter.EXCEPTION_DESCRIPTION;
-import static com.brsanthu.googleanalytics.Parameter.EXCEPTION_FATAL;
-import static com.brsanthu.googleanalytics.Parameter.ITEM_CATEGORY;
-import static com.brsanthu.googleanalytics.Parameter.ITEM_CODE;
-import static com.brsanthu.googleanalytics.Parameter.ITEM_NAME;
-import static com.brsanthu.googleanalytics.Parameter.ITEM_PRICE;
-import static com.brsanthu.googleanalytics.Parameter.ITEM_QUANTITY;
-import static com.brsanthu.googleanalytics.Parameter.PAGE_DOWNLOAD_TIME;
-import static com.brsanthu.googleanalytics.Parameter.PAGE_LOAD_TIME;
-import static com.brsanthu.googleanalytics.Parameter.REDIRECT_RESPONSE_TIME;
-import static com.brsanthu.googleanalytics.Parameter.SERVER_RESPONSE_TIME;
-import static com.brsanthu.googleanalytics.Parameter.SOCIAL_ACTION;
-import static com.brsanthu.googleanalytics.Parameter.SOCIAL_ACTION_TARGET;
-import static com.brsanthu.googleanalytics.Parameter.SOCIAL_NETWORK;
-import static com.brsanthu.googleanalytics.Parameter.TCP_CONNECT_TIME;
-import static com.brsanthu.googleanalytics.Parameter.TRANSACTION_AFFILIATION;
-import static com.brsanthu.googleanalytics.Parameter.TRANSACTION_ID;
-import static com.brsanthu.googleanalytics.Parameter.TRANSACTION_REVENUE;
-import static com.brsanthu.googleanalytics.Parameter.TRANSACTION_SHIPPING;
-import static com.brsanthu.googleanalytics.Parameter.TRANSACTION_TAX;
-import static com.brsanthu.googleanalytics.Parameter.USER_TIMING_CATEGORY;
-import static com.brsanthu.googleanalytics.Parameter.USER_TIMING_LABEL;
-import static com.brsanthu.googleanalytics.Parameter.USER_TIMING_TIME;
-import static com.brsanthu.googleanalytics.Parameter.USER_TIMING_VARIABLE_NAME;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CURRENCY_CODE;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DNS_TIME;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EVENT_ACTION;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EVENT_CATEGORY;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EVENT_LABEL;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EVENT_VALUE;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EXCEPTION_DESCRIPTION;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EXCEPTION_FATAL;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ITEM_CATEGORY;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ITEM_CODE;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ITEM_NAME;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ITEM_PRICE;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ITEM_QUANTITY;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.PAGE_DOWNLOAD_TIME;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.PAGE_LOAD_TIME;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.REDIRECT_RESPONSE_TIME;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SERVER_RESPONSE_TIME;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SOCIAL_ACTION;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SOCIAL_ACTION_TARGET;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SOCIAL_NETWORK;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TCP_CONNECT_TIME;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRANSACTION_AFFILIATION;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRANSACTION_ID;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRANSACTION_REVENUE;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRANSACTION_SHIPPING;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRANSACTION_TAX;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_TIMING_CATEGORY;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_TIMING_LABEL;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_TIMING_TIME;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_TIMING_VARIABLE_NAME;
 
-public class Request extends AbstractRequest<Request>{
+public class GoogleAnalyticsRequest extends AbstractRequest<GoogleAnalyticsRequest>{
 
-	public Request() {
+	public GoogleAnalyticsRequest() {
 		this(null, null, null, null);
 	}
 
-	public Request(String hitType) {
+	public GoogleAnalyticsRequest(String hitType) {
 		this(hitType, null, null, null);
 	}
 
-	public Request(String hitType, String trackingId, String appName, String appVersion) {
+	public GoogleAnalyticsRequest(String hitType, String trackingId, String appName, String appVersion) {
 		hitType(isEmpty(hitType)?"pageView":hitType);
 		trackingId(trackingId);
 		applicationName(appName);
@@ -81,7 +81,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request eventCategory(String value) {
+	public GoogleAnalyticsRequest eventCategory(String value) {
 		setString(EVENT_CATEGORY, value);
 	   	return this;
 	}
@@ -122,7 +122,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request eventAction(String value) {
+	public GoogleAnalyticsRequest eventAction(String value) {
 		setString(EVENT_ACTION, value);
 	   	return this;
 	}
@@ -163,7 +163,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request eventLabel(String value) {
+	public GoogleAnalyticsRequest eventLabel(String value) {
 		setString(EVENT_LABEL, value);
 	   	return this;
 	}
@@ -203,7 +203,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request eventValue(Integer value) {
+	public GoogleAnalyticsRequest eventValue(Integer value) {
 		setInteger(EVENT_VALUE, value);
 	   	return this;
 	}
@@ -244,7 +244,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request exceptionDescription(String value) {
+	public GoogleAnalyticsRequest exceptionDescription(String value) {
 		setString(EXCEPTION_DESCRIPTION, value);
 	   	return this;
 	}
@@ -284,7 +284,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request exceptionFatal(Boolean value) {
+	public GoogleAnalyticsRequest exceptionFatal(Boolean value) {
 		setBoolean(EXCEPTION_FATAL, value);
 	   	return this;
 	}
@@ -324,7 +324,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request itemName(String value) {
+	public GoogleAnalyticsRequest itemName(String value) {
 		setString(ITEM_NAME, value);
 	   	return this;
 	}
@@ -365,7 +365,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request itemPrice(Double value) {
+	public GoogleAnalyticsRequest itemPrice(Double value) {
 		setDouble(ITEM_PRICE, value);
 	   	return this;
 	}
@@ -405,7 +405,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request itemQuantity(Integer value) {
+	public GoogleAnalyticsRequest itemQuantity(Integer value) {
 		setInteger(ITEM_QUANTITY, value);
 	   	return this;
 	}
@@ -445,7 +445,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request itemCode(String value) {
+	public GoogleAnalyticsRequest itemCode(String value) {
 		setString(ITEM_CODE, value);
 	   	return this;
 	}
@@ -485,7 +485,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request itemCategory(String value) {
+	public GoogleAnalyticsRequest itemCategory(String value) {
 		setString(ITEM_CATEGORY, value);
 	   	return this;
 	}
@@ -525,7 +525,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request currencyCode(String value) {
+	public GoogleAnalyticsRequest currencyCode(String value) {
 		setString(CURRENCY_CODE, value);
 	   	return this;
 	}
@@ -566,7 +566,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request socialNetwork(String value) {
+	public GoogleAnalyticsRequest socialNetwork(String value) {
 		setString(SOCIAL_NETWORK, value);
 	   	return this;
 	}
@@ -606,7 +606,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request socialAction(String value) {
+	public GoogleAnalyticsRequest socialAction(String value) {
 		setString(SOCIAL_ACTION, value);
 	   	return this;
 	}
@@ -646,7 +646,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request socialActionTarget(String value) {
+	public GoogleAnalyticsRequest socialActionTarget(String value) {
 		setString(SOCIAL_ACTION_TARGET, value);
 	   	return this;
 	}
@@ -687,7 +687,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request userTimingCategory(String value) {
+	public GoogleAnalyticsRequest userTimingCategory(String value) {
 		setString(USER_TIMING_CATEGORY, value);
 	   	return this;
 	}
@@ -727,7 +727,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request userTimingVariableName(String value) {
+	public GoogleAnalyticsRequest userTimingVariableName(String value) {
 		setString(USER_TIMING_VARIABLE_NAME, value);
 	   	return this;
 	}
@@ -767,7 +767,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request userTimingTime(Integer value) {
+	public GoogleAnalyticsRequest userTimingTime(Integer value) {
 		setInteger(USER_TIMING_TIME, value);
 	   	return this;
 	}
@@ -807,7 +807,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request userTimingLabel(String value) {
+	public GoogleAnalyticsRequest userTimingLabel(String value) {
 		setString(USER_TIMING_LABEL, value);
 	   	return this;
 	}
@@ -847,7 +847,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request pageLoadTime(Integer value) {
+	public GoogleAnalyticsRequest pageLoadTime(Integer value) {
 		setInteger(PAGE_LOAD_TIME, value);
 	   	return this;
 	}
@@ -887,7 +887,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request dnsTime(Integer value) {
+	public GoogleAnalyticsRequest dnsTime(Integer value) {
 		setInteger(DNS_TIME, value);
 	   	return this;
 	}
@@ -927,7 +927,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request pageDownloadTime(Integer value) {
+	public GoogleAnalyticsRequest pageDownloadTime(Integer value) {
 		setInteger(PAGE_DOWNLOAD_TIME, value);
 	   	return this;
 	}
@@ -967,7 +967,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request redirectResponseTime(Integer value) {
+	public GoogleAnalyticsRequest redirectResponseTime(Integer value) {
 		setInteger(REDIRECT_RESPONSE_TIME, value);
 	   	return this;
 	}
@@ -1007,7 +1007,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request tcpConnectTime(Integer value) {
+	public GoogleAnalyticsRequest tcpConnectTime(Integer value) {
 		setInteger(TCP_CONNECT_TIME, value);
 	   	return this;
 	}
@@ -1047,7 +1047,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request serverResponseTime(Integer value) {
+	public GoogleAnalyticsRequest serverResponseTime(Integer value) {
 		setInteger(SERVER_RESPONSE_TIME, value);
 	   	return this;
 	}
@@ -1089,7 +1089,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request txId(String value) {
+	public GoogleAnalyticsRequest txId(String value) {
 		setString(TRANSACTION_ID, value);
 	   	return this;
 	}
@@ -1129,7 +1129,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request txAffiliation(String value) {
+	public GoogleAnalyticsRequest txAffiliation(String value) {
 		setString(TRANSACTION_AFFILIATION, value);
 	   	return this;
 	}
@@ -1169,7 +1169,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request txRevenue(Double value) {
+	public GoogleAnalyticsRequest txRevenue(Double value) {
 		setDouble(TRANSACTION_REVENUE, value);
 	   	return this;
 	}
@@ -1210,7 +1210,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request txShipping(Double value) {
+	public GoogleAnalyticsRequest txShipping(Double value) {
 		setDouble(TRANSACTION_SHIPPING, value);
 	   	return this;
 	}
@@ -1250,7 +1250,7 @@ public class Request extends AbstractRequest<Request>{
 	 * 	</div>
 	 * </div>
 	 */
-	public Request txTax(Double value) {
+	public GoogleAnalyticsRequest txTax(Double value) {
 		setDouble(TRANSACTION_TAX, value);
 	   	return this;
 	}

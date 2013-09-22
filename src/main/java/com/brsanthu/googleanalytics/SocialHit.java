@@ -13,9 +13,9 @@
  */
 package com.brsanthu.googleanalytics;
 
-import static com.brsanthu.googleanalytics.Parameter.SOCIAL_ACTION;
-import static com.brsanthu.googleanalytics.Parameter.SOCIAL_ACTION_TARGET;
-import static com.brsanthu.googleanalytics.Parameter.SOCIAL_NETWORK;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SOCIAL_ACTION;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SOCIAL_ACTION_TARGET;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SOCIAL_NETWORK;
 
 public class SocialHit extends AbstractRequest<SocialHit> {
 

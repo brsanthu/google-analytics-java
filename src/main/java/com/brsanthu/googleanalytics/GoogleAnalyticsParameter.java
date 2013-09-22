@@ -17,7 +17,7 @@ package com.brsanthu.googleanalytics;
  * Google Analytics Measurement Protocol Parameters. Official documentation is at
  * https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
  */
-public enum Parameter {
+public enum GoogleAnalyticsParameter {
 	//General
 	PROTOCOL_VERSION("v", true),
 	TRACKING_ID("tid", true),
@@ -111,23 +111,23 @@ public enum Parameter {
 	private String type = "text";
 	private String[] supportedHitTypes = null;
 
-	private Parameter(String name) {
+	private GoogleAnalyticsParameter(String name) {
 		this(name, false);
 	}
 
-	private Parameter(String name, boolean required) {
+	private GoogleAnalyticsParameter(String name, boolean required) {
 		this(name, required, "text", null);
 	}
 
-	private Parameter(String name, String type) {
+	private GoogleAnalyticsParameter(String name, String type) {
 		this(name, false, type, null);
 	}
 
-	private Parameter(String name, String[] supportedHitTypes) {
+	private GoogleAnalyticsParameter(String name, String[] supportedHitTypes) {
 		this(name, false, "text", supportedHitTypes);
 	}
 
-	private Parameter(String name, boolean required, String type, String[] supportedHitTypes) {
+	private GoogleAnalyticsParameter(String name, boolean required, String type, String[] supportedHitTypes) {
 		this.name = name;
 		this.required = required;
 		this.type = type;

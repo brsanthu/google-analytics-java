@@ -13,13 +13,13 @@
  */
 package com.brsanthu.googleanalytics;
 
-import static com.brsanthu.googleanalytics.Parameter.CURRENCY_CODE;
-import static com.brsanthu.googleanalytics.Parameter.ITEM_CATEGORY;
-import static com.brsanthu.googleanalytics.Parameter.ITEM_CODE;
-import static com.brsanthu.googleanalytics.Parameter.ITEM_NAME;
-import static com.brsanthu.googleanalytics.Parameter.ITEM_PRICE;
-import static com.brsanthu.googleanalytics.Parameter.ITEM_QUANTITY;
-import static com.brsanthu.googleanalytics.Parameter.TRANSACTION_ID;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CURRENCY_CODE;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ITEM_CATEGORY;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ITEM_CODE;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ITEM_NAME;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ITEM_PRICE;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ITEM_QUANTITY;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRANSACTION_ID;
 
 public class ItemHit extends AbstractRequest<ItemHit> {
 

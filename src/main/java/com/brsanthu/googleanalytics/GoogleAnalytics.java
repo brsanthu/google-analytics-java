@@ -19,6 +19,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -56,28 +57,28 @@ public class GoogleAnalytics {
 	private static final Charset UTF8 = Charset.forName("UTF-8");
 	private static final Logger logger = LoggerFactory.getLogger(GoogleAnalytics.class);
 
-	private Config config = null;
-	private Request defaultRequest = null;
+	private GoogleAnalyticsConfig config = null;
+	private GoogleAnalyticsRequest defaultRequest = null;
 	private CloseableHttpClient httpClient = null;
 	private ThreadPoolExecutor executor = null;
 
 	public GoogleAnalytics(String trackingId) {
-		this(new Config(), new Request().trackingId(trackingId));
+		this(new GoogleAnalyticsConfig(), new GoogleAnalyticsRequest().trackingId(trackingId));
 	}
 
-	public GoogleAnalytics(Config config, String trackingId) {
-		this(config, new Request().trackingId(trackingId));
+	public GoogleAnalytics(GoogleAnalyticsConfig config, String trackingId) {
+		this(config, new GoogleAnalyticsRequest().trackingId(trackingId));
 	}
 
 	public GoogleAnalytics(String trackingId, String appName, String appVersion) {
-		this(new Config(), trackingId, appName, appVersion);
+		this(new GoogleAnalyticsConfig(), trackingId, appName, appVersion);
 	}
 
-	public GoogleAnalytics(Config config, String trackingId, String appName, String appVersion) {
-		this(config, new Request().trackingId(trackingId).applicationName(appName).applicationVersion(appVersion));
+	public GoogleAnalytics(GoogleAnalyticsConfig config, String trackingId, String appName, String appVersion) {
+		this(config, new GoogleAnalyticsRequest().trackingId(trackingId).applicationName(appName).applicationVersion(appVersion));
 	}
 
-	public GoogleAnalytics(Config config, Request defaultRequest) {
+	public GoogleAnalytics(GoogleAnalyticsConfig config, GoogleAnalyticsRequest defaultRequest) {
 		if (config.isDeriveSystemParameters()) {
 			deriveSystemParameters(config, defaultRequest);
 		}
@@ -89,7 +90,7 @@ public class GoogleAnalytics {
 		this.httpClient = createHttpClient(config);
 	}
 
-	public Config getConfig() {
+	public GoogleAnalyticsConfig getConfig() {
 		return config;
 	}
 
@@ -97,11 +98,11 @@ public class GoogleAnalytics {
 		return httpClient;
 	}
 
-	public Request getDefaultRequest() {
+	public GoogleAnalyticsRequest getDefaultRequest() {
 		return defaultRequest;
 	}
 
-	public void setDefaultRequest(Request request) {
+	public void setDefaultRequest(GoogleAnalyticsRequest request) {
 		this.defaultRequest = request;
 	}
 
@@ -110,8 +111,8 @@ public class GoogleAnalytics {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Response send(AbstractRequest abstractRequest) {
-		Response response = new Response();
+	public GoogleAnalyticsResponse send(AbstractRequest request) {
+		GoogleAnalyticsResponse response = new GoogleAnalyticsResponse();
 		if (!config.isEnabled()) {
 			return response;
 		}
@@ -119,9 +120,9 @@ public class GoogleAnalytics {
 		CloseableHttpResponse httpResponse = null;
 		try {
 			//Combine request with default parms.
-			Map<Parameter, String> parms = abstractRequest.getParameters();
-			Map<Parameter, String> defaultParms = defaultRequest.getParameters();
-			for (Parameter parm : defaultParms.keySet()) {
+			Map<GoogleAnalyticsParameter, String> parms = request.getParameters();
+			Map<GoogleAnalyticsParameter, String> defaultParms = defaultRequest.getParameters();
+			for (GoogleAnalyticsParameter parm : defaultParms.keySet()) {
 				String value = parms.get(parm);
 				String defaultValue = defaultParms.get(parm);
 				if (isEmpty(value) && !isEmpty(defaultValue)) {
@@ -129,10 +130,12 @@ public class GoogleAnalytics {
 				}
 			}
 
+			logger.debug("Sending " + request);
+
 			HttpPost httpPost;
 			httpPost = new HttpPost(config.getUrl());
 			List<NameValuePair> postParms = new ArrayList<NameValuePair>();
-			for (Parameter key : parms.keySet()) {
+			for (GoogleAnalyticsParameter key : parms.keySet()) {
 				postParms.add(new BasicNameValuePair(key.getName(), parms.get(key)));
 			}
 			httpPost.setEntity(new UrlEncodedFormEntity(postParms, UTF8));
@@ -142,7 +145,7 @@ public class GoogleAnalytics {
 			EntityUtils.consumeQuietly(httpResponse.getEntity());
 
 		} catch (Exception e) {
-			logger.warn("Exception while sending the Google Analytics tracker request " + abstractRequest, e);
+			logger.warn("Exception while sending the Google Analytics tracker request " + request, e);
 		} finally {
 			try {
 				httpResponse.close();
@@ -154,15 +157,28 @@ public class GoogleAnalytics {
 		return response;
 	}
 
-	@SuppressWarnings("rawtypes")
-	public Future<Response> sendAsync(final AbstractRequest abstractRequest) {
+	public Future<GoogleAnalyticsResponse> sendAsync(final RequestProvider requestProvider) {
 		if (!config.isEnabled()) {
 			return null;
 		}
 
-		Future<Response> future = getExecutor().submit(new Callable<Response>() {
-			public Response call() throws Exception {
-				return send(abstractRequest);
+		Future<GoogleAnalyticsResponse> future = getExecutor().submit(new Callable<GoogleAnalyticsResponse>() {
+			public GoogleAnalyticsResponse call() throws Exception {
+				return send(requestProvider.getRequest());
+			}
+		});
+		return future;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public Future<GoogleAnalyticsResponse> sendAsync(final AbstractRequest request) {
+		if (!config.isEnabled()) {
+			return null;
+		}
+
+		Future<GoogleAnalyticsResponse> future = getExecutor().submit(new Callable<GoogleAnalyticsResponse>() {
+			public GoogleAnalyticsResponse call() throws Exception {
+				return send(request);
 			}
 		});
 		return future;
@@ -190,7 +206,7 @@ public class GoogleAnalytics {
 		}
 	}
 
-	protected Request deriveSystemParameters(Config config, Request request) {
+	protected GoogleAnalyticsRequest deriveSystemParameters(GoogleAnalyticsConfig config, GoogleAnalyticsRequest request) {
 		try {
 			if (isEmpty(config.getUserAgent())) {
 				config.setUserAgent(getUserAgentString());
@@ -235,7 +251,7 @@ public class GoogleAnalytics {
 		return request;
 	}
 
-	protected CloseableHttpClient createHttpClient(Config config) {
+	protected CloseableHttpClient createHttpClient(GoogleAnalyticsConfig config) {
 		PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager();
 		connManager.setDefaultMaxPerRoute(Math.min(config.getMaxThreads(), 1));
 
@@ -266,8 +282,8 @@ public class GoogleAnalytics {
 		return executor;
 	}
 
-	protected synchronized ThreadPoolExecutor createExecutor(Config config) {
-		return new ThreadPoolExecutor(0, config.getMaxThreads(), 5, TimeUnit.MINUTES, new LinkedBlockingDeque<Runnable>(), new GoogleAnalyticsThreadFactory());
+	protected synchronized ThreadPoolExecutor createExecutor(GoogleAnalyticsConfig config) {
+		return new ThreadPoolExecutor(0, config.getMaxThreads(), 5, TimeUnit.MINUTES, new LinkedBlockingDeque<Runnable>(), createThreadFactory());
 	}
 
 	protected String getUserAgentString() {
@@ -288,14 +304,22 @@ public class GoogleAnalytics {
 			sb.append("/").append(value);
 		}
 	}
+
+	protected ThreadFactory createThreadFactory() {
+		return new GoogleAnalyticsThreadFactory(config.getThreadNameFormat());
+	}
 }
 
 class GoogleAnalyticsThreadFactory implements ThreadFactory {
     private final AtomicInteger threadNumber = new AtomicInteger(1);
-    private final String namePrefix = "googleanalytics-thread-";
+    private String threadNameFormat = null;
 
-    public Thread newThread(Runnable r) {
-        Thread thread = new Thread(Thread.currentThread().getThreadGroup(), r, namePrefix + threadNumber.getAndIncrement(), 0);
+    public GoogleAnalyticsThreadFactory(String threadNameFormat) {
+    	this.threadNameFormat = threadNameFormat;
+	}
+
+	public Thread newThread(Runnable r) {
+        Thread thread = new Thread(Thread.currentThread().getThreadGroup(), r, MessageFormat.format(threadNameFormat, threadNumber.getAndIncrement()), 0);
         thread.setDaemon(true);
         thread.setPriority(Thread.MIN_PRIORITY);
         return thread;

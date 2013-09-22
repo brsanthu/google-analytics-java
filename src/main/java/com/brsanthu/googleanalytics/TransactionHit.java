@@ -13,12 +13,12 @@
  */
 package com.brsanthu.googleanalytics;
 
-import static com.brsanthu.googleanalytics.Parameter.CURRENCY_CODE;
-import static com.brsanthu.googleanalytics.Parameter.TRANSACTION_AFFILIATION;
-import static com.brsanthu.googleanalytics.Parameter.TRANSACTION_ID;
-import static com.brsanthu.googleanalytics.Parameter.TRANSACTION_REVENUE;
-import static com.brsanthu.googleanalytics.Parameter.TRANSACTION_SHIPPING;
-import static com.brsanthu.googleanalytics.Parameter.TRANSACTION_TAX;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CURRENCY_CODE;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRANSACTION_AFFILIATION;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRANSACTION_ID;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRANSACTION_REVENUE;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRANSACTION_SHIPPING;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRANSACTION_TAX;
 
 public class TransactionHit extends AbstractRequest<TransactionHit> {
 

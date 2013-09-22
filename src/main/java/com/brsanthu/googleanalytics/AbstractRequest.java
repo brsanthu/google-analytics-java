@@ -13,38 +13,38 @@
  */
 package com.brsanthu.googleanalytics;
 
-import static com.brsanthu.googleanalytics.Parameter.ADWORDS_ID;
-import static com.brsanthu.googleanalytics.Parameter.ANONYMIZE_IP;
-import static com.brsanthu.googleanalytics.Parameter.APPLICATION_NAME;
-import static com.brsanthu.googleanalytics.Parameter.APPLICATION_VERSION;
-import static com.brsanthu.googleanalytics.Parameter.CACHE_BUSTER;
-import static com.brsanthu.googleanalytics.Parameter.CAMPAIGN_CONTENT;
-import static com.brsanthu.googleanalytics.Parameter.CAMPAIGN_ID;
-import static com.brsanthu.googleanalytics.Parameter.CAMPAIGN_KEYWORD;
-import static com.brsanthu.googleanalytics.Parameter.CAMPAIGN_MEDIUM;
-import static com.brsanthu.googleanalytics.Parameter.CAMPAIGN_NAME;
-import static com.brsanthu.googleanalytics.Parameter.CAMPAIGN_SOURCE;
-import static com.brsanthu.googleanalytics.Parameter.CLIENT_ID;
-import static com.brsanthu.googleanalytics.Parameter.CONTENT_DESCRIPTION;
-import static com.brsanthu.googleanalytics.Parameter.DISPLAYAD_ID;
-import static com.brsanthu.googleanalytics.Parameter.DOCUMENT_ENCODING;
-import static com.brsanthu.googleanalytics.Parameter.DOCUMENT_HOST_NAME;
-import static com.brsanthu.googleanalytics.Parameter.DOCUMENT_LOCATION_URL;
-import static com.brsanthu.googleanalytics.Parameter.DOCUMENT_PATH;
-import static com.brsanthu.googleanalytics.Parameter.DOCUMENT_REFERRER;
-import static com.brsanthu.googleanalytics.Parameter.DOCUMENT_TITLE;
-import static com.brsanthu.googleanalytics.Parameter.FLASH_VERSION;
-import static com.brsanthu.googleanalytics.Parameter.HIT_TYPE;
-import static com.brsanthu.googleanalytics.Parameter.JAVA_ENABLED;
-import static com.brsanthu.googleanalytics.Parameter.NON_INTERACTION_HIT;
-import static com.brsanthu.googleanalytics.Parameter.PROTOCOL_VERSION;
-import static com.brsanthu.googleanalytics.Parameter.QUEUE_TIME;
-import static com.brsanthu.googleanalytics.Parameter.SCREEN_COLORS;
-import static com.brsanthu.googleanalytics.Parameter.SCREEN_RESOLUTION;
-import static com.brsanthu.googleanalytics.Parameter.SESSION_CONTROL;
-import static com.brsanthu.googleanalytics.Parameter.TRACKING_ID;
-import static com.brsanthu.googleanalytics.Parameter.USER_LANGUAGE;
-import static com.brsanthu.googleanalytics.Parameter.VIEWPORT_SIZE;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ADWORDS_ID;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ANONYMIZE_IP;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.APPLICATION_NAME;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.APPLICATION_VERSION;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CACHE_BUSTER;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CAMPAIGN_CONTENT;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CAMPAIGN_ID;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CAMPAIGN_KEYWORD;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CAMPAIGN_MEDIUM;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CAMPAIGN_NAME;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CAMPAIGN_SOURCE;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CLIENT_ID;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CONTENT_DESCRIPTION;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DISPLAYAD_ID;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_ENCODING;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_HOST_NAME;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_LOCATION_URL;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_PATH;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_REFERRER;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_TITLE;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.FLASH_VERSION;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.HIT_TYPE;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.JAVA_ENABLED;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.NON_INTERACTION_HIT;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.PROTOCOL_VERSION;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.QUEUE_TIME;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SCREEN_COLORS;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SCREEN_RESOLUTION;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SESSION_CONTROL;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRACKING_ID;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_LANGUAGE;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.VIEWPORT_SIZE;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -62,7 +62,7 @@ public abstract class AbstractRequest<T> {
 
 	private final static String DEFAULT_CLIENT_ID = UUID.randomUUID().toString();
 
-	protected Map<Parameter, String> parms = new HashMap<Parameter, String>();
+	protected Map<GoogleAnalyticsParameter, String> parms = new HashMap<GoogleAnalyticsParameter, String>();
 	protected Map<String, String> customDimentions = new HashMap<String, String>();
 	protected Map<String, String> customMetrics = new HashMap<String, String>();
 
@@ -88,7 +88,7 @@ public abstract class AbstractRequest<T> {
 		return string == null || string.trim().length() == 0;
 	}
 
-	protected T setString(Parameter parameter, String value) {
+	protected T setString(GoogleAnalyticsParameter parameter, String value) {
 		if (value == null) {
 			parms.remove(parameter);
 		} else {
@@ -98,11 +98,11 @@ public abstract class AbstractRequest<T> {
 		return (T) this;
 	}
 
-	public String getString(Parameter parameter) {
+	public String getString(GoogleAnalyticsParameter parameter) {
 		return parms.get(parameter);
 	}
 
-	protected T setInteger(Parameter parameter, Integer value) {
+	protected T setInteger(GoogleAnalyticsParameter parameter, Integer value) {
 		if (value == null) {
 			parms.remove(parameter);
 		} else {
@@ -112,11 +112,11 @@ public abstract class AbstractRequest<T> {
 		return (T) this;
 	}
 
-	public Double getDouble(Parameter parameter) {
+	public Double getDouble(GoogleAnalyticsParameter parameter) {
 		return toDouble(parms.get(parameter));
 	}
 
-	protected T setDouble(Parameter parameter, Double value) {
+	protected T setDouble(GoogleAnalyticsParameter parameter, Double value) {
 		if (value == null) {
 			parms.remove(parameter);
 		} else {
@@ -126,11 +126,11 @@ public abstract class AbstractRequest<T> {
 		return (T) this;
 	}
 
-	public Boolean getBoolean(Parameter parameter) {
+	public Boolean getBoolean(GoogleAnalyticsParameter parameter) {
 		return toBoolean(parms.get(parameter));
 	}
 
-	protected T setBoolean(Parameter parameter, Boolean value) {
+	protected T setBoolean(GoogleAnalyticsParameter parameter, Boolean value) {
 		if (value == null) {
 			parms.remove(parameter);
 		} else {
@@ -140,7 +140,7 @@ public abstract class AbstractRequest<T> {
 		return (T) this;
 	}
 
-	public Integer getInteger(Parameter parameter) {
+	public Integer getInteger(GoogleAnalyticsParameter parameter) {
 		return toInteger(parms.get(parameter));
 	}
 
@@ -192,11 +192,11 @@ public abstract class AbstractRequest<T> {
 		return Double.parseDouble(doubleString);
 	}
 
-	public Map<Parameter, String> getParameters() {
+	public Map<GoogleAnalyticsParameter, String> getParameters() {
 		return parms;
 	}
 
-	public T parameter(Parameter parameter, String value) {
+	public T parameter(GoogleAnalyticsParameter parameter, String value) {
 		if (value == null) {
 			parms.remove(parameter);
 		} else {
@@ -205,7 +205,7 @@ public abstract class AbstractRequest<T> {
 		return (T) this;
 	}
 
-	public String parameter(Parameter parameter) {
+	public String parameter(GoogleAnalyticsParameter parameter) {
 		return parms.get(parameter);
 	}
 

@@ -22,7 +22,8 @@ package com.brsanthu.googleanalytics;
  *
  * @author Santhosh Kumar
  */
-public class Config {
+public class GoogleAnalyticsConfig {
+	private String threadNameFormat = "googleanalytics-thread-{0}";
 	private boolean enabled = true;
 	private int maxThreads = 1;
 	private boolean useHttps = true;
@@ -36,6 +37,16 @@ public class Config {
 	private String proxyPassword = null;
 	private boolean deriveSystemParameters = true;
 
+
+	public String getThreadNameFormat() {
+		return threadNameFormat;
+	}
+
+	public GoogleAnalyticsConfig setThreadNameFormat(String threadPrefix) {
+		this.threadNameFormat = threadPrefix;
+		return this;
+	}
+
 	public boolean isDeriveSystemParameters() {
 		return deriveSystemParameters;
 	}
@@ -46,7 +57,7 @@ public class Config {
 	 *
 	 * <p>This is <strong>initialization</strong> level configuration (must be set while creating GoogleAnalytics object).</p>
 	 */
-	public Config setDeriveSystemParameters(boolean deriveSystemProperties) {
+	public GoogleAnalyticsConfig setDeriveSystemParameters(boolean deriveSystemProperties) {
 		this.deriveSystemParameters = deriveSystemProperties;
 		return this;
 	}
@@ -60,7 +71,7 @@ public class Config {
 	 *
 	 * <p>This is <strong>initialization</strong> level configuration (must be set while creating GoogleAnalytics object).</p>
 	 */
-	public Config setProxyUserName(String proxyUserName) {
+	public GoogleAnalyticsConfig setProxyUserName(String proxyUserName) {
 		this.proxyUserName = proxyUserName;
 		return this;
 	}
@@ -74,7 +85,7 @@ public class Config {
 	 *
 	 * <p>This is <strong>initialization</strong> level configuration (must be set while creating GoogleAnalytics object).</p>
 	 */
-	public Config setProxyPassword(String proxyPassword) {
+	public GoogleAnalyticsConfig setProxyPassword(String proxyPassword) {
 		this.proxyPassword = proxyPassword;
 		return this;
 	}
@@ -87,7 +98,7 @@ public class Config {
 	 *
 	 * <p>This is <strong>initialization</strong> level configuration (must be set while creating GoogleAnalytics object).</p>
 	 */
-	public Config setProxyHost(String proxyHost) {
+	public GoogleAnalyticsConfig setProxyHost(String proxyHost) {
 		this.proxyHost = proxyHost;
 		return this;
 	}
@@ -100,7 +111,7 @@ public class Config {
 	 *
 	 * <p>This is <strong>initialization</strong> level configuration (must be set while creating GoogleAnalytics object).</p>
 	 */
-	public Config setProxyPort(int proxyPort) {
+	public GoogleAnalyticsConfig setProxyPort(int proxyPort) {
 		this.proxyPort = proxyPort;
 		return this;
 	}
@@ -114,7 +125,7 @@ public class Config {
 	 *
 	 * <p>This is <strong>initialization</strong> level configuration (must be set while creating GoogleAnalytics object).</p>
 	 */
-	public Config setUserAgent(String userAgent) {
+	public GoogleAnalyticsConfig setUserAgent(String userAgent) {
 		this.userAgent = userAgent;
 		return this;
 	}
@@ -128,7 +139,7 @@ public class Config {
 	 *
 	 * <p>This is <strong>request</strong> level configuration (can be changed any time).</p>
 	 */
-	public Config setEnabled(boolean enabled) {
+	public GoogleAnalyticsConfig setEnabled(boolean enabled) {
 		this.enabled = enabled;
 		return this;
 	}
@@ -141,7 +152,7 @@ public class Config {
 	public int getMaxThreads() {
 		return maxThreads;
 	}
-	public Config setMaxThreads(int maxThreads) {
+	public GoogleAnalyticsConfig setMaxThreads(int maxThreads) {
 		this.maxThreads = maxThreads;
 		return this;
 	}
@@ -154,7 +165,7 @@ public class Config {
 	 *
 	 * <p>This is <strong>request</strong> level configuration (can be changed any time).</p>
 	 */
-	public Config setUseHttps(boolean useHttps) {
+	public GoogleAnalyticsConfig setUseHttps(boolean useHttps) {
 		this.useHttps = useHttps;
 		return this;
 	}
@@ -169,7 +180,7 @@ public class Config {
 	 *
 	 * <p>This is <strong>request</strong> level configuration (can be changed any time).</p>
 	 */
-	public Config setValidate(boolean validate) {
+	public GoogleAnalyticsConfig setValidate(boolean validate) {
 		this.validate = validate;
 		return this;
 	}
@@ -182,7 +193,7 @@ public class Config {
 	 *
 	 * <p>This is <strong>request</strong> level configuration (can be changed any time).</p>
 	 */
-	public Config setHttpUrl(String httpUrl) {
+	public GoogleAnalyticsConfig setHttpUrl(String httpUrl) {
 		this.httpUrl = httpUrl;
 		return this;
 	}
@@ -195,7 +206,7 @@ public class Config {
 	 *
 	 * <p>This is <strong>request</strong> level configuration (can be changed any time).</p>
 	 */
-	public Config setHttpsUrl(String httpsUrl) {
+	public GoogleAnalyticsConfig setHttpsUrl(String httpsUrl) {
 		this.httpsUrl = httpsUrl;
 		return this;
 	}

@@ -13,7 +13,7 @@
  */
 package com.brsanthu.googleanalytics;
 
-public class Response {
+public class GoogleAnalyticsResponse {
 	private int statusCode = 200;
 
 	public void setStatusCode(int statusCode) {

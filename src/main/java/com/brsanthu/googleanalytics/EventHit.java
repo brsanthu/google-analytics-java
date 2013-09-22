@@ -13,10 +13,10 @@
  */
 package com.brsanthu.googleanalytics;
 
-import static com.brsanthu.googleanalytics.Parameter.EVENT_ACTION;
-import static com.brsanthu.googleanalytics.Parameter.EVENT_CATEGORY;
-import static com.brsanthu.googleanalytics.Parameter.EVENT_LABEL;
-import static com.brsanthu.googleanalytics.Parameter.EVENT_VALUE;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EVENT_ACTION;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EVENT_CATEGORY;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EVENT_LABEL;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EVENT_VALUE;
 
 public class EventHit extends AbstractRequest<EventHit> {
 
