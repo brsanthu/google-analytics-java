@@ -43,7 +43,7 @@ public enum GoogleAnalyticsParameter {
 	CAMPAIGN_CONTENT("cc"),
 	CAMPAIGN_ID("ci"),
 	ADWORDS_ID("gclid"),
-	DISPLAYAD_ID("dclid"),
+	DISPLAY_ADS_ID("dclid"),
 
 	//System Info
 	SCREEN_RESOLUTION("sr"),
@@ -59,7 +59,7 @@ public enum GoogleAnalyticsParameter {
 	NON_INTERACTION_HIT("ni"),
 
 	//Content Information
-	DOCUMENT_LOCATION_URL("dl"),
+	DOCUMENT_URL("dl"),
 	DOCUMENT_HOST_NAME ("dh"),
 	DOCUMENT_PATH ("dp"),
 	DOCUMENT_TITLE ("dt"),

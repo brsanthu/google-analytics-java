@@ -40,7 +40,7 @@ public class GoogleAnalyticsConfig {
 	private String proxyUserName = null;
 	private String proxyPassword = null;
 	private boolean deriveSystemParameters = true;
-	private boolean gatherStats = true;
+	private boolean gatherStats = false;
 
 	public boolean isGatherStats() {
 		return gatherStats;

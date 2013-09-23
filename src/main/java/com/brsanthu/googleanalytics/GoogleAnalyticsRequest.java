@@ -26,10 +26,10 @@ import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CAMPAIGN_NAM
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CAMPAIGN_SOURCE;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CLIENT_ID;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CONTENT_DESCRIPTION;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DISPLAYAD_ID;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DISPLAY_ADS_ID;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_ENCODING;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_HOST_NAME;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_LOCATION_URL;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_URL;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_PATH;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_REFERRER;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_TITLE;
@@ -965,11 +965,11 @@ public class GoogleAnalyticsRequest<T> {
 	 * </div>
 	 */
 	public T displayadId(String value) {
-		setString(DISPLAYAD_ID, value);
+		setString(DISPLAY_ADS_ID, value);
 	   	return (T) this;
 	}
 	public String displayadId() {
-		return getString(DISPLAYAD_ID);
+		return getString(DISPLAY_ADS_ID);
 	}
 
 	/**
@@ -1365,11 +1365,11 @@ public class GoogleAnalyticsRequest<T> {
 	 * </div>
 	 */
 	public T documentUrl(String value) {
-		setString(DOCUMENT_LOCATION_URL, value);
+		setString(DOCUMENT_URL, value);
 	   	return (T) this;
 	}
 	public String documentUrl() {
-		return getString(DOCUMENT_LOCATION_URL);
+		return getString(DOCUMENT_URL);
 	}
 
 	/**
