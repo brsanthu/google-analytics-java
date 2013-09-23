@@ -13,7 +13,14 @@
  */
 package com.brsanthu.googleanalytics;
 
-public class PageViewHit extends AbstractRequest<PageViewHit> {
+/**
+ * GA request to track a typical web page view
+ *
+ * <p>For more information, see <a href="https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#content">GA Parameters Reference</a></p>
+ *
+ * @author Santhosh Kumar
+ */
+public class PageViewHit extends GoogleAnalyticsRequest<PageViewHit> {
 	public PageViewHit() {
 		this(null, null, null);
 	}

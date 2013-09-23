@@ -1,10 +1,25 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.brsanthu.googleanalytics;
 
 /**
- * Interface which provides the request that needs to be sent to GA. This type helps creating the
- * delayed GA request inside the async thread so the cost of constructing the Request is part of
- * user related thread or cost is completely avoided if GA is disabled
- * (via {@link GoogleAnalyticsConfig.setEnabled)
+ * Interface which returns the GA request that needs to be sent to GA.
+ * <p>
+ * This interface helps creating the GA request in lazily inside the async thread
+ * so the cost of constructing the Request is not part of user related thread or
+ * cost is completely avoided if GA is disabled (via {@link GoogleAnalyticsConfig.setEnabled})
  *
  * @author Santhosh Kumar
  */
@@ -18,5 +33,5 @@ public interface RequestProvider {
 	 * 		nothing will be sent to GA.
 	 */
 	@SuppressWarnings("rawtypes")
-	AbstractRequest getRequest();
+	GoogleAnalyticsRequest getRequest();
 }

@@ -20,7 +20,14 @@ import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRANSACTION_
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRANSACTION_SHIPPING;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRANSACTION_TAX;
 
-public class TransactionHit extends AbstractRequest<TransactionHit> {
+/**
+ * GA request to track ecommerce transaction.
+ *
+ * <p>For more information, see <a href="https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ecomm">GA Parameters Reference</a></p>
+ *
+ * @author Santhosh Kumar
+ */
+public class TransactionHit extends GoogleAnalyticsRequest<TransactionHit> {
 
 	public TransactionHit() {
 		this(null);
@@ -60,7 +67,7 @@ public class TransactionHit extends AbstractRequest<TransactionHit> {
 	 * 		<strong>Required for item hit type.</strong>
 	 * 	</p>
 	 * 	<p>A unique identifier for the transaction. This value should be the same for both the Transaction hit and Items hits associated to the particular transaction.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>
@@ -100,7 +107,7 @@ public class TransactionHit extends AbstractRequest<TransactionHit> {
 	 * 		Optional.
 	 * 	</p>
 	 * 	<p>Specifies the affiliation or store name.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>
@@ -140,7 +147,7 @@ public class TransactionHit extends AbstractRequest<TransactionHit> {
 	 * 		Optional.
 	 * 	</p>
 	 * 	<p>Specifies the total revenue associated with the transaction. This value should include any shipping or tax costs.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>
@@ -180,7 +187,7 @@ public class TransactionHit extends AbstractRequest<TransactionHit> {
 	 * 		Optional.
 	 * 	</p>
 	 * 	<p>Specifies the total shipping cost of the transaction.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>
@@ -220,7 +227,7 @@ public class TransactionHit extends AbstractRequest<TransactionHit> {
 	 * 		Optional.
 	 * 	</p>
 	 * 	<p>Specifies the total tax of the transaction.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>
@@ -260,7 +267,7 @@ public class TransactionHit extends AbstractRequest<TransactionHit> {
 	 * 		Optional.
 	 * 	</p>
 	 * 	<p>When present indicates the local currency for all transaction currency values. Value should be a valid ISO 4217 currency code.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>

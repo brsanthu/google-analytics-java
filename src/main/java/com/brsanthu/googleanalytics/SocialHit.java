@@ -17,7 +17,14 @@ import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SOCIAL_ACTIO
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SOCIAL_ACTION_TARGET;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SOCIAL_NETWORK;
 
-public class SocialHit extends AbstractRequest<SocialHit> {
+/**
+ * GA request to track social interactions
+ *
+ * <p>For more information, see <a href="https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#social">GA Parameters Reference</a></p>
+ *
+ * @author Santhosh Kumar
+ */
+public class SocialHit extends GoogleAnalyticsRequest<SocialHit> {
 
 	public SocialHit(String socialNetwork, String socialAction, String socialTarget) {
 		super("social");
@@ -32,7 +39,7 @@ public class SocialHit extends AbstractRequest<SocialHit> {
 	 * 		<strong>Required for social hit type.</strong>
 	 * 	</p>
 	 * 	<p>Specifies the social network, for example Facebook or Google Plus.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>
@@ -72,7 +79,7 @@ public class SocialHit extends AbstractRequest<SocialHit> {
 	 * 		<strong>Required for social hit type.</strong>
 	 * 	</p>
 	 * 	<p>Specifies the social interaction action. For example on Google Plus when a user clicks the +1 button, the social action is 'plus'.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>
@@ -112,7 +119,7 @@ public class SocialHit extends AbstractRequest<SocialHit> {
 	 * 		<strong>Required for social hit type.</strong>
 	 * 	</p>
 	 * 	<p>Specifies the target of a social interaction. This value is typically a URL but can be any text.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>

@@ -13,7 +13,14 @@
  */
 package com.brsanthu.googleanalytics;
 
-public class AppViewHit extends AbstractRequest<AppViewHit> {
+/**
+ * GA request to track application page view (for mobile or desktop apps).
+ *
+ * <p>For more information, see <a href="https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#apptracking">GA Parameters Reference</a></p>
+ *
+ * @author Santhosh Kumar
+ */
+public class AppViewHit extends GoogleAnalyticsRequest<AppViewHit> {
 	public AppViewHit() {
 		this(null);
 	}

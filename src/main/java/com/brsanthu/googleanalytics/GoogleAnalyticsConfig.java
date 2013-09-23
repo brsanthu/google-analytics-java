@@ -16,9 +16,13 @@ package com.brsanthu.googleanalytics;
 /**
  * Properties that can be configured in this library. These would include any properties that are required to process the
  * tracking request or enhance the tracking request (but not specified in measurement protocol like User agent).
- *
- * Most of the properties are initialization level and request level. If a property is initialization level, it should be set at the time
- * of the GoogleAnalytics object initialization. If a property is request level, then it can be set any time and it will be effective.
+ * <p>
+ * Most of the properties are initialization level and request level. If a property is a initialization level property,
+ * it should be set at the time of GoogleAnalytics object initialization. If a property is a request level property,
+ * it can be set any time and it will be effective.
+ * <p>
+ * All properties of this config object supports method chaining. So for example, you could do,
+ * <code>new GoogleAnalyticsConfig().setMaxThreads(2).setThreadNameFormat("name");</code>
  *
  * @author Santhosh Kumar
  */

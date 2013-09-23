@@ -18,7 +18,14 @@ import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EVENT_CATEGO
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EVENT_LABEL;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EVENT_VALUE;
 
-public class EventHit extends AbstractRequest<EventHit> {
+/**
+ * GA request to track events.
+ *
+ * <p>For more information, see <a href="https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#events">GA Parameters Reference</a></p>
+ *
+ * @author Santhosh Kumar
+ */
+public class EventHit extends GoogleAnalyticsRequest<EventHit> {
 
 	public EventHit (String eventCategory, String eventAction) {
 		this(eventCategory, eventAction, null, null);
@@ -39,7 +46,7 @@ public class EventHit extends AbstractRequest<EventHit> {
 	 * 		Optional.
 	 * 	</p>
 	 * 	<p>Specifies the event category. Must not be empty.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>
@@ -79,7 +86,7 @@ public class EventHit extends AbstractRequest<EventHit> {
 	 * 		Optional.
 	 * 	</p>
 	 * 	<p>Specifies the event action.  Must not be empty.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>
@@ -119,7 +126,7 @@ public class EventHit extends AbstractRequest<EventHit> {
 	 * 		Optional.
 	 * 	</p>
 	 * 	<p>Specifies the event label.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>
@@ -159,7 +166,7 @@ public class EventHit extends AbstractRequest<EventHit> {
 	 * 		Optional.
 	 * 	</p>
 	 * 	<p>Specifies the event value. Values must be non-negative.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>

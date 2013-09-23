@@ -16,7 +16,14 @@ package com.brsanthu.googleanalytics;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EXCEPTION_DESCRIPTION;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EXCEPTION_FATAL;
 
-public class ExceptionHit extends AbstractRequest<ExceptionHit> {
+/**
+ * GA request to track exceptions.
+ *
+ * <p>For more information, see <a href="https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#exception">GA Parameters Reference</a></p>
+ *
+ * @author Santhosh Kumar
+ */
+public class ExceptionHit extends GoogleAnalyticsRequest<ExceptionHit> {
 
 	public ExceptionHit(String exceptionDescription) {
 		this(exceptionDescription, false);
@@ -34,7 +41,7 @@ public class ExceptionHit extends AbstractRequest<ExceptionHit> {
 	 * 		Optional.
 	 * 	</p>
 	 * 	<p>Specifies the description of an exception.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>
@@ -74,7 +81,7 @@ public class ExceptionHit extends AbstractRequest<ExceptionHit> {
 	 * 		Optional.
 	 * 	</p>
 	 * 	<p>Specifies whether the exception was fatal.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>

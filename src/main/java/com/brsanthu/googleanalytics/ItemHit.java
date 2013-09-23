@@ -21,7 +21,14 @@ import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ITEM_PRICE;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ITEM_QUANTITY;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRANSACTION_ID;
 
-public class ItemHit extends AbstractRequest<ItemHit> {
+/**
+ * GA request to track items as part of ecommerce transaction.
+ *
+ * <p>For more information, see <a href="https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ecomm">GA Parameters Reference</a></p>
+ *
+ * @author Santhosh Kumar
+ */
+public class ItemHit extends GoogleAnalyticsRequest<ItemHit> {
 
 	public ItemHit() {
 		super("item");
@@ -35,7 +42,7 @@ public class ItemHit extends AbstractRequest<ItemHit> {
 	 * 		<strong>Required for item hit type.</strong>
 	 * 	</p>
 	 * 	<p>A unique identifier for the transaction. This value should be the same for both the Transaction hit and Items hits associated to the particular transaction.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>
@@ -75,7 +82,7 @@ public class ItemHit extends AbstractRequest<ItemHit> {
 	 * 		<strong>Required for item hit type.</strong>
 	 * 	</p>
 	 * 	<p>Specifies the item name.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>
@@ -115,7 +122,7 @@ public class ItemHit extends AbstractRequest<ItemHit> {
 	 * 		Optional.
 	 * 	</p>
 	 * 	<p>Specifies the price for a single item / unit.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>
@@ -155,7 +162,7 @@ public class ItemHit extends AbstractRequest<ItemHit> {
 	 * 		Optional.
 	 * 	</p>
 	 * 	<p>Specifies the number of items purchased.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>
@@ -195,7 +202,7 @@ public class ItemHit extends AbstractRequest<ItemHit> {
 	 * 		Optional.
 	 * 	</p>
 	 * 	<p>Specifies the SKU or item code.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>
@@ -235,7 +242,7 @@ public class ItemHit extends AbstractRequest<ItemHit> {
 	 * 		Optional.
 	 * 	</p>
 	 * 	<p>Specifies the category that the item belongs to.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>
@@ -276,7 +283,7 @@ public class ItemHit extends AbstractRequest<ItemHit> {
 	 * 		Optional.
 	 * 	</p>
 	 * 	<p>When present indicates the local currency for all transaction currency values. Value should be a valid ISO 4217 currency code.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>

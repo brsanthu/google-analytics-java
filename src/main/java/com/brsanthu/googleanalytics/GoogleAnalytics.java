@@ -50,7 +50,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class  for sending data to google analytics
+ * This is the main class of this library that accepts the requests from clients and
+ * sends the events to Google Analytics (GA).
+ *
+ * Clients needs to instantiate this object with {@link GoogleAnalyticsConfig} and {@link DefaultRequest}.
+ * Configuration contains sensible defaults so one could just initialize using one of the convenience constructors.
+ *
+ * This object is ThreadSafe and it is intended that clients create one instance of this for each GA Tracker Id
+ * and reuse each time an event needs to be posted.
+ *
+ * This object contains resources which needs to be shutdown/disposed. So {@link #close()} method is called
+ * to release all resources. Once close method is called, this instance cannot be reused so create new instance
+ * if required.
  */
 public class GoogleAnalytics {
 
@@ -58,17 +69,17 @@ public class GoogleAnalytics {
 	private static final Logger logger = LoggerFactory.getLogger(GoogleAnalytics.class);
 
 	private GoogleAnalyticsConfig config = null;
-	private GoogleAnalyticsRequest defaultRequest = null;
+	private DefaultRequest defaultRequest = null;
 	private CloseableHttpClient httpClient = null;
 	private ThreadPoolExecutor executor = null;
 	private GoogleAnalyticsStats stats = new GoogleAnalyticsStats();
 
 	public GoogleAnalytics(String trackingId) {
-		this(new GoogleAnalyticsConfig(), new GoogleAnalyticsRequest().trackingId(trackingId));
+		this(new GoogleAnalyticsConfig(), new DefaultRequest().trackingId(trackingId));
 	}
 
 	public GoogleAnalytics(GoogleAnalyticsConfig config, String trackingId) {
-		this(config, new GoogleAnalyticsRequest().trackingId(trackingId));
+		this(config, new DefaultRequest().trackingId(trackingId));
 	}
 
 	public GoogleAnalytics(String trackingId, String appName, String appVersion) {
@@ -76,10 +87,10 @@ public class GoogleAnalytics {
 	}
 
 	public GoogleAnalytics(GoogleAnalyticsConfig config, String trackingId, String appName, String appVersion) {
-		this(config, new GoogleAnalyticsRequest().trackingId(trackingId).applicationName(appName).applicationVersion(appVersion));
+		this(config, new DefaultRequest().trackingId(trackingId).applicationName(appName).applicationVersion(appVersion));
 	}
 
-	public GoogleAnalytics(GoogleAnalyticsConfig config, GoogleAnalyticsRequest defaultRequest) {
+	public GoogleAnalytics(GoogleAnalyticsConfig config, DefaultRequest defaultRequest) {
 		if (config.isDeriveSystemParameters()) {
 			deriveSystemParameters(config, defaultRequest);
 		}
@@ -99,11 +110,11 @@ public class GoogleAnalytics {
 		return httpClient;
 	}
 
-	public GoogleAnalyticsRequest getDefaultRequest() {
+	public DefaultRequest getDefaultRequest() {
 		return defaultRequest;
 	}
 
-	public void setDefaultRequest(GoogleAnalyticsRequest request) {
+	public void setDefaultRequest(DefaultRequest request) {
 		this.defaultRequest = request;
 	}
 
@@ -112,7 +123,7 @@ public class GoogleAnalytics {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public GoogleAnalyticsResponse post(AbstractRequest request) {
+	public GoogleAnalyticsResponse post(GoogleAnalyticsRequest request) {
 		GoogleAnalyticsResponse response = new GoogleAnalyticsResponse();
 		if (!config.isEnabled()) {
 			return response;
@@ -162,7 +173,7 @@ public class GoogleAnalytics {
 		return response;
 	}
 
-	private void gatherStats(@SuppressWarnings("rawtypes") AbstractRequest request) {
+	private void gatherStats(@SuppressWarnings("rawtypes") GoogleAnalyticsRequest request) {
 		String hitType = request.getString(GoogleAnalyticsParameter.HIT_TYPE);
 
 		if ("pageView".equalsIgnoreCase(hitType)) {
@@ -197,7 +208,7 @@ public class GoogleAnalytics {
 			public GoogleAnalyticsResponse call() throws Exception {
 				try {
 					@SuppressWarnings("rawtypes")
-					AbstractRequest request = requestProvider.getRequest();
+					GoogleAnalyticsRequest request = requestProvider.getRequest();
 					if (request != null) {
 						return post(request);
 					}
@@ -212,7 +223,7 @@ public class GoogleAnalytics {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public Future<GoogleAnalyticsResponse> postAsync(final AbstractRequest request) {
+	public Future<GoogleAnalyticsResponse> postAsync(final GoogleAnalyticsRequest request) {
 		if (!config.isEnabled()) {
 			return null;
 		}
@@ -247,7 +258,7 @@ public class GoogleAnalytics {
 		}
 	}
 
-	protected GoogleAnalyticsRequest deriveSystemParameters(GoogleAnalyticsConfig config, GoogleAnalyticsRequest request) {
+	protected DefaultRequest deriveSystemParameters(GoogleAnalyticsConfig config, DefaultRequest request) {
 		try {
 			if (isEmpty(config.getUserAgent())) {
 				config.setUserAgent(getUserAgentString());

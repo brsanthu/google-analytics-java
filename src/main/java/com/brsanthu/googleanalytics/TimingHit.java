@@ -24,7 +24,14 @@ import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_TIMING_
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_TIMING_TIME;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_TIMING_VARIABLE_NAME;
 
-public class TimingHit extends AbstractRequest<TimingHit> {
+/**
+ * GA request to track performance timings like page load time, server response time etc.
+ *
+ * <p>For more information, see <a href="https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#timing">GA Parameters Reference</a></p>
+ *
+ * @author Santhosh Kumar
+ */
+public class TimingHit extends GoogleAnalyticsRequest<TimingHit> {
 	public TimingHit() {
 		super("timing");
 	}
@@ -35,7 +42,7 @@ public class TimingHit extends AbstractRequest<TimingHit> {
 	 * 		Optional.
 	 * 	</p>
 	 * 	<p>Specifies the user timing category.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>
@@ -75,7 +82,7 @@ public class TimingHit extends AbstractRequest<TimingHit> {
 	 * 		Optional.
 	 * 	</p>
 	 * 	<p>Specifies the user timing variable.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>
@@ -115,7 +122,7 @@ public class TimingHit extends AbstractRequest<TimingHit> {
 	 * 		Optional.
 	 * 	</p>
 	 * 	<p>Specifies the user timing value. The value is in milliseconds.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>
@@ -155,7 +162,7 @@ public class TimingHit extends AbstractRequest<TimingHit> {
 	 * 		Optional.
 	 * 	</p>
 	 * 	<p>Specifies the user timing label.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>
@@ -195,7 +202,7 @@ public class TimingHit extends AbstractRequest<TimingHit> {
 	 * 		Optional.
 	 * 	</p>
 	 * 	<p>Specifies the time it took for a page to load. The value is in milliseconds.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>
@@ -235,7 +242,7 @@ public class TimingHit extends AbstractRequest<TimingHit> {
 	 * 		Optional.
 	 * 	</p>
 	 * 	<p>Specifies the time it took to do a DNS lookup.The value is in milliseconds.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>
@@ -275,7 +282,7 @@ public class TimingHit extends AbstractRequest<TimingHit> {
 	 * 		Optional.
 	 * 	</p>
 	 * 	<p>Specifies the time it took for the page to be downloaded. The value is in milliseconds.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>
@@ -315,7 +322,7 @@ public class TimingHit extends AbstractRequest<TimingHit> {
 	 * 		Optional.
 	 * 	</p>
 	 * 	<p>Specifies the time it took for any redirects to happen. The value is in milliseconds.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>
@@ -355,7 +362,7 @@ public class TimingHit extends AbstractRequest<TimingHit> {
 	 * 		Optional.
 	 * 	</p>
 	 * 	<p>Specifies the time it took for a TCP connection to be made. The value is in milliseconds.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>
@@ -395,7 +402,7 @@ public class TimingHit extends AbstractRequest<TimingHit> {
 	 * 		Optional.
 	 * 	</p>
 	 * 	<p>Specifies the time it took for the server to respond after the connect time. The value is in milliseconds.</p>
-	 * 	<table>
+	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
 	 * 				<th>Parameter</th>
