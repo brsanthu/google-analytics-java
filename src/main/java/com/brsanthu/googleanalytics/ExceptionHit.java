@@ -25,6 +25,10 @@ import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EXCEPTION_FA
  */
 public class ExceptionHit extends GoogleAnalyticsRequest<ExceptionHit> {
 
+	public ExceptionHit() {
+		this(null);
+	}
+
 	public ExceptionHit(String exceptionDescription) {
 		this(exceptionDescription, false);
 	}

@@ -27,6 +27,10 @@ import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EVENT_VALUE;
  */
 public class EventHit extends GoogleAnalyticsRequest<EventHit> {
 
+	public EventHit () {
+		this(null, null, null, null);
+	}
+
 	public EventHit (String eventCategory, String eventAction) {
 		this(eventCategory, eventAction, null, null);
 	}

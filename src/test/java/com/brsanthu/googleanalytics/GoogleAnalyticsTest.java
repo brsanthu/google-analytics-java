@@ -1,5 +1,7 @@
 package com.brsanthu.googleanalytics;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -23,5 +25,34 @@ public class GoogleAnalyticsTest {
 		ga.post(new SocialHit("Facebook", "Like", "https://www.google.com"));
 		ga.post(new SocialHit("Google+", "Post", "It is a comment"));
 		ga.post(new SocialHit("Twitter", "Repost", "Post"));
+	}
+
+	@Test
+	public void testGatherStats() throws Exception {
+		ga.getConfig().setGatherStats(false);
+		ga.resetStats();
+		ga.post(new PageViewHit());
+		ga.post(new PageViewHit());
+		ga.post(new PageViewHit());
+		ga.post(new AppViewHit());
+		ga.post(new AppViewHit());
+		ga.post(new ItemHit());
+
+		assertEquals(0, ga.getStats().getPageViewHits());
+		assertEquals(0, ga.getStats().getAppViewHits());
+		assertEquals(0, ga.getStats().getItemHits());
+
+		ga.getConfig().setGatherStats(true);
+		ga.resetStats();
+		ga.post(new PageViewHit());
+		ga.post(new PageViewHit());
+		ga.post(new PageViewHit());
+		ga.post(new AppViewHit());
+		ga.post(new AppViewHit());
+		ga.post(new ItemHit());
+
+		assertEquals(3, ga.getStats().getPageViewHits());
+		assertEquals(2, ga.getStats().getAppViewHits());
+		assertEquals(1, ga.getStats().getItemHits());
 	}
 }

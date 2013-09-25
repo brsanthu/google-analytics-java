@@ -26,6 +26,10 @@ import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SOCIAL_NETWO
  */
 public class SocialHit extends GoogleAnalyticsRequest<SocialHit> {
 
+	public SocialHit() {
+		this(null, null, null);
+	}
+
 	public SocialHit(String socialNetwork, String socialAction, String socialTarget) {
 		super("social");
 		socialAction(socialAction);

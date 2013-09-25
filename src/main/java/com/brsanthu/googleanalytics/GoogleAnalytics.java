@@ -174,7 +174,7 @@ public class GoogleAnalytics {
 	}
 
 	private void gatherStats(@SuppressWarnings("rawtypes") GoogleAnalyticsRequest request) {
-		String hitType = request.getString(GoogleAnalyticsParameter.HIT_TYPE);
+		String hitType = request.hitType();
 
 		if ("pageView".equalsIgnoreCase(hitType)) {
 			stats.pageViewHit();

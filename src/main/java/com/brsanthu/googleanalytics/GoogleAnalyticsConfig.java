@@ -45,22 +45,33 @@ public class GoogleAnalyticsConfig {
 	public boolean isGatherStats() {
 		return gatherStats;
 	}
-
+	/**
+	 * If set to true, {@link GoogleAnalytics} will collect the basic stats about successful event postings
+	 * for various hit types and keeps a copy of {@link GoogleAnalyticsStats}, which can be retrieved
+	 * using {@link GoogleAnalytics#getStats()}
+	 *
+	 * @param gatherStats
+	 */
 	public void setGatherStats(boolean gatherStats) {
 		this.gatherStats = gatherStats;
 	}
 
-	public String getThreadNameFormat() {
-		return threadNameFormat;
-	}
-
-	public GoogleAnalyticsConfig setThreadNameFormat(String threadPrefix) {
-		this.threadNameFormat = threadPrefix;
+	/**
+	 * Sets the thread name format that should be while creating the threads.
+	 * <p>
+	 * Default is "googleanalytics-thread-{0}" where {0} is the thread counter. If you specify
+	 * a custom format, make sure {0} is there somewhere otherwise all threads will be nameed
+	 * same and can be an issue for troubleshooting.
+	 *
+	 * @param threadNameFormat non-null string for thread name.
+	 */
+	public GoogleAnalyticsConfig setThreadNameFormat(String threadNameFormat) {
+		this.threadNameFormat = threadNameFormat;
 		return this;
 	}
 
-	public boolean isDeriveSystemParameters() {
-		return deriveSystemParameters;
+	public String getThreadNameFormat() {
+		return threadNameFormat;
 	}
 
 	/**
@@ -74,10 +85,9 @@ public class GoogleAnalyticsConfig {
 		return this;
 	}
 
-	public String getProxyUserName() {
-		return proxyUserName;
+	public boolean isDeriveSystemParameters() {
+		return deriveSystemParameters;
 	}
-
 	/**
 	 * Sets the user name which should be used to authenticate to the proxy server. This is applicable only if {@link #setProxyHost(String)} is not empty.
 	 *
@@ -86,6 +96,10 @@ public class GoogleAnalyticsConfig {
 	public GoogleAnalyticsConfig setProxyUserName(String proxyUserName) {
 		this.proxyUserName = proxyUserName;
 		return this;
+	}
+
+	public String getProxyUserName() {
+		return proxyUserName;
 	}
 
 	public String getProxyPassword() {
@@ -230,7 +244,13 @@ public class GoogleAnalyticsConfig {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Config [enabled=");
+		builder.append("GoogleAnalyticsConfig [");
+		if (threadNameFormat != null) {
+			builder.append("threadNameFormat=");
+			builder.append(threadNameFormat);
+			builder.append(", ");
+		}
+		builder.append("enabled=");
 		builder.append(enabled);
 		builder.append(", maxThreads=");
 		builder.append(maxThreads);
@@ -274,16 +294,13 @@ public class GoogleAnalyticsConfig {
 		}
 		builder.append("deriveSystemParameters=");
 		builder.append(deriveSystemParameters);
+		builder.append(", gatherStats=");
+		builder.append(gatherStats);
 		builder.append("]");
 		return builder.toString();
 	}
 
     public static String mask(String value) {
-    	if (value == null) {
-    		return null;
-    	}
-
-    	return "********";
+    	return value == null?null:"********";
     }
-
 }
