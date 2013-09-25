@@ -11,7 +11,7 @@ Latest release 1.0.0 is synched to Maven Central. Add the following dependency t
 	<dependency>
 		<groupId>com.brsanthu</groupId>
 		<artifactId>google-analytics-java</artifactId>
-		<version>1.0.1-SNAPSHOT</version>
+		<version>1.0.0</version>
 	</dependency>
 
 To get a local build, do
