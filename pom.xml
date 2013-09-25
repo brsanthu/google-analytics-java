@@ -1,9 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<parent>
+    	<groupId>org.sonatype.oss</groupId>
+    	<artifactId>oss-parent</artifactId>
+    	<version>7</version>
+  	</parent>
+
 	<groupId>com.brsanthu</groupId>
 	<artifactId>google-analytics-java</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<properties>
@@ -144,8 +150,7 @@
 	</dependencies>
 	<name>Google Analytics Java API</name>
 	<url>https://github.com/brsanthu/google-analytics-java</url>
-	<description>This is Java API for Google Analytics (Measurement Protocol). More information about the protocol is available at https://developers.google.com/analytics/devguides/collection/protocol/v1/.
-</description>
+	<description>This is Java API for Google Analytics (Measurement Protocol). More information about the protocol is available at https://developers.google.com/analytics/devguides/collection/protocol/v1/.</description>
 	<inceptionYear>Sep 2013</inceptionYear>
 	<organization>
 		<url>http://www.brsanthu.com</url>
@@ -153,8 +158,8 @@
 	</organization>
 	<scm>
 		<url>https://github.com/brsanthu/google-analytics-java</url>
-		<connection>https://github.com/brsanthu/google-analytics-java</connection>
-		<developerConnection>https://github.com/brsanthu/google-analytics-java</developerConnection>
+		<connection>scm:git:git@github.com:brsanthu/google-analytics-java</connection>
+		<developerConnection>scm:git:git@github.com:brsanthu/google-analytics-java</developerConnection>
 	</scm>
 	<issueManagement>
 		<system>github.com</system>
@@ -175,8 +180,38 @@
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
-      		<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      		<distribution>repo</distribution>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
 		</license>
 	</licenses>
+
+<profiles>
+  <profile>
+    <id>release-sign-artifacts</id>
+    <activation>
+      <property>
+        <name>performRelease</name>
+        <value>true</value>
+      </property>
+    </activation>
+    <build>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-gpg-plugin</artifactId>
+          <version>1.1</version>
+          <executions>
+            <execution>
+              <id>sign-artifacts</id>
+              <phase>verify</phase>
+              <goals>
+                <goal>sign</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </build>
+  </profile>
+</profiles>
 </project>
