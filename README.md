@@ -41,19 +41,19 @@ Examples
 -------------
 
 	GoogleAnalytics ga = new GoogleAnalytics("UA-12345678-1");
-	ga.post(new PageView("https://www.google.com", "Google Search"));
+	ga.post(new PageViewHit("https://www.google.com", "Google Search"));
 
 Or
 
 	GoogleAnalytics ga = new GoogleAnalytics("UA-12345678-1");
-	ga.postAsync(new PageView("https://www.google.com", "Google Search"));
+	ga.postAsync(new PageViewHit("https://www.google.com", "Google Search"));
 
 Or
 
 	GoogleAnalytics ga = new GoogleAnalytics("UA-12345678-1");
 	ga.postAsync(new RequestProvider() {
-		public AbstractRequest getRequest() {
-			return new PageView("https://www.google.com", "Google Search");
+		public GoogleAnalyticsRequest getRequest() {
+			return new PageViewHit("https://www.google.com", "Google Search");
 		}
 	});
 
