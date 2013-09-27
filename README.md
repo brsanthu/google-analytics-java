@@ -62,6 +62,10 @@ Or
 		}
 	});
 
+Wishlist
+--------------
+* Queuing in case of internet connectivity
+
 Other Implementations
 ---------------------
 
