@@ -2,6 +2,12 @@ package com.brsanthu.googleanalytics;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -54,5 +60,22 @@ public class GoogleAnalyticsTest {
 		assertEquals(3, ga.getStats().getPageViewHits());
 		assertEquals(2, ga.getStats().getAppViewHits());
 		assertEquals(1, ga.getStats().getItemHits());
+	}
+	
+	@Test
+	public void testHttpConfig() throws Exception {
+		final AtomicInteger value = new AtomicInteger();
+		
+		final GoogleAnalyticsConfig config = new GoogleAnalyticsConfig().setMaxThreads(10);
+		new GoogleAnalytics(config, "TrackingId") {
+			@Override
+			protected int getDefaultMaxPerRoute(GoogleAnalyticsConfig config1) {
+				value.set(super.getDefaultMaxPerRoute(config));
+				
+				return value.get();
+			}
+		};
+		
+		assertEquals(10, value.get());
 	}
 }

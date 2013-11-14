@@ -18,6 +18,7 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -161,7 +162,11 @@ public class GoogleAnalytics {
 			}
 
 		} catch (Exception e) {
-			logger.warn("Exception while sending the Google Analytics tracker request " + request, e);
+			if (e instanceof UnknownHostException) {
+				logger.warn("Coudln't connect to Google Analytics. Internet may not be available. " + e.toString());
+			} else {
+				logger.warn("Exception while sending the Google Analytics tracker request " + request, e);
+			}
 		} finally {
 			try {
 				httpResponse.close();
@@ -305,7 +310,7 @@ public class GoogleAnalytics {
 
 	protected CloseableHttpClient createHttpClient(GoogleAnalyticsConfig config) {
 		PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager();
-		connManager.setDefaultMaxPerRoute(Math.min(config.getMaxThreads(), 1));
+		connManager.setDefaultMaxPerRoute(getDefaultMaxPerRoute(config));
 
 		HttpClientBuilder builder = HttpClients.custom().setConnectionManager(connManager);
 
@@ -325,6 +330,10 @@ public class GoogleAnalytics {
 		}
 
 		return builder.build();
+	}
+
+	protected int getDefaultMaxPerRoute(GoogleAnalyticsConfig config) {
+		return Math.max(config.getMaxThreads(), 1);
 	}
 
 	protected ThreadPoolExecutor getExecutor() {

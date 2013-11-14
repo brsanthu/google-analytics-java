@@ -39,7 +39,7 @@ public class EventHit extends GoogleAnalyticsRequest<EventHit> {
 		super("event");
 		eventCategory(eventCategory);
 		eventAction(eventAction);
-		eventLabel(eventAction);
+		eventLabel(eventLabel);
 		eventValue(eventValue);
 	}
 
