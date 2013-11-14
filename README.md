@@ -6,12 +6,12 @@ is released under liberal Apache Open source License 2.0
 Google Analytics Measurement Protocol is new tracking protocol, which will replace the legacy Tracking protocol.
 This protocol is documented at https://developers.google.com/analytics/devguides/collection/protocol/v1/
 
-Latest release 1.0.0 is synched to Maven Central. Add the following dependency to your pom file.
+The library is available in Maven Central. Add the following dependency and you are good to go.
 
 	<dependency>
 		<groupId>com.brsanthu</groupId>
 		<artifactId>google-analytics-java</artifactId>
-		<version>1.0.0</version>
+		<version>1.0.1</version>
 	</dependency>
 
 To get a local build, do
