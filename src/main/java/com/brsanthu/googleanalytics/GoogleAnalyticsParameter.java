@@ -107,9 +107,13 @@ public enum GoogleAnalyticsParameter {
 
 	//Exceptions
 	EXCEPTION_DESCRIPTION("exd", new String[] {"exception"}),
-	EXCEPTION_FATAL("exf", false, "boolean", new String[] {"exception"});
+	EXCEPTION_FATAL("exf", false, "boolean", new String[] {"exception"}),
 
-	private String name = null;
+	//Experiment Variations
+	EXPERIMENT_ID("xid"),
+	EXPERIMENT_VARIANT("xvar");
+
+	private String parameterName = null;
 	private boolean required = false;
 	private String type = "text";
 	private String[] supportedHitTypes = null;
@@ -131,14 +135,14 @@ public enum GoogleAnalyticsParameter {
 	}
 
 	private GoogleAnalyticsParameter(String name, boolean required, String type, String[] supportedHitTypes) {
-		this.name = name;
+		this.parameterName = name;
 		this.required = required;
 		this.type = type;
 		this.supportedHitTypes = supportedHitTypes;
 	}
 
-	public String getName() {
-		return name;
+	public String getParameterName() {
+		return parameterName;
 	}
 
 	public String[] getSupportedHitTypes() {

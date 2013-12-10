@@ -149,7 +149,7 @@ public class GoogleAnalytics {
 			httpPost = new HttpPost(config.getUrl());
 			List<NameValuePair> postParms = new ArrayList<NameValuePair>();
 			for (GoogleAnalyticsParameter key : parms.keySet()) {
-				postParms.add(new BasicNameValuePair(key.getName(), parms.get(key)));
+				postParms.add(new BasicNameValuePair(key.getParameterName(), parms.get(key)));
 			}
 			httpPost.setEntity(new UrlEncodedFormEntity(postParms, UTF8));
 

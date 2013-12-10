@@ -13,6 +13,7 @@
  */
 package com.brsanthu.googleanalytics;
 
+
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ADWORDS_ID;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ANONYMIZE_IP;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.APPLICATION_NAME;
@@ -45,6 +46,8 @@ import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SESSION_CONT
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRACKING_ID;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_LANGUAGE;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.VIEWPORT_SIZE;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EXPERIMENT_ID;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EXPERIMENT_VARIANT;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -1612,9 +1615,89 @@ public class GoogleAnalyticsRequest<T> {
 		return getString(APPLICATION_VERSION);
 	}
 
+	/**
+	 * <div class="ind">
+	 *   <p>
+	 *      Optional.
+	 *      
+	 *   </p>
+	 *   <p>This parameter specifies that this visitor has been exposed to an experiment with the given ID. It should be sent in conjunction with the Experiment Variant parameter.</p>
+	 *   <table>
+	 *     <tbody><tr>
+	 *       <th>Parameter</th>
+	 *       <th>Value Type</th>
+	 *       <th>Default Value</th>
+	 *       <th>Max Length</th>
+	 *       <th>Supported Hit Types</th>
+	 *     </tr>
+	 *     <tr>
+	 *       <td><code>xid</code></td>
+	 *       <td>text</td>
+	 *       <td><span class="none">None</span>
+	 *           </td>
+	 *       <td>40 Bytes
+	 *           </td>
+	 *       <td>all</td>
+	 *     </tr>
+	 *   </tbody></table>
+	 * 
+	 *   
+	 *   <div>
+	 *     Example value: <code>Qp0gahJ3RAO3DJ18b0XoUQ</code><br>
+	 *     Example usage: <code>xid=Qp0gahJ3RAO3DJ18b0XoUQ</code>
+	 *   </div>
+	 * </div>
+	 */
+	public T expirementId(String value) {
+		setString(EXPERIMENT_ID, value);
+	   	return (T) this;
+	}
+	public String expirementId() {
+		return getString(EXPERIMENT_ID);
+	}
+	
+	/**
+	 *<div class="ind">
+	 *  <p>
+	 *     Optional.
+	 *     
+	 *  </p>
+	 *  <p>This parameter specifies that this visitor has been exposed to a particular variation of an experiment. It should be sent in conjunction with the Experiment ID parameter.</p>
+	 *  <table>
+	 *    <tbody><tr>
+	 *      <th>Parameter</th>
+	 *      <th>Value Type</th>
+	 *      <th>Default Value</th>
+	 *      <th>Max Length</th>
+	 *      <th>Supported Hit Types</th>
+	 *    </tr>
+	 *    <tr>
+	 *      <td><code>xvar</code></td>
+	 *      <td>text</td>
+	 *      <td><span class="none">None</span>
+	 *          </td>
+	 *      <td><span class="none">None</span>
+	 *          </td>
+	 *      <td>all</td>
+	 *    </tr>
+	 *  </tbody></table>
+	 *
+	 *  <div>
+	 *    Example value: <code>1</code><br>
+	 *    Example usage: <code>xvar=1</code>
+	 *  </div>
+	 *</div>
+	 */
+	public T expirementVariant(String value) {
+		setString(EXPERIMENT_VARIANT, value);
+	   	return (T) this;
+	}
+	public String expirementVariant() {
+		return getString(EXPERIMENT_VARIANT);
+	}
+	
 	protected boolean isEmpty(String string) {
 		return string == null || string.trim().length() == 0;
 	}
-
-
+	
 }
