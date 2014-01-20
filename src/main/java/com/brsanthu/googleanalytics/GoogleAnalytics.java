@@ -22,6 +22,7 @@ import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -123,7 +124,7 @@ public class GoogleAnalytics {
 		this.httpClient = httpClient;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	public GoogleAnalyticsResponse post(GoogleAnalyticsRequest request) {
 		GoogleAnalyticsResponse response = new GoogleAnalyticsResponse();
 		if (!config.isEnabled()) {
@@ -132,46 +133,28 @@ public class GoogleAnalytics {
 
 		CloseableHttpResponse httpResponse = null;
 		try {
-			//Combine request with default parms.
-			Map<GoogleAnalyticsParameter, String> parms = request.getParameters();
-			Map<GoogleAnalyticsParameter, String> defaultParms = defaultRequest.getParameters();
-			for (GoogleAnalyticsParameter parm : defaultParms.keySet()) {
-				String value = parms.get(parm);
-				String defaultValue = defaultParms.get(parm);
-				if (isEmpty(value) && !isEmpty(defaultValue)) {
-					parms.put(parm, defaultValue);
-				}
-			}
-
-			logger.debug("Sending " + request);
-
-			HttpPost httpPost;
-			httpPost = new HttpPost(config.getUrl());
 			List<NameValuePair> postParms = new ArrayList<NameValuePair>();
-			for (GoogleAnalyticsParameter key : parms.keySet()) {
-				postParms.add(new BasicNameValuePair(key.getParameterName(), parms.get(key)));
-			}
 
-            // Add custom dimensions to the post
-            Map<String, String> customDimensions = request.customDimentions();
-            if (customDimensions.size() > 0) {
-                for (String key : customDimensions.keySet()) {
-                    postParms.add(new BasicNameValuePair(key, customDimensions.get(key)));
-                }
-            }
+			logger.debug("Processing " + request);
 
-            // Add custom metrics to the post
-            Map<String, String> customMetrics = request.custommMetrics();
-            if (customMetrics.size() > 0) {
-                for (String key : customMetrics.keySet()) {
-                    postParms.add(new BasicNameValuePair(key, customMetrics.get(key)));
-                }
-            }
+			//Process the parameters
+			processParameters(request, postParms);
 
+			//Process custom dimensions
+			processCustomDimentionParameters(request, postParms);
+
+			//Process custom metrics
+			processCustomMetricParameters(request, postParms);
+			
+			logger.debug("Processed all parameters and sending the request " + postParms);
+			
+			HttpPost httpPost = new HttpPost(config.getUrl());
 			httpPost.setEntity(new UrlEncodedFormEntity(postParms, UTF8));
 
 			httpResponse = (CloseableHttpResponse) httpClient.execute(httpPost);
 			response.setStatusCode(httpResponse.getStatusLine().getStatusCode());
+			response.setPostedParms(postParms);
+			
 			EntityUtils.consumeQuietly(httpResponse.getEntity());
 
 			if (config.isGatherStats()) {
@@ -195,6 +178,69 @@ public class GoogleAnalytics {
 		return response;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private void processParameters(GoogleAnalyticsRequest request, List<NameValuePair> postParms) {
+		Map<GoogleAnalyticsParameter, String> requestParms = request.getParameters();
+		Map<GoogleAnalyticsParameter, String> defaultParms = defaultRequest.getParameters();
+		for (GoogleAnalyticsParameter parm : defaultParms.keySet()) {
+			String value = requestParms.get(parm);
+			String defaultValue = defaultParms.get(parm);
+			if (isEmpty(value) && !isEmpty(defaultValue)) {
+				requestParms.put(parm, defaultValue);
+			}
+		}
+		for (GoogleAnalyticsParameter key : requestParms.keySet()) {
+			postParms.add(new BasicNameValuePair(key.getParameterName(), requestParms.get(key)));
+		}
+	}
+	
+	/**
+	 * Processes the custom dimentions and adds the values to list of parameters, which would be posted to GA.
+	 * 
+	 * @param request
+	 * @param postParms
+	 */
+	private void processCustomDimentionParameters(@SuppressWarnings("rawtypes") GoogleAnalyticsRequest request, List<NameValuePair> postParms) {
+		Map<String, String> customDimParms = new HashMap<String, String>();
+		for (String defaultCustomDimKey : defaultRequest.customDimentions().keySet()) {
+			customDimParms.put(defaultCustomDimKey, defaultRequest.customDimentions().get(defaultCustomDimKey));
+		}
+
+		@SuppressWarnings("unchecked")
+		Map<String, String> requestCustomDims = request.customDimentions();
+		for (String requestCustomDimKey : requestCustomDims.keySet()) {
+			customDimParms.put(requestCustomDimKey, requestCustomDims.get(requestCustomDimKey));
+		}
+		
+		for (String key : customDimParms.keySet()) {
+			postParms.add(new BasicNameValuePair(key, customDimParms.get(key)));
+		}
+	}
+
+	/**
+	 * Processes the custom metrics and adds the values to list of parameters, which would be posted to GA.
+	 * 
+	 * @param request
+	 * @param postParms
+	 */
+	private void processCustomMetricParameters(@SuppressWarnings("rawtypes") GoogleAnalyticsRequest request, List<NameValuePair> postParms) {
+		Map<String, String> customMetricParms = new HashMap<String, String>();
+		for (String defaultCustomMetricKey : defaultRequest.custommMetrics().keySet()) {
+			customMetricParms.put(defaultCustomMetricKey, defaultRequest.custommMetrics().get(defaultCustomMetricKey));
+		}
+
+		@SuppressWarnings("unchecked")
+		Map<String, String> requestCustomMetrics = request.custommMetrics();
+		for (String requestCustomDimKey : requestCustomMetrics.keySet()) {
+			customMetricParms.put(requestCustomDimKey, requestCustomMetrics.get(requestCustomDimKey));
+		}
+		
+		for (String key : customMetricParms.keySet()) {
+			postParms.add(new BasicNameValuePair(key, customMetricParms.get(key)));
+		}
+	}
+	
+	
 	private void gatherStats(@SuppressWarnings("rawtypes") GoogleAnalyticsRequest request) {
 		String hitType = request.hitType();
 

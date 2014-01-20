@@ -1,6 +1,6 @@
 package com.brsanthu.googleanalytics;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -73,5 +73,41 @@ public class GoogleAnalyticsTest {
 		};
 		
 		assertEquals(10, value.get());
+	}
+	
+	@Test
+	public void testCustomDimentions() throws Exception {
+		DefaultRequest defaultRequest = new DefaultRequest();
+		defaultRequest.customDimention(1, "foo");
+		defaultRequest.customDimention(5, "bar");
+		
+		ga.setDefaultRequest(defaultRequest);
+		PageViewHit request = new PageViewHit("http://www.google.com", "Search");
+		request.customDimention(2, "bob");
+		request.customDimention(5, "alice");
+		
+		GoogleAnalyticsResponse response = ga.post(request);
+		
+		assertEquals("foo", response.getPostedParmsAsMap().get("cd1"));
+		assertEquals("bob", response.getPostedParmsAsMap().get("cd2"));
+		assertEquals("alice", response.getPostedParmsAsMap().get("cd5"));
+	}
+
+	@Test
+	public void testCustomMetrics() throws Exception {
+		DefaultRequest defaultRequest = new DefaultRequest();
+		defaultRequest.customMetric(1, "foo");
+		defaultRequest.customMetric(5, "bar");
+		
+		ga.setDefaultRequest(defaultRequest);
+		PageViewHit request = new PageViewHit("http://www.google.com", "Search");
+		request.customMetric(2, "bob");
+		request.customMetric(5, "alice");
+		
+		GoogleAnalyticsResponse response = ga.post(request);
+		
+		assertEquals("foo", response.getPostedParmsAsMap().get("cm1"));
+		assertEquals("bob", response.getPostedParmsAsMap().get("cm2"));
+		assertEquals("alice", response.getPostedParmsAsMap().get("cm5"));
 	}
 }
