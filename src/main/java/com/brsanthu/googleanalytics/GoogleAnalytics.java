@@ -151,6 +151,23 @@ public class GoogleAnalytics {
 			for (GoogleAnalyticsParameter key : parms.keySet()) {
 				postParms.add(new BasicNameValuePair(key.getParameterName(), parms.get(key)));
 			}
+
+            // Add custom dimensions to the post
+            Map<String, String> customDimensions = request.customDimentions();
+            if (customDimensions.size() > 0) {
+                for (String key : customDimensions.keySet()) {
+                    postParms.add(new BasicNameValuePair(key, customDimensions.get(key)));
+                }
+            }
+
+            // Add custom metrics to the post
+            Map<String, String> customMetrics = request.custommMetrics();
+            if (customMetrics.size() > 0) {
+                for (String key : customMetrics.keySet()) {
+                    postParms.add(new BasicNameValuePair(key, customMetrics.get(key)));
+                }
+            }
+
 			httpPost.setEntity(new UrlEncodedFormEntity(postParms, UTF8));
 
 			httpResponse = (CloseableHttpResponse) httpClient.execute(httpPost);
