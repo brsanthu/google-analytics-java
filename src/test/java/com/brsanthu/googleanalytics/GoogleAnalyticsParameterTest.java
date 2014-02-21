@@ -14,6 +14,8 @@ public class GoogleAnalyticsParameterTest {
 		assertEquals("an", GoogleAnalyticsParameter.APPLICATION_NAME.getParameterName());
 		assertEquals("av", GoogleAnalyticsParameter.APPLICATION_VERSION.getParameterName());
 		assertEquals("z", GoogleAnalyticsParameter.CACHE_BUSTER.getParameterName());
+		assertEquals("uip", GoogleAnalyticsParameter.IP_OVERRIDE.getParameterName());
+		assertEquals("ua", GoogleAnalyticsParameter.USER_AGENT_OVERRIDE.getParameterName());
 		assertEquals("cc", GoogleAnalyticsParameter.CAMPAIGN_CONTENT.getParameterName());
 		assertEquals("ci", GoogleAnalyticsParameter.CAMPAIGN_ID.getParameterName());
 		assertEquals("ck", GoogleAnalyticsParameter.CAMPAIGN_KEYWORD.getParameterName());

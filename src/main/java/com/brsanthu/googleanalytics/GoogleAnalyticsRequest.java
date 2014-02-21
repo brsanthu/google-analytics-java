@@ -19,6 +19,8 @@ import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ANONYMIZE_IP
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.APPLICATION_NAME;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.APPLICATION_VERSION;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CACHE_BUSTER;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.IP_OVERRIDE;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_AGENT_OVERRIDE;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CAMPAIGN_CONTENT;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CAMPAIGN_ID;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CAMPAIGN_KEYWORD;
@@ -530,6 +532,97 @@ public class GoogleAnalyticsRequest<T> {
 		return getString(CACHE_BUSTER);
 	}
 
+	
+	/**
+	 * <div class="ind">
+	 * 	<p>
+	 * 		Optional.
+	 * 	</p>
+	 * 	<p>Used to override the IP address sent via HTTP event delivery. 
+	 * Usecase: Google uses the inbound HTTP request to determine the IP which is then used for geo-location.
+	 * When generating events on the server it's useful to override the IP address on event to the client's IP
+	 * 
+	 * </p>
+	 * 	<table border="1">
+	 * 		<tbody>
+	 * 			<tr>
+	 * 				<th>Parameter</th>
+	 * 				<th>Value Type</th>
+	 * 				<th>Default Value</th>
+	 * 				<th>Max Length</th>
+	 * 				<th>Supported Hit Types</th>
+	 * 			</tr>
+	 * 			<tr>
+	 * 				<td><code>uip</code></td>
+	 * 				<td>text</td>
+	 * 				<td><span class="none">None</span>
+	 * 				</td>
+	 * 				<td><span class="none">None</span>
+	 * 				</td>
+	 * 				<td>all</td>
+	 * 			</tr>
+	 * 		</tbody>
+	 * 	</table>
+	 * 	<div>
+	 * 		Example value: <code>202.13.45.107</code><br>
+	 * 		Example usage: <code>uip=202.13.45.107</code>
+	 * 	</div>
+	 * </div>
+	 */
+	public T ipOverride(String value) {
+		setString(IP_OVERRIDE, value);
+	   	return (T) this;
+	}
+	public String ipOverride() {
+		return getString(IP_OVERRIDE);
+	}
+	
+	
+	
+	/**
+	 * <div class="ind">
+	 * 	<p>
+	 * 		Optional.
+	 * 	</p>
+	 * 	<p>Used to override the USER-AGENT HTTP header sent via HTTP event delivery. 
+	 * Usecase: Google uses the inbound HTTP request to determine the USER-AGENT which is then used for Browser identifciation etc.
+	 * When generating events on the server it's useful to override the USER-AGENT on the HEADER to the client's USER-AGENT
+	 * 
+	 * </p>
+	 * 	<table border="1">
+	 * 		<tbody>
+	 * 			<tr>
+	 * 				<th>Parameter</th>
+	 * 				<th>Value Type</th>
+	 * 				<th>Default Value</th>
+	 * 				<th>Max Length</th>
+	 * 				<th>Supported Hit Types</th>
+	 * 			</tr>
+	 * 			<tr>
+	 * 				<td><code>ua</code></td>
+	 * 				<td>text</td>
+	 * 				<td><span class="none">None</span>
+	 * 				</td>
+	 * 				<td><span class="none">None</span>
+	 * 				</td>
+	 * 				<td>all</td>
+	 * 			</tr>
+	 * 		</tbody>
+	 * 	</table>
+	 * 	<div>
+	 * 		Example value: <code>Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36</code><br>
+	 * 		Example usage: <code>ua=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36</code>
+	 * 	</div>
+	 * </div>
+	 */
+	public T userAgentOverride(String value) {
+		setString(USER_AGENT_OVERRIDE, value);
+	   	return (T) this;
+	}
+	public String userAgentOverride() {
+		return getString(USER_AGENT_OVERRIDE);
+	}
+	
 	/**
 	 * <div class="ind">
 	 * 	<p>

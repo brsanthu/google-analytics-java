@@ -27,6 +27,8 @@ public enum GoogleAnalyticsParameter {
 	ANONYMIZE_IP("aip", "boolean"),
 	QUEUE_TIME("qt", "integer"),
 	CACHE_BUSTER("z"),
+	IP_OVERRIDE("uip"),
+	USER_AGENT_OVERRIDE("ua"),
 
 	//Visitor
 	CLIENT_ID("cid", true),
