@@ -1695,7 +1695,35 @@ public class GoogleAnalyticsRequest<T> {
 	public String expirementVariant() {
 		return getString(EXPERIMENT_VARIANT);
 	}
-	
+
+	/**
+	 * IP Override
+	 * parameter: uip 
+     * Should be a valid IP address. This will always be anonymized just as though &aip (anonymize IP) had been used.
+     * example: &uip=1.2.3.4
+	 */
+	public T userIp(String value) {
+		setString(GoogleAnalyticsParameter.USER_IP, value);
+	   	return (T) this;
+	}
+	public String userIp() {
+		return getString(GoogleAnalyticsParameter.USER_IP);
+	}
+
+	/**
+     * User Agent Override
+     * parameter: &ua
+     * Should be a User Agent reported by the browser. Note: We have libraries to identify real user agents. Hand crafting your own agent could break at any time.
+     * example: &ua=Opera%2F9.80%20(Windows%20NT%206.0)%20Presto%2F2.12.388%20Version%2F12.14
+	 */
+	public T userAgent(String value) {
+		setString(GoogleAnalyticsParameter.USER_AGENT, value);
+	   	return (T) this;
+	}
+	public String userAgent() {
+		return getString(GoogleAnalyticsParameter.USER_AGENT);
+	}
+
 	protected boolean isEmpty(String string) {
 		return string == null || string.trim().length() == 0;
 	}

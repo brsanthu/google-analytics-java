@@ -110,4 +110,21 @@ public class GoogleAnalyticsTest {
 		assertEquals("bob", response.getPostedParmsAsMap().get("cm2"));
 		assertEquals("alice", response.getPostedParmsAsMap().get("cm5"));
 	}
+
+	@Test
+	public void testUserIpAndAgent() throws Exception {
+		DefaultRequest defaultRequest = new DefaultRequest();
+		defaultRequest.userIp("1.2.3.4");
+		defaultRequest.userAgent("Opera/9.80 (Windows NT 6.0) Presto/2.12.388 Version/12.14");
+		
+		ga.setDefaultRequest(defaultRequest);
+		PageViewHit request = new PageViewHit("http://www.google.com", "Search");
+		defaultRequest.userIp("1.2.3.5");
+		defaultRequest.userAgent("Chrome/9.80 (Windows NT 6.0) Presto/2.12.388 Version/12.14");
+		
+		GoogleAnalyticsResponse response = ga.post(request);
+		
+		assertEquals("1.2.3.5", response.getPostedParmsAsMap().get("uip"));
+		assertEquals("Chrome/9.80 (Windows NT 6.0) Presto/2.12.388 Version/12.14", response.getPostedParmsAsMap().get("ua"));
+	}
 }

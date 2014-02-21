@@ -71,6 +71,8 @@ public class GoogleAnalyticsParameterTest {
 		assertEquals("utt", GoogleAnalyticsParameter.USER_TIMING_TIME.getParameterName());
 		assertEquals("utv", GoogleAnalyticsParameter.USER_TIMING_VARIABLE_NAME.getParameterName());
 		assertEquals("vp", GoogleAnalyticsParameter.VIEWPORT_SIZE.getParameterName());
+		assertEquals("uip", GoogleAnalyticsParameter.USER_IP.getParameterName());
+		assertEquals("ua", GoogleAnalyticsParameter.USER_AGENT.getParameterName());
 		
 		assertEquals("xid", GoogleAnalyticsParameter.EXPERIMENT_ID.getParameterName());
 		assertNull(GoogleAnalyticsParameter.EXPERIMENT_ID.getSupportedHitTypes());
