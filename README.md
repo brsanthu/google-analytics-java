@@ -47,7 +47,7 @@ Version History
 
 Version 1.0.4 - Mar 3 2014
 
-* Fixed the issue #11
+* Fixed the issue #8
 
 Version 1.0.3 - Jan 20 2014
 
