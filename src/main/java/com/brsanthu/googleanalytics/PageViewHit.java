@@ -30,7 +30,7 @@ public class PageViewHit extends GoogleAnalyticsRequest<PageViewHit> {
 	}
 
 	public PageViewHit(String url, String title, String description) {
-		super("pageView");
+		super("pageview");
 		documentUrl(url);
 		documentTitle(title);
 		contentDescription(description);

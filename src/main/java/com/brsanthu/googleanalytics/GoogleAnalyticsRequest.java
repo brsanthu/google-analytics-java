@@ -80,7 +80,7 @@ public class GoogleAnalyticsRequest<T> {
 	}
 
 	public GoogleAnalyticsRequest(String hitType, String trackingId, String appName, String appVersion) {
-		hitType(isEmpty(hitType)?"pageView":hitType);
+		hitType(isEmpty(hitType)?"pageview":hitType);
 		trackingId(trackingId);
 		applicationName(appName);
 		applicationVersion(appVersion);

@@ -244,10 +244,10 @@ public class GoogleAnalytics {
 	private void gatherStats(@SuppressWarnings("rawtypes") GoogleAnalyticsRequest request) {
 		String hitType = request.hitType();
 
-		if ("pageView".equalsIgnoreCase(hitType)) {
+		if ("pageview".equalsIgnoreCase(hitType)) {
 			stats.pageViewHit();
 
-		} else if ("appView".equalsIgnoreCase(hitType)) {
+		} else if ("appview".equalsIgnoreCase(hitType)) {
 			stats.appViewHit();
 
 		} else if ("event".equalsIgnoreCase(hitType)) {
