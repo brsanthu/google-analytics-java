@@ -11,7 +11,7 @@ The library is available in Maven Central. Add the following dependency and you 
 	<dependency>
 		<groupId>com.brsanthu</groupId>
 		<artifactId>google-analytics-java</artifactId>
-		<version>1.0.4</version>
+		<version>1.0.5</version>
 	</dependency>
 
 To get a local build, do
@@ -44,6 +44,10 @@ This library implements the measurement protocol with following features.
 
 Version History
 ---------------
+
+Version 1.0.5 - Apr 09 2014
+
+* Fixed the issue #12
 
 Version 1.0.4 - Mar 3 2014
 
