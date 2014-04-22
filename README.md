@@ -11,7 +11,7 @@ The library is available in Maven Central. Add the following dependency and you 
 	<dependency>
 		<groupId>com.brsanthu</groupId>
 		<artifactId>google-analytics-java</artifactId>
-		<version>1.0.5</version>
+		<version>1.1.0</version>
 	</dependency>
 
 To get a local build, do
@@ -44,6 +44,10 @@ This library implements the measurement protocol with following features.
 
 Version History
 ---------------
+
+Version 1.1.0 - Apr 22 2014
+
+* Fixed the issue #5. Fix changes some of the existing behavior. If you are using discover system parameters, then by default Screen Colors and Screen Resolution will not be populated. If you would like, you need to set AwtRequestParameterDiscoverer in the GoogleAnalyticsConfig before initializing the GoogleAnalytics. This change is to ensure that it can be used in a environment where JVM has no access to java.awt.* classes.
 
 Version 1.0.5 - Apr 09 2014
 
