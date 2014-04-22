@@ -15,7 +15,7 @@ public class GoogleAnalyticsConfigTest {
 		assertEquals("http://www.google-analytics.com/collect", config.getHttpUrl());
 		assertEquals("https://www.google-analytics.com/collect", config.getHttpsUrl());
 		assertEquals(80, config.getProxyPort());
-		assertEquals(true, config.isDeriveSystemParameters());
+		assertEquals(true, config.isDiscoverRequestParameters());
 		assertEquals(false, config.isGatherStats());
 	}
 }

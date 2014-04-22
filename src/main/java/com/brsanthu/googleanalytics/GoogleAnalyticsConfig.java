@@ -39,9 +39,26 @@ public class GoogleAnalyticsConfig {
 	private int proxyPort = 80;
 	private String proxyUserName = null;
 	private String proxyPassword = null;
-	private boolean deriveSystemParameters = true;
+	private boolean discoverRequestParameters = true;
 	private boolean gatherStats = false;
-
+	private RequestParameterDiscoverer requestParameterDiscoverer = new DefaultRequestParameterDiscoverer();
+	
+	public RequestParameterDiscoverer getRequestParameterDiscoverer() {
+		return requestParameterDiscoverer;
+	}
+	
+	/**
+	 * Sets the appropriate request parameter discoverer. Default is {@link DefaultRequestParameterDiscoverer} but
+	 * can be changed to {@link AwtRequestParameterDiscoverer} if you want to use Toolkit to derive the screen resolution etc.
+	 *
+	 * Please make sure you also enable the discovery using {@link #setDiscoverRequestParameters(boolean)}
+	 * 
+	 * @param requestParameterDiscoverer can be null and is so, parameters will not be discovered.
+	 */
+	public void setRequestParameterDiscoverer(RequestParameterDiscoverer requestParameterDiscoverer) {
+		this.requestParameterDiscoverer = requestParameterDiscoverer;
+	}
+	
 	public boolean isGatherStats() {
 		return gatherStats;
 	}
@@ -75,18 +92,38 @@ public class GoogleAnalyticsConfig {
 	}
 
 	/**
+	 * Deprecated since 1.0.6
+	 * 
+	 * @deprecated Use {@link #setDiscoverRequestParameters(boolean)} instead
+	 */
+	@Deprecated
+	public GoogleAnalyticsConfig setDeriveSystemParameters(boolean deriveSystemProperties) {
+		return setDiscoverRequestParameters(deriveSystemProperties);
+	}
+
+	/**
 	 * If true, derives the system properties (User Language, Region, Country, Screen Size, Color Depth, and File encoding) and adds to
 	 * the default request.
 	 *
 	 * <p>This is <strong>initialization</strong> level configuration (must be set while creating GoogleAnalytics object).</p>
 	 */
-	public GoogleAnalyticsConfig setDeriveSystemParameters(boolean deriveSystemProperties) {
-		this.deriveSystemParameters = deriveSystemProperties;
+	public GoogleAnalyticsConfig setDiscoverRequestParameters(boolean discoverSystemParameters) {
+		this.discoverRequestParameters = discoverSystemParameters;
 		return this;
 	}
 
+	/**
+	 * Deprecated since 1.0.6
+	 * 
+	 * @deprecated Use {@link #isDiscoverRequestParameters()} instead
+	 */
+	@Deprecated
 	public boolean isDeriveSystemParameters() {
-		return deriveSystemParameters;
+		return isDiscoverRequestParameters();
+	}
+
+	public boolean isDiscoverRequestParameters() {
+		return discoverRequestParameters;
 	}
 	/**
 	 * Sets the user name which should be used to authenticate to the proxy server. This is applicable only if {@link #setProxyHost(String)} is not empty.
@@ -293,7 +330,7 @@ public class GoogleAnalyticsConfig {
 			builder.append(", ");
 		}
 		builder.append("deriveSystemParameters=");
-		builder.append(deriveSystemParameters);
+		builder.append(discoverRequestParameters);
 		builder.append(", gatherStats=");
 		builder.append(gatherStats);
 		builder.append("]");

@@ -13,10 +13,9 @@
  */
 package com.brsanthu.googleanalytics;
 
-import java.awt.Dimension;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.Toolkit;
+import static com.brsanthu.googleanalytics.GaUtils.isEmpty;
+import static com.brsanthu.googleanalytics.GaUtils.isNotEmpty;
+
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
@@ -93,8 +92,8 @@ public class GoogleAnalytics {
 	}
 
 	public GoogleAnalytics(GoogleAnalyticsConfig config, DefaultRequest defaultRequest) {
-		if (config.isDeriveSystemParameters()) {
-			deriveSystemParameters(config, defaultRequest);
+		if (config.isDiscoverRequestParameters() && config.getRequestParameterDiscoverer() != null) {
+			config.getRequestParameterDiscoverer().discoverParameters(config, defaultRequest);
 		}
 
 		logger.info("Initializing Google Analytics with config=" + config + " and defaultRequest=" + defaultRequest);
@@ -304,14 +303,6 @@ public class GoogleAnalytics {
 		return future;
 	}
 
-	private boolean isNotEmpty(String value) {
-		return !isEmpty(value);
-	}
-
-	private boolean isEmpty(String value) {
-    	return value == null || value.trim().length() == 0;
-    }
-
 	public void close() {
 		try {
 			executor.shutdown();
@@ -324,51 +315,6 @@ public class GoogleAnalytics {
 		} catch (IOException e) {
 			//ignore
 		}
-	}
-
-	protected DefaultRequest deriveSystemParameters(GoogleAnalyticsConfig config, DefaultRequest request) {
-		try {
-			if (isEmpty(config.getUserAgent())) {
-				config.setUserAgent(getUserAgentString());
-			}
-
-			if (isEmpty(request.userLanguage())) {
-			    String region = System.getProperty("user.region");
-			    if (isEmpty(region)) {
-			        region = System.getProperty("user.country");
-			    }
-			    request.userLanguage(System.getProperty("user.language") + "-" + region);
-			}
-
-			if (isEmpty(request.documentEncoding())) {
-				request.documentEncoding(System.getProperty("file.encoding"));
-			}
-
-			Toolkit toolkit = Toolkit.getDefaultToolkit();
-
-			if (isEmpty(request.screenResolution())) {
-				Dimension screenSize = toolkit.getScreenSize();
-				request.screenResolution(((int) screenSize.getWidth()) + "x" + ((int) screenSize.getHeight()) + ", " + toolkit.getScreenResolution() + " dpi");
-			}
-
-			if (isEmpty(request.screenColors())) {
-				GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
-				GraphicsDevice[] graphicsDevices = graphicsEnvironment.getScreenDevices();
-
-				StringBuilder sb = new StringBuilder();
-				for (GraphicsDevice graphicsDevice : graphicsDevices) {
-					if (sb.length() != 0) {
-						sb.append(", ");
-					}
-					sb.append(graphicsDevice.getDisplayMode().getBitDepth());
-				}
-				request.screenColors(sb.toString());
-			}
-		} catch (Exception e) {
-			logger.warn("Exception while deriving the System properties for request " + request, e);
-		}
-
-		return request;
 	}
 
 	protected CloseableHttpClient createHttpClient(GoogleAnalyticsConfig config) {
@@ -408,25 +354,6 @@ public class GoogleAnalytics {
 
 	protected synchronized ThreadPoolExecutor createExecutor(GoogleAnalyticsConfig config) {
 		return new ThreadPoolExecutor(0, config.getMaxThreads(), 5, TimeUnit.MINUTES, new LinkedBlockingDeque<Runnable>(), createThreadFactory());
-	}
-
-	protected String getUserAgentString() {
-		StringBuilder sb = new StringBuilder("java");
-		appendProperty(sb, "java.runtime.version");
-		appendProperty(sb, "java.specification.vendor");
-		appendProperty(sb, "java.vm.name");
-		appendProperty(sb, "os.name");
-		appendProperty(sb, "os.version");
-		appendProperty(sb, "os.arch");
-
-		return sb.toString();
-	}
-
-	protected void appendProperty(StringBuilder sb, String property) {
-		String value = System.getProperty(property);
-		if (isNotEmpty(value)) {
-			sb.append("/").append(value);
-		}
 	}
 
 	protected ThreadFactory createThreadFactory() {
