@@ -19,6 +19,8 @@ To get a local build, do
 	git clone https://github.com/brsanthu/google-analytics-java.git
 	mvn install
 
+View Javadocs here http://brsanthu.github.io/google-analytics-java/javadocs/
+
 Features
 --------------
 This library implements the measurement protocol with following features.
