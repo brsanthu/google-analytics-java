@@ -33,7 +33,7 @@ public class GoogleAnalyticsConfig {
 	private boolean useHttps = true;
 	private boolean validate = true;
 	private String httpUrl = "http://www.google-analytics.com/collect";
-	private String httpsUrl = "https://www.google-analytics.com/collect";
+	private String httpsUrl = "https://ssl.google-analytics.com/collect";
 	private String userAgent = null;
 	private String proxyHost = null;
 	private int proxyPort = 80;
@@ -254,6 +254,8 @@ public class GoogleAnalyticsConfig {
 	/**
 	 * URL to use when posting the event in http mode. This url is Google Analytics service url and usually not updated by the clients.
 	 *
+	 * <p>Default value is <code>http://www.google-analytics.com/collect</code></p>
+	 * 
 	 * <p>This is <strong>request</strong> level configuration (can be changed any time).</p>
 	 */
 	public GoogleAnalyticsConfig setHttpUrl(String httpUrl) {
@@ -266,6 +268,7 @@ public class GoogleAnalyticsConfig {
 
 	/**
 	 * URL to use when posting the event in https mode. This url is Google Analytics service url and usually not updated by the clients.
+	 * <p>Default value is <code>https://ssl.google-analytics.com/collect</code>
 	 *
 	 * <p>This is <strong>request</strong> level configuration (can be changed any time).</p>
 	 */

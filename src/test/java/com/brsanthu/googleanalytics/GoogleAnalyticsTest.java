@@ -127,4 +127,29 @@ public class GoogleAnalyticsTest {
 		assertEquals("1.2.3.5", response.getPostedParmsAsMap().get("uip"));
 		assertEquals("Chrome/9.80 (Windows NT 6.0) Presto/2.12.388 Version/12.14", response.getPostedParmsAsMap().get("ua"));
 	}
+	
+	@Test
+	public void testUserDetails() throws Exception {
+		PageViewHit request = new PageViewHit("http://www.google.com", "Search");
+		GoogleAnalyticsResponse response = ga.post(request);
+		assertNotNull(response.getPostedParmsAsMap().get("cid"));
+
+		DefaultRequest defaultRequest = new DefaultRequest();
+		defaultRequest.clientId("1234");
+		defaultRequest.userId("user1");
+		ga.setDefaultRequest(defaultRequest);
+		
+		request = new PageViewHit("http://www.google.com", "Search");
+		response = ga.post(request);
+		assertEquals("1234", response.getPostedParmsAsMap().get("cid"));
+		assertEquals("user1", response.getPostedParmsAsMap().get("uid"));
+		
+		request = new PageViewHit("http://www.google.com", "Search");
+		request.clientId("12345");
+		request.userId("user2");
+		
+		response = ga.post(request);
+		assertEquals("12345", response.getPostedParmsAsMap().get("cid"));
+		assertEquals("user2", response.getPostedParmsAsMap().get("uid"));
+	}
 }

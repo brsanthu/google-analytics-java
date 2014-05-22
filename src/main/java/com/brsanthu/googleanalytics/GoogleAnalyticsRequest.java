@@ -30,10 +30,12 @@ import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CONTENT_DESC
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DISPLAY_ADS_ID;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_ENCODING;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_HOST_NAME;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_URL;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_PATH;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_REFERRER;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_TITLE;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_URL;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EXPERIMENT_ID;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EXPERIMENT_VARIANT;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.FLASH_VERSION;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.HIT_TYPE;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.JAVA_ENABLED;
@@ -44,14 +46,12 @@ import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SCREEN_COLOR
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SCREEN_RESOLUTION;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SESSION_CONTROL;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRACKING_ID;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_ID;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_LANGUAGE;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.VIEWPORT_SIZE;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EXPERIMENT_ID;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EXPERIMENT_VARIANT;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Base GA Tracking Request containing the standard and custom parameter values.
@@ -64,8 +64,6 @@ import java.util.UUID;
  */
 @SuppressWarnings("unchecked")
 public class GoogleAnalyticsRequest<T> {
-
-	private final static String DEFAULT_CLIENT_ID = UUID.randomUUID().toString();
 
 	protected Map<GoogleAnalyticsParameter, String> parms = new HashMap<GoogleAnalyticsParameter, String>();
 	protected Map<String, String> customDimentions = new HashMap<String, String>();
@@ -85,7 +83,6 @@ public class GoogleAnalyticsRequest<T> {
 		applicationName(appName);
 		applicationVersion(appVersion);
 
-		clientId(DEFAULT_CLIENT_ID);
 		protocolVersion("1");
 	}
 
@@ -568,6 +565,51 @@ public class GoogleAnalyticsRequest<T> {
 	}
 	public String clientId() {
 		return getString(CLIENT_ID);
+	}
+	
+	/**
+	 *<div class="ind">
+	 *  <strong>
+	 *     Optional.
+	 *  </strong>
+	 *  <p>This is intended to be a known identifier for a user provided by the site owner/tracking library user. It may not itself be PII. The value should never be persisted in GA cookies or other Analytics provided storage.</p>
+	 *  <table>
+	 *    <tbody><tr>
+	 *      <th>Parameter</th>
+	 *      <th>Value Type</th>
+	 *      <th>Default Value</th>
+	 *      <th>Max Length</th>
+	 *      <th>Supported Hit Types</th>
+	 *    </tr>
+	 *    <tr>
+	 *      <td><code>uid</code></td>
+	 *      <td>text</td>
+	 *      <td><span class="none">None</span>
+	 *          </td>
+	 *      <td><span class="none">None</span>
+	 *          </td>
+	 *      <td>all</td>
+	 *    </tr>
+	 *  </tbody></table>
+	 *
+	 *  
+	 *  <div>
+	 *    Example value: <code>as8eknlll</code><br>
+	 *    Example usage: <code>uid=as8eknlll</code>
+	 *  </div>
+	 *  
+	 *  
+	 *</div>
+	 *
+	 * @param value
+	 * @return
+	 */
+	public T userId(String value) {
+		setString(USER_ID, value);
+		return (T) this;
+	}
+	public String userId() {
+		return getString(USER_ID);
 	}
 
 	/**

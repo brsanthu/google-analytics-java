@@ -21,6 +21,7 @@ public class GoogleAnalyticsParameterTest {
 		assertEquals("cn", GoogleAnalyticsParameter.CAMPAIGN_NAME.getParameterName());
 		assertEquals("cs", GoogleAnalyticsParameter.CAMPAIGN_SOURCE.getParameterName());
 		assertEquals("cid", GoogleAnalyticsParameter.CLIENT_ID.getParameterName());
+		assertEquals("uid", GoogleAnalyticsParameter.USER_ID.getParameterName());
 		assertEquals("cd", GoogleAnalyticsParameter.CONTENT_DESCRIPTION.getParameterName());
 		assertEquals("cu", GoogleAnalyticsParameter.CURRENCY_CODE.getParameterName());
 		assertEquals("dclid", GoogleAnalyticsParameter.DISPLAY_ADS_ID.getParameterName());

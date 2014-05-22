@@ -32,6 +32,7 @@ public enum GoogleAnalyticsParameter {
 
 	//Visitor
 	CLIENT_ID("cid", true),
+	USER_ID("uid"),
 
 	//Session
 	SESSION_CONTROL("sc"),

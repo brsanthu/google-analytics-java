@@ -20,5 +20,4 @@ public class GoogleAnalyticsRequestTest {
 		assertEquals("1234567890", pageViewHit.expirementId());
 		assertEquals("some variation", pageViewHit.expirementVariant());
 	}
-
 }

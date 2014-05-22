@@ -45,6 +45,8 @@ import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_TIMING_
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_TIMING_TIME;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_TIMING_VARIABLE_NAME;
 
+import java.util.UUID;
+
 /**
  * Default request that captures default value for any of the parameters. Create an instance of
  * this object and specify as constructor parameter to {@link GoogleAnalytics} or set one any time using
@@ -53,6 +55,8 @@ import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_TIMING_
  * @author Santhosh Kumar
  */
 public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest>{
+
+	private final static String DEFAULT_CLIENT_ID = UUID.randomUUID().toString();
 
 	public DefaultRequest() {
 		this(null, null, null, null);
@@ -67,6 +71,8 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest>{
 		trackingId(trackingId);
 		applicationName(appName);
 		applicationVersion(appVersion);
+
+		clientId(DEFAULT_CLIENT_ID);
 	}
 
 	/**
