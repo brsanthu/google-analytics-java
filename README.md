@@ -11,7 +11,7 @@ The library is available in Maven Central. Add the following dependency and you 
 	<dependency>
 		<groupId>com.brsanthu</groupId>
 		<artifactId>google-analytics-java</artifactId>
-		<version>1.1.0</version>
+		<version>1.1.1</version>
 	</dependency>
 
 To get a local build, do
@@ -46,6 +46,11 @@ This library implements the measurement protocol with following features.
 
 Version History
 ---------------
+
+Version 1.1.1 - May 21 2014
+
+* Fixed the issue #14. Https Collection url has been updated to latest one.
+* Fixed the issue #15. Added new parameter User Id (uid). As part of this, another change was made to move initializing the default ClientId parameter from GoogleAnalyticsRequest to DefaultRequest. This way, whatever the default clientid you use, will be used for all requests. Previously, default client id wasn't referred.
 
 Version 1.1.0 - Apr 22 2014
 
