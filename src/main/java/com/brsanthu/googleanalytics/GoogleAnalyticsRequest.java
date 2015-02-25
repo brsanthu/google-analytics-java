@@ -380,11 +380,11 @@ public class GoogleAnalyticsRequest<T> {
 	 * 			<tr>
 	 * 				<th>Parameter</th>
 	 * 				<th>Value Type</th>
-     * 				<th>Default Value</th>
+	 * 				<th>Default Value</th>
 	 * 				<th>Max Length</th>
 	 * 				<th>Supported Hit Types</th>
-     * 			</tr>
-     * 			<tr>
+	 * 			</tr>
+	 * 			<tr>
 	 * 				<td><code>tid</code></td>
 	 * 				<td>text</td>
 	 * 				<td><span class="none">None</span>
@@ -1746,9 +1746,9 @@ public class GoogleAnalyticsRequest<T> {
     }
     public String applicationId() {
         return getString(APPLICATION_ID);
-    }
+	}
 
-    /**
+	/**
 	 * <div class="ind">
 	 *   <p>
 	 *      Optional.
