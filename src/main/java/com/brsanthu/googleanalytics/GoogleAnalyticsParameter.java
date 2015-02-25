@@ -25,6 +25,7 @@ public enum GoogleAnalyticsParameter {
 	PROTOCOL_VERSION("v", true),
 	TRACKING_ID("tid", true),
 	ANONYMIZE_IP("aip", "boolean"),
+    DATA_SOURCE("ds"),
 	QUEUE_TIME("qt", "integer"),
 	CACHE_BUSTER("z"),
 	USER_IP("uip"),
@@ -71,6 +72,7 @@ public enum GoogleAnalyticsParameter {
 	//App Tracking
 	APPLICATION_NAME("an"),
 	APPLICATION_VERSION("av"),
+    APPLICATION_ID("aid"),
 
 	//Event Tracking
 	EVENT_CATEGORY("ec", new String[] {"event"}),
