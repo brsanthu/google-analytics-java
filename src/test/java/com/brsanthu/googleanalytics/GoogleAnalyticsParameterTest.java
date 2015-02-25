@@ -13,6 +13,7 @@ public class GoogleAnalyticsParameterTest {
 		assertEquals("aip", GoogleAnalyticsParameter.ANONYMIZE_IP.getParameterName());
 		assertEquals("an", GoogleAnalyticsParameter.APPLICATION_NAME.getParameterName());
 		assertEquals("av", GoogleAnalyticsParameter.APPLICATION_VERSION.getParameterName());
+        assertEquals("aid", GoogleAnalyticsParameter.APPLICATION_ID.getParameterName());
 		assertEquals("z", GoogleAnalyticsParameter.CACHE_BUSTER.getParameterName());
 		assertEquals("cc", GoogleAnalyticsParameter.CAMPAIGN_CONTENT.getParameterName());
 		assertEquals("ci", GoogleAnalyticsParameter.CAMPAIGN_ID.getParameterName());
@@ -74,7 +75,8 @@ public class GoogleAnalyticsParameterTest {
 		assertEquals("vp", GoogleAnalyticsParameter.VIEWPORT_SIZE.getParameterName());
 		assertEquals("uip", GoogleAnalyticsParameter.USER_IP.getParameterName());
 		assertEquals("ua", GoogleAnalyticsParameter.USER_AGENT.getParameterName());
-		
+        assertEquals("ds", GoogleAnalyticsParameter.DATA_SOURCE.getParameterName());
+
 		assertEquals("xid", GoogleAnalyticsParameter.EXPERIMENT_ID.getParameterName());
 		assertNull(GoogleAnalyticsParameter.EXPERIMENT_ID.getSupportedHitTypes());
 		assertEquals("text", GoogleAnalyticsParameter.EXPERIMENT_ID.getType());

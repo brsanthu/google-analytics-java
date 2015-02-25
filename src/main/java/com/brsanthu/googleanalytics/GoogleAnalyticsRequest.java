@@ -14,44 +14,10 @@
 package com.brsanthu.googleanalytics;
 
 
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ADWORDS_ID;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ANONYMIZE_IP;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.APPLICATION_NAME;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.APPLICATION_VERSION;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CACHE_BUSTER;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CAMPAIGN_CONTENT;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CAMPAIGN_ID;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CAMPAIGN_KEYWORD;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CAMPAIGN_MEDIUM;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CAMPAIGN_NAME;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CAMPAIGN_SOURCE;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CLIENT_ID;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CONTENT_DESCRIPTION;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DISPLAY_ADS_ID;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_ENCODING;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_HOST_NAME;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_PATH;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_REFERRER;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_TITLE;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_URL;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EXPERIMENT_ID;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EXPERIMENT_VARIANT;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.FLASH_VERSION;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.HIT_TYPE;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.JAVA_ENABLED;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.NON_INTERACTION_HIT;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.PROTOCOL_VERSION;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.QUEUE_TIME;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SCREEN_COLORS;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SCREEN_RESOLUTION;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SESSION_CONTROL;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRACKING_ID;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_ID;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_LANGUAGE;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.VIEWPORT_SIZE;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.*;
 
 /**
  * Base GA Tracking Request containing the standard and custom parameter values.
@@ -445,6 +411,55 @@ public class GoogleAnalyticsRequest<T> {
 	}
 	public Boolean anonymizeIp() {
 		return getBoolean(ANONYMIZE_IP);
+	}
+
+	/**
+	 * <div class="ds">
+	 * 	<p>
+	 * 		Optional.
+	 * 	</p>
+	 * 	<p>Indicates the data source of the hit. Hits sent from analytics.js will have data source set to 'web'; hits sent from one of the mobile SDKs will have data source set to 'app'.</p>
+	 * 	<table border="1">
+	 * 		<tbody>
+	 * 			<tr>
+	 * 				<th>Parameter</th>
+	 * 				<th>Value Type</th>
+	 * 				<th>Default Value</th>
+	 * 				<th>Max Length</th>
+	 * 				<th>Supported Hit Types</th>
+	 * 			</tr>
+	 * 			<tr>
+	 * 				<td><code>ds</code></td>
+	 * 				<td>text</td>
+	 * 				<td><span class="none">None</span>
+	 * 				</td>
+	 * 				<td><span class="none">None</span>
+	 * 				</td>
+	 * 				<td>all</td>
+	 * 			</tr>
+	 * 		</tbody>
+	 * 	</table>
+	 * 	<div>
+	 * 		Example value: <code>web</code><br>
+	 * 		Example usage: <code>ds=web</code>
+     *
+     * 	    Example value: <code>app</code><br>
+	 * 		Example usage: <code>ds=app</code>
+     *
+     * 	    Example value: <code>call center</code><br>
+     * 		Example usage: <code>ds=call%20center</code>
+     *
+     *      Example value: <code>crm</code><br>
+     * 		Example usage: <code>ds=crm</code>
+	 * 	</div>
+	 * </div>
+	 */
+	public T dataSource(String value) {
+		setString(DATA_SOURCE, value);
+	   	return (T) this;
+	}
+	public String dataSource() {
+		return getString(DATA_SOURCE);
 	}
 
 	/**
@@ -1657,7 +1672,47 @@ public class GoogleAnalyticsRequest<T> {
 		return getString(APPLICATION_VERSION);
 	}
 
-	/**
+    /**
+     * <div class="aid">
+     * 	<p>
+     * 		Optional.
+     * 	</p>
+     * 	<p>Specifies the application identifier. Only visible in app views (profiles).</p>
+     * 	<table border="1">
+     * 		<tbody>
+     * 			<tr>
+     * 				<th>Parameter</th>
+     * 				<th>Value Type</th>
+     * 				<th>Default Value</th>
+     * 				<th>Max Length</th>
+     * 				<th>Supported Hit Types</th>
+     * 			</tr>
+     * 			<tr>
+     * 				<td><code>aid</code></td>
+     * 				<td>text</td>
+     * 				<td><span class="none">None</span>
+     * 				</td>
+     * 				<td>150 Bytes
+     * 				</td>
+     * 				<td>all</td>
+     * 			</tr>
+     * 		</tbody>
+     * 	</table>
+     * 	<div>
+     * 		Example value: <code>com.company.app</code><br>
+     * 		Example usage: <code>aid=com.company.app</code>
+     * 	</div>
+     * </div>
+     */
+    public T applicationId(String value) {
+        setString(APPLICATION_ID, value);
+        return (T) this;
+    }
+    public String applicationId() {
+        return getString(APPLICATION_ID);
+    }
+
+    /**
 	 * <div class="ind">
 	 *   <p>
 	 *      Optional.
