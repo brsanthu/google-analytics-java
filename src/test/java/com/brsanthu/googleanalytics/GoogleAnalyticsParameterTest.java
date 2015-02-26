@@ -1,7 +1,6 @@
 package com.brsanthu.googleanalytics;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -9,6 +8,26 @@ public class GoogleAnalyticsParameterTest {
 
 	@Test
 	public void testParameters() throws Exception {
+		assertParameter("v", true, "text", null, 0, GoogleAnalyticsParameter.PROTOCOL_VERSION);
+		assertParameter("tid", true, "text", null, 0, GoogleAnalyticsParameter.TRACKING_ID);
+		assertParameter("aip", false, "boolean", null, 0, GoogleAnalyticsParameter.ANONYMIZE_IP);
+		assertParameter("qt", false, "integer", null, 0, GoogleAnalyticsParameter.QUEUE_TIME);
+		assertParameter("z", false, "text", null, 0, GoogleAnalyticsParameter.CACHE_BUSTER);
+		
+		assertParameter("cid", true, "text", null, 0, GoogleAnalyticsParameter.CLIENT_ID);
+		assertParameter("uid", false, "text", null, 0, GoogleAnalyticsParameter.USER_ID);
+		
+		assertParameter("sc", false, "text", null, 0, GoogleAnalyticsParameter.SESSION_CONTROL);
+		assertParameter("uip", false, "text", null, 0, GoogleAnalyticsParameter.USER_IP);
+		assertParameter("ua", false, "text", null, 0, GoogleAnalyticsParameter.USER_AGENT);
+		assertParameter("aid", false, "text", null, 150, GoogleAnalyticsParameter.APPLICATION_ID);
+		
+		assertParameter("ds", false, "text", null, 0, GoogleAnalyticsParameter.DATA_SOURCE);
+	}
+	
+	public void testParametersOld() throws Exception {
+		
+		assertEquals("v", GoogleAnalyticsParameter.PROTOCOL_VERSION.getParameterName());
 		assertEquals("gclid", GoogleAnalyticsParameter.ADWORDS_ID.getParameterName());
 		assertEquals("aip", GoogleAnalyticsParameter.ANONYMIZE_IP.getParameterName());
 		assertEquals("an", GoogleAnalyticsParameter.APPLICATION_NAME.getParameterName());
@@ -49,7 +68,6 @@ public class GoogleAnalyticsParameterTest {
 		assertEquals("ni", GoogleAnalyticsParameter.NON_INTERACTION_HIT.getParameterName());
 		assertEquals("pdt", GoogleAnalyticsParameter.PAGE_DOWNLOAD_TIME.getParameterName());
 		assertEquals("plt", GoogleAnalyticsParameter.PAGE_LOAD_TIME.getParameterName());
-		assertEquals("v", GoogleAnalyticsParameter.PROTOCOL_VERSION.getParameterName());
 		assertEquals("qt", GoogleAnalyticsParameter.QUEUE_TIME.getParameterName());
 		assertEquals("rrt", GoogleAnalyticsParameter.REDIRECT_RESPONSE_TIME.getParameterName());
 		assertEquals("sd", GoogleAnalyticsParameter.SCREEN_COLORS.getParameterName());
@@ -72,7 +90,7 @@ public class GoogleAnalyticsParameterTest {
 		assertEquals("utt", GoogleAnalyticsParameter.USER_TIMING_TIME.getParameterName());
 		assertEquals("utv", GoogleAnalyticsParameter.USER_TIMING_VARIABLE_NAME.getParameterName());
 		assertEquals("vp", GoogleAnalyticsParameter.VIEWPORT_SIZE.getParameterName());
-		assertEquals("uip", GoogleAnalyticsParameter.USER_IP.getParameterName());
+		assertEquals("uip", GoogleAnalyticsParameter.USER_ID.getParameterName());
 		assertEquals("ua", GoogleAnalyticsParameter.USER_AGENT.getParameterName());
 		
 		assertEquals("xid", GoogleAnalyticsParameter.EXPERIMENT_ID.getParameterName());
@@ -82,5 +100,13 @@ public class GoogleAnalyticsParameterTest {
 		assertEquals("xvar", GoogleAnalyticsParameter.EXPERIMENT_VARIANT.getParameterName());
 		assertNull(GoogleAnalyticsParameter.EXPERIMENT_VARIANT.getSupportedHitTypes());
 		assertEquals("text", GoogleAnalyticsParameter.EXPERIMENT_VARIANT.getType());
+	}
+	
+	private void assertParameter(String name, boolean required, String type, String[] hitTypes, int maxLength, GoogleAnalyticsParameter param) {
+		assertEquals(name, param.getParameterName());
+		assertEquals(required, param.isRequired());
+		assertEquals(type, param.getType());
+		assertArrayEquals(hitTypes, param.getSupportedHitTypes());
+		assertEquals(maxLength, param.getMaxLength());
 	}
 }

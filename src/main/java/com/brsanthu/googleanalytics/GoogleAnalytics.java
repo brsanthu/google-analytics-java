@@ -140,7 +140,7 @@ public class GoogleAnalytics {
 			processParameters(request, postParms);
 
 			//Process custom dimensions
-			processCustomDimentionParameters(request, postParms);
+			processCustomDimensionParameters(request, postParms);
 
 			//Process custom metrics
 			processCustomMetricParameters(request, postParms);
@@ -194,19 +194,19 @@ public class GoogleAnalytics {
 	}
 	
 	/**
-	 * Processes the custom dimentions and adds the values to list of parameters, which would be posted to GA.
+	 * Processes the custom dimensions and adds the values to list of parameters, which would be posted to GA.
 	 * 
 	 * @param request
 	 * @param postParms
 	 */
-	private void processCustomDimentionParameters(@SuppressWarnings("rawtypes") GoogleAnalyticsRequest request, List<NameValuePair> postParms) {
+	private void processCustomDimensionParameters(@SuppressWarnings("rawtypes") GoogleAnalyticsRequest request, List<NameValuePair> postParms) {
 		Map<String, String> customDimParms = new HashMap<String, String>();
-		for (String defaultCustomDimKey : defaultRequest.customDimentions().keySet()) {
-			customDimParms.put(defaultCustomDimKey, defaultRequest.customDimentions().get(defaultCustomDimKey));
+		for (String defaultCustomDimKey : defaultRequest.customDimensions().keySet()) {
+			customDimParms.put(defaultCustomDimKey, defaultRequest.customDimensions().get(defaultCustomDimKey));
 		}
 
 		@SuppressWarnings("unchecked")
-		Map<String, String> requestCustomDims = request.customDimentions();
+		Map<String, String> requestCustomDims = request.customDimensions();
 		for (String requestCustomDimKey : requestCustomDims.keySet()) {
 			customDimParms.put(requestCustomDimKey, requestCustomDims.get(requestCustomDimKey));
 		}

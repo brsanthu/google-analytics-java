@@ -76,15 +76,15 @@ public class GoogleAnalyticsTest {
 	}
 	
 	@Test
-	public void testCustomDimentions() throws Exception {
+	public void testCustomDimensions() throws Exception {
 		DefaultRequest defaultRequest = new DefaultRequest();
-		defaultRequest.customDimention(1, "foo");
-		defaultRequest.customDimention(5, "bar");
+		defaultRequest.customDimension(1, "foo");
+		defaultRequest.customDimension(5, "bar");
 		
 		ga.setDefaultRequest(defaultRequest);
 		PageViewHit request = new PageViewHit("http://www.google.com", "Search");
-		request.customDimention(2, "bob");
-		request.customDimention(5, "alice");
+		request.customDimension(2, "bob");
+		request.customDimension(5, "alice");
 		
 		GoogleAnalyticsResponse response = ga.post(request);
 		

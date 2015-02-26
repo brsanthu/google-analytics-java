@@ -13,9 +13,9 @@
  */
 package com.brsanthu.googleanalytics;
 
-
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ADWORDS_ID;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ANONYMIZE_IP;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.APPLICATION_ID;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.APPLICATION_NAME;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.APPLICATION_VERSION;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CACHE_BUSTER;
@@ -27,6 +27,7 @@ import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CAMPAIGN_NAM
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CAMPAIGN_SOURCE;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CLIENT_ID;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CONTENT_DESCRIPTION;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DATA_SOURCE;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DISPLAY_ADS_ID;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_ENCODING;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_HOST_NAME;
@@ -66,7 +67,7 @@ import java.util.Map;
 public class GoogleAnalyticsRequest<T> {
 
 	protected Map<GoogleAnalyticsParameter, String> parms = new HashMap<GoogleAnalyticsParameter, String>();
-	protected Map<String, String> customDimentions = new HashMap<String, String>();
+	protected Map<String, String> customDimensions = new HashMap<String, String>();
 	protected Map<String, String> customMetrics = new HashMap<String, String>();
 
 	public GoogleAnalyticsRequest() {
@@ -215,8 +216,22 @@ public class GoogleAnalyticsRequest<T> {
 		return parms;
 	}
 
+	/**
+	 * @deprecated Use {@link #customDimension(int)} instead
+	 */
 	public String customDimention(int index) {
-		return customDimentions.get("cd" + index);
+		return customDimension(index);
+	}
+
+	public String customDimension(int index) {
+		return customDimensions.get("cd" + index);
+	}
+
+	/**
+	 * @deprecated Use {@link #customDimension(int,String)} instead
+	 */
+	public T customDimention(int index, String value) {
+		return customDimension(index, value);
 	}
 
 	/**
@@ -251,8 +266,8 @@ public class GoogleAnalyticsRequest<T> {
 	 * 	</div>
 	 * </div>
 	 */
-	public T customDimention(int index, String value) {
-		customDimentions.put("cd" + index, value);
+	public T customDimension(int index, String value) {
+		customDimensions.put("cd" + index, value);
 		return (T) this;
 	}
 
@@ -297,8 +312,15 @@ public class GoogleAnalyticsRequest<T> {
 		return customMetrics.get("cm" + index);
 	}
 
+	/**
+	 * @deprecated Use {@link #customDimensions()} instead
+	 */
 	public Map<String, String> customDimentions() {
-		return customDimentions;
+		return customDimensions();
+	}
+
+	public Map<String, String> customDimensions() {
+		return customDimensions;
 	}
 
 	public Map<String, String> custommMetrics() {
@@ -314,9 +336,9 @@ public class GoogleAnalyticsRequest<T> {
 			builder.append(parms);
 			builder.append(", ");
 		}
-		if (customDimentions != null) {
-			builder.append("customDimentions=");
-			builder.append(customDimentions);
+		if (customDimensions != null) {
+			builder.append("customDimensions=");
+			builder.append(customDimensions);
 			builder.append(", ");
 		}
 		if (customMetrics != null) {
@@ -447,6 +469,54 @@ public class GoogleAnalyticsRequest<T> {
 		return getBoolean(ANONYMIZE_IP);
 	}
 
+	/**
+	 * <div class="ds">
+	 * 	<p>
+	 * 		Optional.
+	 * 	</p>
+	 * 	<p>Indicates the data source of the hit. Hits sent from analytics.js will have data source set to 'web'; hits sent from one of the mobile SDKs will have data source set to 'app'.</p>
+	 * 	<table border="1">
+	 * 		<tbody>
+	 * 			<tr>
+	 * 				<th>Parameter</th>
+	 * 				<th>Value Type</th>
+	 * 				<th>Default Value</th>
+	 * 				<th>Max Length</th>
+	 * 				<th>Supported Hit Types</th>
+	 * 			</tr>
+	 * 			<tr>
+	 * 				<td><code>ds</code></td>
+	 * 				<td>text</td>
+	 * 				<td><span class="none">None</span>
+	 * 				</td>
+	 * 				<td><span class="none">None</span>
+	 * 				</td>
+	 * 				<td>all</td>
+	 * 			</tr>
+	 * 		</tbody>
+	 * 	</table>
+	 * 	<div>
+	 * 		Example value: <code>web</code><br>
+	 * 		Example usage: <code>ds=web</code>
+     *
+     * 	    Example value: <code>app</code><br>
+	 * 		Example usage: <code>ds=app</code>
+     *
+     * 	    Example value: <code>call center</code><br>
+     * 		Example usage: <code>ds=call%20center</code>
+     *
+     *      Example value: <code>crm</code><br>
+     * 		Example usage: <code>ds=crm</code>
+	 * 	</div>
+	 * </div>
+	 */
+	public T dataSource(String value) {
+		setString(DATA_SOURCE, value);
+	   	return (T) this;
+	}
+	public String dataSource() {
+		return getString(DATA_SOURCE);
+	}	
 	/**
 	 * <div class="ind">
 	 * 	<p>
@@ -1657,6 +1727,46 @@ public class GoogleAnalyticsRequest<T> {
 		return getString(APPLICATION_VERSION);
 	}
 
+	/**
+     * <div class="aid">
+     * 	<p>
+     * 		Optional.
+     * 	</p>
+     * 	<p>Specifies the application identifier. Only visible in app views (profiles).</p>
+     * 	<table border="1">
+     * 		<tbody>
+     * 			<tr>
+     * 				<th>Parameter</th>
+     * 				<th>Value Type</th>
+     * 				<th>Default Value</th>
+     * 				<th>Max Length</th>
+     * 				<th>Supported Hit Types</th>
+     * 			</tr>
+     * 			<tr>
+     * 				<td><code>aid</code></td>
+     * 				<td>text</td>
+     * 				<td><span class="none">None</span>
+     * 				</td>
+     * 				<td>150 Bytes
+     * 				</td>
+     * 				<td>all</td>
+     * 			</tr>
+     * 		</tbody>
+     * 	</table>
+     * 	<div>
+     * 		Example value: <code>com.company.app</code><br>
+     * 		Example usage: <code>aid=com.company.app</code>
+     * 	</div>
+     * </div>
+     */
+    public T applicationId(String value) {
+        setString(APPLICATION_ID, value);
+        return (T) this;
+    }
+    public String applicationId() {
+        return getString(APPLICATION_ID);
+	}
+    
 	/**
 	 * <div class="ind">
 	 *   <p>
