@@ -186,8 +186,4 @@ public enum GoogleAnalyticsParameter {
 	public int getMaxLength() {
 		return maxLength;
 	}
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> initializing after doing dos2unix
