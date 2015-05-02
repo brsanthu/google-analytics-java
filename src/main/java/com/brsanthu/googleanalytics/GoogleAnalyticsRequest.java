@@ -18,6 +18,7 @@ import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ANONYMIZE_IP
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.APPLICATION_ID;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.APPLICATION_NAME;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.APPLICATION_VERSION;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.APPLICATION_INSTALLER_ID;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CACHE_BUSTER;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CAMPAIGN_CONTENT;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CAMPAIGN_ID;
@@ -1726,6 +1727,46 @@ public class GoogleAnalyticsRequest<T> {
 	public String applicationVersion() {
 		return getString(APPLICATION_VERSION);
 	}
+
+    /**
+     * <div class="ind">
+     * 	<p>
+     * 		Optional.
+     * 	</p>
+     * 	<p>Specifies the application installer identifier Only visible in app views (profiles).</p>
+     * 	<table border="1">
+     * 		<tbody>
+     * 			<tr>
+     * 				<th>Parameter</th>
+     * 				<th>Value Type</th>
+     * 				<th>Default Value</th>
+     * 				<th>Max Length</th>
+     * 				<th>Supported Hit Types</th>
+     * 			</tr>
+     * 			<tr>
+     * 				<td><code>aiid</code></td>
+     * 				<td>text</td>
+     * 				<td><span class="none">None</span>
+     * 				</td>
+     * 				<td>150 Bytes
+     * 				</td>
+     * 				<td>all</td>
+     * 			</tr>
+     * 		</tbody>
+     * 	</table>
+     * 	<div>
+     * 		Example value: <code>com.platform.vending</code><br>
+     * 		Example usage: <code>aiid=com.platform.vending</code>
+     * 	</div>
+     * </div>
+     */
+    public T applicationInstallerId(String value) {
+        setString(APPLICATION_INSTALLER_ID, value);
+        return (T) this;
+    }
+    public String applicationInstallerId() {
+        return getString(APPLICATION_INSTALLER_ID);
+    }
 
 	/**
      * <div class="aid">

@@ -21,7 +21,8 @@ public class GoogleAnalyticsParameterTest {
 		assertParameter("uip", false, "text", null, 0, GoogleAnalyticsParameter.USER_IP);
 		assertParameter("ua", false, "text", null, 0, GoogleAnalyticsParameter.USER_AGENT);
 		assertParameter("aid", false, "text", null, 150, GoogleAnalyticsParameter.APPLICATION_ID);
-		
+		assertParameter("aiid", false, "text", null, 150, GoogleAnalyticsParameter.APPLICATION_INSTALLER_ID);
+
 		assertParameter("ds", false, "text", null, 0, GoogleAnalyticsParameter.DATA_SOURCE);
 	}
 	
