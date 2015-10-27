@@ -47,6 +47,7 @@ import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SCREEN_COLOR
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SCREEN_RESOLUTION;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SESSION_CONTROL;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRACKING_ID;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRANSACTION_REVENUE;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_ID;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_LANGUAGE;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.VIEWPORT_SIZE;
@@ -69,6 +70,9 @@ public class GoogleAnalyticsRequest<T> {
 	protected Map<GoogleAnalyticsParameter, String> parms = new HashMap<GoogleAnalyticsParameter, String>();
 	protected Map<String, String> customDimensions = new HashMap<String, String>();
 	protected Map<String, String> customMetrics = new HashMap<String, String>();
+	protected Map<Integer, SubParameters> productParameters = new HashMap<Integer, SubParameters>();
+	protected Map<Integer, SubParameters> productImpressionParameters = new HashMap<Integer, SubParameters>();
+	protected Map<Integer, SubParameters> promotionParameters = new HashMap<Integer, SubParameters>();
 
 	public GoogleAnalyticsRequest() {
 		this(null, null, null, null);
@@ -172,7 +176,7 @@ public class GoogleAnalyticsRequest<T> {
 			return null;
 		}
 
-		return "" + intValue;
+		return Integer.toString(intValue);
 	}
 
 	protected Integer toInteger(String intString) {
@@ -188,7 +192,7 @@ public class GoogleAnalyticsRequest<T> {
 			return null;
 		}
 
-		return "" + doubleValue;
+		return String.format("%.2f", doubleValue);
 	}
 
 	protected Double toDouble(String doubleString) {
@@ -327,6 +331,18 @@ public class GoogleAnalyticsRequest<T> {
 		return customMetrics;
 	}
 
+	public Map<Integer, SubParameters> getProductParameters() {
+		return productParameters;
+	}
+
+	public Map<Integer, SubParameters> getProductImpressionParameters() {
+		return productImpressionParameters;
+	}
+
+	public Map<Integer, SubParameters> getPromotionParameters() {
+		return promotionParameters;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -344,6 +360,18 @@ public class GoogleAnalyticsRequest<T> {
 		if (customMetrics != null) {
 			builder.append("customMetrics=");
 			builder.append(customMetrics);
+		}
+		if (productParameters != null) {
+			builder.append("productParameters=");
+			builder.append(productParameters);
+		}
+		if (productImpressionParameters != null) {
+			builder.append("productImpressionParameters=");
+			builder.append(productImpressionParameters);
+		}
+		if (promotionParameters != null) {
+			builder.append("promotionParameters=");
+			builder.append(promotionParameters);
 		}
 		builder.append("]");
 		return builder.toString();
@@ -1880,4 +1908,358 @@ public class GoogleAnalyticsRequest<T> {
 		return string == null || string.trim().length() == 0;
 	}
 	
+	/**
+	 * Enhanced E-Commerce Tracking
+	 */
+	public T transactionId(String value) {
+		setString(GoogleAnalyticsParameter.TRANSACTION_ID, value);
+	   	return (T) this;
+	}
+	public String transactionId() {
+		return getString(GoogleAnalyticsParameter.TRANSACTION_ID);
+	}
+
+	public T transactionRevenue(Double value) {
+		setDouble(GoogleAnalyticsParameter.TRANSACTION_REVENUE, value);
+	   	return (T) this;
+	}
+	public Double transactionRevenue() {
+		return getDouble(GoogleAnalyticsParameter.TRANSACTION_REVENUE);
+	}
+
+	public T productSku(int productIndex, String value) {
+		SubParameters thisProductParameters = getDistinctSubParameters(productParameters, productIndex);
+		thisProductParameters.parameter(GoogleAnalyticsParameter.PRODUCT_SKU, value);
+		return (T) this;
+	}
+
+	public String productSku(int productIndex) {
+		return productParameters.get(productIndex).parameter(GoogleAnalyticsParameter.PRODUCT_SKU);
+	}
+
+	public T productName(int productIndex, String value) {
+		SubParameters thisProductParameters = getDistinctSubParameters(productParameters, productIndex);
+		thisProductParameters.parameter(GoogleAnalyticsParameter.PRODUCT_NAME, value);
+		return (T) this;
+	}
+
+	public String productName(int productIndex) {
+		return productParameters.get(productIndex).parameter(GoogleAnalyticsParameter.PRODUCT_NAME);
+	}
+
+	public T productBrand(int productIndex, String value) {
+		SubParameters thisProductParameters = getDistinctSubParameters(productParameters, productIndex);
+		thisProductParameters.parameter(GoogleAnalyticsParameter.PRODUCT_BRAND, value);
+		return (T) this;
+	}
+
+	public String productBrand(int productIndex) {
+		return productParameters.get(productIndex).parameter(GoogleAnalyticsParameter.PRODUCT_BRAND);
+	}
+
+	public T productCategory(int productIndex, String value) {
+		SubParameters thisProductParameters = getDistinctSubParameters(productParameters, productIndex);
+		thisProductParameters.parameter(GoogleAnalyticsParameter.PRODUCT_CATEGORY, value);
+		return (T) this;
+	}
+
+	public String productCategory(int productIndex) {
+		return productParameters.get(productIndex).parameter(GoogleAnalyticsParameter.PRODUCT_CATEGORY);
+	}
+
+	public T productVariant(int productIndex, String value) {
+		SubParameters thisProductParameters = getDistinctSubParameters(productParameters, productIndex);
+		thisProductParameters.parameter(GoogleAnalyticsParameter.PRODUCT_VARIANT, value);
+		return (T) this;
+	}
+
+	public String productVariant(int productIndex) {
+		return productParameters.get(productIndex).parameter(GoogleAnalyticsParameter.PRODUCT_VARIANT);
+	}
+
+	public T productPrice(int productIndex, double value) {
+		SubParameters thisProductParameters = getDistinctSubParameters(productParameters, productIndex);
+		thisProductParameters.parameter(GoogleAnalyticsParameter.PRODUCT_PRICE, fromDouble(value));
+		return (T) this;
+	}
+
+	public double productPrice(int productIndex) {
+		return toDouble(productParameters.get(productIndex).parameter(GoogleAnalyticsParameter.PRODUCT_PRICE));
+	}
+
+	public T productQuantity(int productIndex, int value) {
+		SubParameters thisProductParameters = getDistinctSubParameters(productParameters, productIndex);
+		thisProductParameters.parameter(GoogleAnalyticsParameter.PRODUCT_QUANTITY, fromInteger(value));
+		return (T) this;
+	}
+
+	public int productQuantity(int productIndex) {
+		return toInteger(productParameters.get(productIndex).parameter(GoogleAnalyticsParameter.PRODUCT_QUANTITY));
+	}
+
+	public T productCouponCode(int productIndex, String value) {
+		SubParameters thisProductParameters = getDistinctSubParameters(productParameters, productIndex);
+		thisProductParameters.parameter(GoogleAnalyticsParameter.PRODUCT_COUPON_CODE, value);
+		return (T) this;
+	}
+
+	public String productCouponCode(int productIndex) {
+		return productParameters.get(productIndex).parameter(GoogleAnalyticsParameter.PRODUCT_COUPON_CODE);
+	}
+
+	public T productPosition(int productIndex, int value) {
+		SubParameters thisProductParameters = getDistinctSubParameters(productParameters, productIndex);
+		thisProductParameters.parameter(GoogleAnalyticsParameter.PRODUCT_POSITION, fromInteger(value));
+		return (T) this;
+	}
+	
+	public int productPosition(int productIndex) {
+		return toInteger(productParameters.get(productIndex).parameter(GoogleAnalyticsParameter.PRODUCT_POSITION));
+	}
+
+	public T productCustomDimension(int productIndex, int index, String value) {
+		SubParameters thisProductParameters = getDistinctSubParameters(productParameters, productIndex);
+		thisProductParameters.customDimension(index, value);
+		return (T) this;
+	}
+	
+	public String productCustomDimension(int productIndex, int index) {
+		return productParameters.get(productIndex).customDimension(index);
+	}
+
+	public T productCustomMetric(int productIndex, int index, int value) {
+		SubParameters thisProductParameters = getDistinctSubParameters(productParameters, productIndex);
+		thisProductParameters.customMetric(index, value);
+		return (T) this;
+	}
+
+	public int productCustomMetric(int productIndex, int index) {
+		return productParameters.get(productIndex).customMetric(index);
+	}
+
+	public T productAction(String value) {
+		setString(GoogleAnalyticsParameter.PRODUCT_ACTION, value);
+		return (T) this;
+	}
+
+	public String productAction() {
+		return getString(GoogleAnalyticsParameter.PRODUCT_ACTION);
+	}
+
+	public T transactionCouponCode(String value) {
+		setString(GoogleAnalyticsParameter.TRANSACTION_COUPON_CODE, value);
+		return (T) this;
+	}
+
+	public String transactionCouponCode() {
+		return getString(GoogleAnalyticsParameter.TRANSACTION_COUPON_CODE);
+	}
+
+	public T productActionList(String value) {
+		setString(GoogleAnalyticsParameter.PRODUCT_ACTION_LIST, value);
+		return (T) this;
+	}
+
+	public String productActionList() {
+		return getString(GoogleAnalyticsParameter.PRODUCT_ACTION_LIST);
+	}
+
+	public T checkoutStep(int value) {
+		setInteger(GoogleAnalyticsParameter.CHECKOUT_STEP, value);
+		return (T) this;
+	}
+
+	public int checkoutStep() {
+		return getInteger(GoogleAnalyticsParameter.CHECKOUT_STEP);
+	}
+
+	public T checkoutStepOption(String value) {
+		setString(GoogleAnalyticsParameter.CHECKOUT_STEP_OPTION, value);
+		return (T) this;
+	}
+
+	public String checkoutStepOption() {
+		return getString(GoogleAnalyticsParameter.CHECKOUT_STEP_OPTION);
+	}
+	
+	public T productImpressionListName(int listIndex, String value) {
+		SubParameters thisListParameters = getDistinctSubParameters(productImpressionParameters, listIndex);
+		thisListParameters.parameter(GoogleAnalyticsParameter.PRODUCT_IMPRESSION_LIST_NAME, value);
+		return (T) this;
+	}
+	
+	public String productImpressionListName(int listIndex) {
+		return productImpressionParameters.get(listIndex).parameter(GoogleAnalyticsParameter.PRODUCT_IMPRESSION_LIST_NAME);
+	}
+
+	public T productImpressionSku(int listIndex, int productIndex, String value) {
+		SubParameters thisListParameters = getDistinctSubParameters(productImpressionParameters, listIndex);
+		SubParameters thisProductParameters = getDistinctSubParameters(thisListParameters.subParameters(), productIndex);
+		thisProductParameters.parameter(GoogleAnalyticsParameter.PRODUCT_IMPRESSION_SKU, value);
+		return (T) this;
+	}
+
+	public String productImpressionSku(int listIndex, int productIndex) {
+		return productImpressionParameters.get(listIndex)
+				.subParameters().get(productIndex)
+				.parameter(GoogleAnalyticsParameter.PRODUCT_IMPRESSION_SKU);
+	}
+
+	public T productImpressionName(int listIndex, int productIndex, String value) {
+		SubParameters thisListParameters = getDistinctSubParameters(productImpressionParameters, listIndex);
+		SubParameters thisProductParameters = getDistinctSubParameters(thisListParameters.subParameters(), productIndex);
+		thisProductParameters.parameter(GoogleAnalyticsParameter.PRODUCT_IMPRESSION_NAME, value);
+		return (T) this;
+	}
+
+	public String productImpressionName(int listIndex, int productIndex) {
+		return productImpressionParameters.get(listIndex)
+				.subParameters().get(productIndex)
+				.parameter(GoogleAnalyticsParameter.PRODUCT_IMPRESSION_NAME);
+	}
+
+	public T productImpressionBrand(int listIndex, int productIndex, String value) {
+		SubParameters thisListParameters = getDistinctSubParameters(productImpressionParameters, listIndex);
+		SubParameters thisProductParameters = getDistinctSubParameters(thisListParameters.subParameters(), productIndex);
+		thisProductParameters.parameter(GoogleAnalyticsParameter.PRODUCT_IMPRESSION_BRAND, value);
+		return (T) this;
+	}
+
+	public String productImpressionBrand(int listIndex, int productIndex) {
+		return productImpressionParameters.get(listIndex)
+				.subParameters().get(productIndex)
+				.parameter(GoogleAnalyticsParameter.PRODUCT_IMPRESSION_BRAND);
+	}
+
+	public T productImpressionCategory(int listIndex, int productIndex, String value) {
+		SubParameters thisListParameters = getDistinctSubParameters(productImpressionParameters, listIndex);
+		SubParameters thisProductParameters = getDistinctSubParameters(thisListParameters.subParameters(), productIndex);
+		thisProductParameters.parameter(GoogleAnalyticsParameter.PRODUCT_IMPRESSION_CATEGORY, value);
+		return (T) this;
+	}
+
+	public String productImpressionCategory(int listIndex, int productIndex) {
+		return productImpressionParameters.get(listIndex)
+				.subParameters().get(productIndex)
+				.parameter(GoogleAnalyticsParameter.PRODUCT_IMPRESSION_CATEGORY);
+	}
+
+	public T productImpressionVariant(int listIndex, int productIndex, String value) {
+		SubParameters thisListParameters = getDistinctSubParameters(productImpressionParameters, listIndex);
+		SubParameters thisProductParameters = getDistinctSubParameters(thisListParameters.subParameters(), productIndex);
+		thisProductParameters.parameter(GoogleAnalyticsParameter.PRODUCT_IMPRESSION_VARIANT, value);
+		return (T) this;
+	}
+
+	public String productImpressionVariant(int listIndex, int productIndex) {
+		return productImpressionParameters.get(listIndex)
+				.subParameters().get(productIndex)
+				.parameter(GoogleAnalyticsParameter.PRODUCT_IMPRESSION_VARIANT);
+	}
+
+	public T productImpressionPosition(int listIndex, int productIndex, int value) {
+		SubParameters thisListParameters = getDistinctSubParameters(productImpressionParameters, listIndex);
+		SubParameters thisProductParameters = getDistinctSubParameters(thisListParameters.subParameters(), productIndex);
+		thisProductParameters.parameter(GoogleAnalyticsParameter.PRODUCT_IMPRESSION_POSITION, fromInteger(value));
+		return (T) this;
+	}
+
+	public int productImpressionPosition(int listIndex, int productIndex) {
+		return toInteger(productImpressionParameters.get(listIndex)
+				.subParameters().get(productIndex)
+				.parameter(GoogleAnalyticsParameter.PRODUCT_IMPRESSION_POSITION));
+	}
+
+	public T productImpressionPrice(int listIndex, int productIndex, double value) {
+		SubParameters thisListParameters = getDistinctSubParameters(productImpressionParameters, listIndex);
+		SubParameters thisProductParameters = getDistinctSubParameters(thisListParameters.subParameters(), productIndex);
+		thisProductParameters.parameter(GoogleAnalyticsParameter.PRODUCT_IMPRESSION_PRICE, fromDouble(value));
+		return (T) this;
+	}
+
+	public double productImpressionPrice(int listIndex, int productIndex) {
+		return toDouble(productImpressionParameters.get(listIndex)
+				.subParameters().get(productIndex)
+				.parameter(GoogleAnalyticsParameter.PRODUCT_IMPRESSION_PRICE));
+	}
+	
+	public T productImpressionCustomDimension(int listIndex, int productIndex, int index, String value) {
+		SubParameters thisListParameters = getDistinctSubParameters(productImpressionParameters, listIndex);
+		SubParameters thisProductParameters = getDistinctSubParameters(thisListParameters.subParameters(), productIndex);
+		thisProductParameters.customDimension(index, value);
+		return (T) this;
+	}
+	
+	public String productImpressionCustomDimension(int listIndex, int productIndex, int index) {
+		return productImpressionParameters.get(listIndex)
+				.subParameters().get(productIndex)
+				.customDimension(index);
+	}
+
+	public T productImpressionCustomMetric(int listIndex, int productIndex, int index, int value) {
+		SubParameters thisListParameters = getDistinctSubParameters(productImpressionParameters, listIndex);
+		SubParameters thisProductParameters = getDistinctSubParameters(thisListParameters.subParameters(), productIndex);
+		thisProductParameters.customMetric(index, value);
+		return (T) this;
+	}
+
+	public int productImpressionCustomMetric(int listIndex, int productIndex, int index) {
+		return productImpressionParameters.get(listIndex)
+				.subParameters().get(productIndex)
+				.customMetric(index);
+	}
+
+	public T promotionId(int promotionIndex, String value) {
+		SubParameters thisProductParameters = getDistinctSubParameters(promotionParameters, promotionIndex);
+		thisProductParameters.parameter(GoogleAnalyticsParameter.PROMOTION_ID, value);
+		return (T) this;
+	}
+
+	public String promotionId(int promotionIndex) {
+		return promotionParameters.get(promotionIndex).parameter(GoogleAnalyticsParameter.PROMOTION_ID);
+	}
+
+	public T promotionName(int promotionIndex, String value) {
+		SubParameters thisProductParameters = getDistinctSubParameters(promotionParameters, promotionIndex);
+		thisProductParameters.parameter(GoogleAnalyticsParameter.PROMOTION_NAME, value);
+		return (T) this;
+	}
+
+	public String promotionName(int promotionIndex) {
+		return promotionParameters.get(promotionIndex).parameter(GoogleAnalyticsParameter.PROMOTION_NAME);
+	}
+
+	public T promotionCreative(int promotionIndex, String value) {
+		SubParameters thisProductParameters = getDistinctSubParameters(promotionParameters, promotionIndex);
+		thisProductParameters.parameter(GoogleAnalyticsParameter.PROMOTION_CREATIVE, value);
+		return (T) this;
+	}
+
+	public String promotionCreative(int promotionIndex) {
+		return promotionParameters.get(promotionIndex).parameter(GoogleAnalyticsParameter.PROMOTION_CREATIVE);
+	}
+
+	public T promotionPosition(int promotionIndex, String value) {
+		SubParameters thisProductParameters = getDistinctSubParameters(promotionParameters, promotionIndex);
+		thisProductParameters.parameter(GoogleAnalyticsParameter.PROMOTION_POSITION, value);
+		return (T) this;
+	}
+
+	public String promotionPosition(int promotionIndex) {
+		return promotionParameters.get(promotionIndex).parameter(GoogleAnalyticsParameter.PROMOTION_POSITION);
+	}
+
+	public T promotionAction(String value) {
+		setString(GoogleAnalyticsParameter.PROMOTION_ACTION, value);
+		return (T) this;
+	}
+
+	public String promotionAction() {
+		return getString(GoogleAnalyticsParameter.PROMOTION_ACTION);
+	}
+
+	private SubParameters getDistinctSubParameters(Map<Integer, SubParameters> pmap, int index) {
+		if (!pmap.containsKey(index)) pmap.put(index, new SubParameters());
+		return pmap.get(index);
+	}
 }
