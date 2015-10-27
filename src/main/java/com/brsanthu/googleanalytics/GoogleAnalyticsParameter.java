@@ -21,6 +21,9 @@ package com.brsanthu.googleanalytics;
  * @author Santhosh Kumar
  */
 public enum GoogleAnalyticsParameter {
+
+	// TODO: check private final static String[] SUPPORT_PAGEVIEW_EVENT = new String[] {"pageview", "event"}
+
 	//General
 	PROTOCOL_VERSION("v", true),
 	TRACKING_ID("tid", true),
@@ -85,17 +88,50 @@ public enum GoogleAnalyticsParameter {
 	EVENT_VALUE("ev", false, "integer", new String[] {"event"}),
 
 	//E-Commerce
-	TRANSACTION_ID("ti", new String[] {"transaction", "item"}, 500),
-	TRANSACTION_AFFILIATION("ta", new String[] {"transaction"}, 500),
-	TRANSACTION_REVENUE("tr", false, "currency", new String[] {"transaction"}),
-	TRANSACTION_SHIPPING("ts", false, "currency", new String[] {"transaction"}),
-	TRANSACTION_TAX("tt", false, "currency", new String[] {"transaction"}),
+	TRANSACTION_ID("ti", new String[] {"transaction", "item", "pageview", "event"}, 500),
+	TRANSACTION_AFFILIATION("ta", new String[] {"transaction", "pageview", "event"}, 500),
+	TRANSACTION_REVENUE("tr", false, "currency", new String[] {"transaction", "pageview", "event"}),
+	TRANSACTION_SHIPPING("ts", false, "currency", new String[] {"transaction", "pageview", "event"}),
+	TRANSACTION_TAX("tt", false, "currency", new String[] {"transaction", "pageview", "event"}),
 	ITEM_NAME("in", new String[] {"item"}, 500),
 	ITEM_PRICE("ip", false, "currency", new String[] {"item"}),
 	ITEM_QUANTITY("iq", false, "integer", new String[] {"item"}),
 	ITEM_CODE("ic", new String[] {"item"}, 500),
 	ITEM_CATEGORY("iv", new String[] {"item"}, 500),
 	CURRENCY_CODE("cu", new String[] {"transaction", "item"}, 10),
+
+	// Enhanced E-Commerce
+	PRODUCT_SKU("pr#id", new String[] {"pageview", "event"}, 500),
+	PRODUCT_NAME("pr#nm", new String[] {"pageview", "event"}, 500),
+	PRODUCT_BRAND("pr#br", new String[] {"pageview", "event"}, 500),
+	PRODUCT_CATEGORY("pr#ca", new String[] {"pageview", "event"}, 500),
+	PRODUCT_VARIANT("pr#va", new String[] {"pageview", "event"}, 500),
+	PRODUCT_PRICE("pr#pr", false, "currency", new String[] {"pageview", "event"}),
+	PRODUCT_QUANTITY("pr#qt", false, "integer", new String[] {"pageview", "event"}),
+	PRODUCT_COUPON_CODE("pr#cc", new String[] {"pageview", "event"}, 500),
+	PRODUCT_POSITION("pr#ps", false, "integer", new String[] {"pageview", "event"}),
+	PRODUCT_CUSTOM_DIMENSION("pr#cd§", new String[] {"pageview", "event"}),
+	PRODUCT_CUSTOM_METRIC("pr#cm§", false, "integer", new String[] {"pageview", "event"}),
+	PRODUCT_ACTION("pa", new String[] {"pageview", "event"}),
+	TRANSACTION_COUPON_CODE("tcc", new String[] {"pageview", "event"}),
+	PRODUCT_ACTION_LIST("pal", new String[] {"pageview", "event"}),
+	CHECKOUT_STEP("cos", false, "integer", new String[] {"pageview", "event"}),
+	CHECKOUT_STEP_OPTION("pal", new String[] {"pageview", "event"}),
+	PRODUCT_IMPRESSION_LIST_NAME("pr$nm", new String[] {"pageview", "event"}),
+	PRODUCT_IMPRESSION_SKU("pr$pi#id", new String[] {"pageview", "event"}),
+	PRODUCT_IMPRESSION_NAME("pr$pi#nm", new String[] {"pageview", "event"}),
+	PRODUCT_IMPRESSION_BRAND("pr$pi#br", new String[] {"pageview", "event"}),
+	PRODUCT_IMPRESSION_CATEGORY("pr$pi#ca", new String[] {"pageview", "event"}),
+	PRODUCT_IMPRESSION_VARIANT("pr$pi#va", new String[] {"pageview", "event"}),
+	PRODUCT_IMPRESSION_POSITION("pr$pi#ps", false, "integer", new String[] {"pageview", "event"}),
+	PRODUCT_IMPRESSION_PRICE("pr$pi#pr", false, "currency", new String[] {"pageview", "event"}),
+	PRODUCT_IMPRESSION_CUSTOM_DIMENSION("pr$pi#cd§", new String[] {"pageview", "event"}),
+	PRODUCT_IMPRESSION_CUSTOM_METRIC("pr$pi#cm§", false, "integer", new String[] {"pageview", "event"}),
+	PROMOTION_ID("promo&id", new String[] {"pageview", "event"}),
+	PROMOTION_NAME("promo&nm", new String[] {"pageview", "event"}),
+	PROMOTION_CREATIVE("promo&cr", new String[] {"pageview", "event"}),
+	PROMOTION_POSITION("promo&ps", new String[] {"pageview", "event"}),
+	PROMOTION_ACTION("promoa", new String[] {"pageview", "event"}),
 
 	//Social Interactions
 	SOCIAL_NETWORK("sn", new String[] {"social"}, 50),

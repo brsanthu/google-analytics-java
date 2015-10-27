@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -123,7 +124,7 @@ public class GoogleAnalytics {
 		this.httpClient = httpClient;
 	}
 
-	@SuppressWarnings({ "rawtypes" })
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public GoogleAnalyticsResponse post(GoogleAnalyticsRequest request) {
 		GoogleAnalyticsResponse response = new GoogleAnalyticsResponse();
 		if (!config.isEnabled()) {
@@ -140,11 +141,14 @@ public class GoogleAnalytics {
 			processParameters(request, postParms);
 
 			//Process custom dimensions
-			processCustomDimensionParameters(request, postParms);
+			processCustomParameters(request, postParms, defaultRequest.customDimensions, request.customDimensions);
 
 			//Process custom metrics
-			processCustomMetricParameters(request, postParms);
-			
+			processCustomParameters(request, postParms, defaultRequest.customMetrics, request.customMetrics);
+
+			// Process productParameters
+			processCustomSubParameters(request, postParms);
+
 			logger.debug("Processed all parameters and sending the request " + postParms);
 			
 			HttpPost httpPost = new HttpPost(config.getUrl());
@@ -194,52 +198,124 @@ public class GoogleAnalytics {
 	}
 	
 	/**
-	 * Processes the custom dimensions and adds the values to list of parameters, which would be posted to GA.
+	 * Processes the custom dimensions/metrics and adds the values to list of parameters, which would be posted to GA.
 	 * 
 	 * @param request
 	 * @param postParms
+	 * @param defaultCustomElements
+	 * @param requestCustomElements
 	 */
-	private void processCustomDimensionParameters(@SuppressWarnings("rawtypes") GoogleAnalyticsRequest request, List<NameValuePair> postParms) {
-		Map<String, String> customDimParms = new HashMap<String, String>();
-		for (String defaultCustomDimKey : defaultRequest.customDimensions().keySet()) {
-			customDimParms.put(defaultCustomDimKey, defaultRequest.customDimensions().get(defaultCustomDimKey));
-		}
+	private void processCustomParameters(@SuppressWarnings("rawtypes") GoogleAnalyticsRequest request, List<NameValuePair> postParms,
+			Map<String, String> defaultCustomElements, Map<String, String> requestCustomElements) {
 
-		@SuppressWarnings("unchecked")
-		Map<String, String> requestCustomDims = request.customDimensions();
-		for (String requestCustomDimKey : requestCustomDims.keySet()) {
-			customDimParms.put(requestCustomDimKey, requestCustomDims.get(requestCustomDimKey));
-		}
+		Map<String, String> customParms = new HashMap<String, String>();
+		customParms.putAll(defaultCustomElements);
+		customParms.putAll(requestCustomElements);
 		
-		for (String key : customDimParms.keySet()) {
-			postParms.add(new BasicNameValuePair(key, customDimParms.get(key)));
+		for (Entry<String, String> e : customParms.entrySet()) {
+			postParms.add(new BasicNameValuePair(e.getKey(), e.getValue()));
 		}
 	}
 
-	/**
-	 * Processes the custom metrics and adds the values to list of parameters, which would be posted to GA.
-	 * 
-	 * @param request
-	 * @param postParms
-	 */
-	private void processCustomMetricParameters(@SuppressWarnings("rawtypes") GoogleAnalyticsRequest request, List<NameValuePair> postParms) {
-		Map<String, String> customMetricParms = new HashMap<String, String>();
-		for (String defaultCustomMetricKey : defaultRequest.custommMetrics().keySet()) {
-			customMetricParms.put(defaultCustomMetricKey, defaultRequest.custommMetrics().get(defaultCustomMetricKey));
-		}
+	private void processCustomSubParameters(@SuppressWarnings("rawtypes") GoogleAnalyticsRequest request, List<NameValuePair> postParms) {
+
+		int productIndex = 0;
 
 		@SuppressWarnings("unchecked")
-		Map<String, String> requestCustomMetrics = request.custommMetrics();
-		for (String requestCustomDimKey : requestCustomMetrics.keySet()) {
-			customMetricParms.put(requestCustomDimKey, requestCustomMetrics.get(requestCustomDimKey));
+		Map<Integer, SubParameters> productParametersMap = request.getProductParameters();
+		for (Entry<Integer, SubParameters> prodocutParametersEntry : productParametersMap.entrySet()) {
+
+			productIndex = prodocutParametersEntry.getKey();
+
+			for (Entry<GoogleAnalyticsParameter, String> productParametersValueEntry
+					: prodocutParametersEntry.getValue().getParameters().entrySet()) {
+
+				String key = productParametersValueEntry.getKey().getParameterName()
+						.replace("#", Integer.toString(productIndex));
+
+				postParms.add(new BasicNameValuePair(key, productParametersValueEntry.getValue()));
+			}
+
+			customDimensionAndMetrics(prodocutParametersEntry.getValue(), postParms, 0, productIndex);
+
 		}
-		
-		for (String key : customMetricParms.keySet()) {
-			postParms.add(new BasicNameValuePair(key, customMetricParms.get(key)));
+
+		productIndex = 0;
+
+		@SuppressWarnings("unchecked")
+		Map<Integer, SubParameters> productImpressionParametersMap = request.getProductImpressionParameters();
+		for (Entry<Integer, SubParameters> prodocutImpressionParametersEntry : productImpressionParametersMap.entrySet()) {
+
+			int listIndex = prodocutImpressionParametersEntry.getKey();
+
+			Map<Integer, SubParameters> productImpressionProductParametersMap = prodocutImpressionParametersEntry.getValue().subParameters();
+			for (Entry<Integer, SubParameters> prodocutParametersEntry : productImpressionProductParametersMap.entrySet()) {
+
+				productIndex = prodocutParametersEntry.getKey();
+
+				for (Entry<GoogleAnalyticsParameter, String> productParametersValueEntry
+						: prodocutParametersEntry.getValue().getParameters().entrySet()) {
+
+					String key = productParametersValueEntry.getKey().getParameterName()
+							.replace("#", Integer.toString(productIndex))
+							.replace("$", Integer.toString(listIndex));
+
+					postParms.add(new BasicNameValuePair(key, productParametersValueEntry.getValue()));
+				}
+				
+				customDimensionAndMetrics(prodocutParametersEntry.getValue(), postParms, listIndex, productIndex);
+
+			}
+
+		}
+
+		int promoIndex = 0;
+
+		@SuppressWarnings("unchecked")
+		Map<Integer, SubParameters> promotionParametersMap = request.getPromotionParameters();
+		for (Entry<Integer, SubParameters> promotionParametersEntry : promotionParametersMap.entrySet()) {
+
+			promoIndex = promotionParametersEntry.getKey();
+
+			for (Entry<GoogleAnalyticsParameter, String> productParametersValueEntry
+					: promotionParametersEntry.getValue().getParameters().entrySet()) {
+
+				String key = productParametersValueEntry.getKey().getParameterName()
+						.replace("&", Integer.toString(promoIndex));
+
+				postParms.add(new BasicNameValuePair(key, productParametersValueEntry.getValue()));
+			}
 		}
 	}
 	
-	
+	private void customDimensionAndMetrics(SubParameters parameterSet, List<NameValuePair> postParms,
+			int listIndex, int productIndex) {
+		
+		// custom dimensions
+		for (Entry<Integer, String> customDimensionEntry : parameterSet.customDimensions().entrySet()) {
+			int customIndex = customDimensionEntry.getKey();
+			String key = GoogleAnalyticsParameter.PRODUCT_IMPRESSION_CUSTOM_DIMENSION.getParameterName()
+					.replace("#", Integer.toString(productIndex))
+					.replace("$", Integer.toString(listIndex))
+					.replace("§", Integer.toString(customIndex))
+				+ customDimensionEntry.getKey();
+			
+			postParms.add(new BasicNameValuePair(key, customDimensionEntry.getValue()));
+		}
+
+		// custom metrics
+		for (Entry<Integer, Integer> customMetricsEntry : parameterSet.customMetrics().entrySet()) {
+			int customIndex = customMetricsEntry.getKey();
+			String key = GoogleAnalyticsParameter.PRODUCT_IMPRESSION_CUSTOM_METRIC.getParameterName()
+					.replace("#", Integer.toString(productIndex))
+					.replace("$", Integer.toString(listIndex))
+					.replace("§", Integer.toString(customIndex))
+				+ customMetricsEntry.getKey();
+
+			postParms.add(new BasicNameValuePair(key, Integer.toString(customMetricsEntry.getValue())));
+		}
+	}
+
 	private void gatherStats(@SuppressWarnings("rawtypes") GoogleAnalyticsRequest request) {
 		String hitType = request.hitType();
 
