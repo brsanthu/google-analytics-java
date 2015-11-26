@@ -29,7 +29,10 @@ package com.brsanthu.googleanalytics;
 public class GoogleAnalyticsConfig {
 	private String threadNameFormat = "googleanalytics-thread-{0}";
 	private boolean enabled = true;
-	private int maxThreads = 1;
+	private int minThreads = 1;
+	private int maxThreads = 10;
+	private int queueSize = maxThreads * 100;
+    private int threadTimeOut = 5;
 	private boolean useHttps = true;
 	private boolean validate = true;
 	private String httpUrl = "http://www.google-analytics.com/collect";
@@ -281,7 +284,40 @@ public class GoogleAnalyticsConfig {
 		return useHttps?httpsUrl:httpUrl;
 	}
 
-	@Override
+    public int getMinThreads() {
+        return minThreads;
+    }
+
+    /**
+     * Minimum or initial threads to use to process the asynchronous event posting and Http client connection pooling. Default is 1.
+     */
+    public void setMinThreads(int minThreads) {
+        this.minThreads = minThreads;
+    }
+
+    public int getQueueSize() {
+        return queueSize;
+    }
+
+    /**
+     * The size of the execution Queue to be handled by the threads of the Executor Default is maxThreads*100.
+     */
+    public void setQueueSize(int queueSize) {
+        this.queueSize = queueSize;
+    }
+
+    public int getThreadTimeOut() {
+        return threadTimeOut;
+    }
+
+    /**
+     * The timeout in seconds for the thread execution
+     */
+    public void setThreadTimeOut(int threadTimeOut) {
+        this.threadTimeOut = threadTimeOut;
+    }
+
+    @Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("GoogleAnalyticsConfig [");
@@ -292,8 +328,14 @@ public class GoogleAnalyticsConfig {
 		}
 		builder.append("enabled=");
 		builder.append(enabled);
+        builder.append(", minThreads=");
+        builder.append(minThreads);
 		builder.append(", maxThreads=");
 		builder.append(maxThreads);
+        builder.append(", queueSize=");
+        builder.append(queueSize);
+        builder.append(", threadTimeout=");
+        builder.append(threadTimeOut);
 		builder.append(", useHttps=");
 		builder.append(useHttps);
 		builder.append(", validate=");
@@ -336,6 +378,7 @@ public class GoogleAnalyticsConfig {
 		builder.append(discoverRequestParameters);
 		builder.append(", gatherStats=");
 		builder.append(gatherStats);
+
 		builder.append("]");
 		return builder.toString();
 	}
