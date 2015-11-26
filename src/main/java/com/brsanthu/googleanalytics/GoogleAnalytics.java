@@ -13,25 +13,6 @@
  */
 package com.brsanthu.googleanalytics;
 
-import static com.brsanthu.googleanalytics.GaUtils.isEmpty;
-import static com.brsanthu.googleanalytics.GaUtils.isNotEmpty;
-
-import java.io.IOException;
-import java.net.UnknownHostException;
-import java.nio.charset.Charset;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import org.apache.http.HttpHost;
 import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthScope;
@@ -49,6 +30,20 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.UnknownHostException;
+import java.nio.charset.Charset;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static com.brsanthu.googleanalytics.GaUtils.isEmpty;
+import static com.brsanthu.googleanalytics.GaUtils.isNotEmpty;
 
 /**
  * This is the main class of this library that accepts the requests from clients and
@@ -144,16 +139,16 @@ public class GoogleAnalytics {
 
 			//Process custom metrics
 			processCustomMetricParameters(request, postParms);
-			
+
 			logger.debug("Processed all parameters and sending the request " + postParms);
-			
+
 			HttpPost httpPost = new HttpPost(config.getUrl());
 			httpPost.setEntity(new UrlEncodedFormEntity(postParms, UTF8));
 
 			httpResponse = (CloseableHttpResponse) httpClient.execute(httpPost);
 			response.setStatusCode(httpResponse.getStatusLine().getStatusCode());
 			response.setPostedParms(postParms);
-			
+
 			EntityUtils.consumeQuietly(httpResponse.getEntity());
 
 			if (config.isGatherStats()) {
@@ -192,10 +187,10 @@ public class GoogleAnalytics {
 			postParms.add(new BasicNameValuePair(key.getParameterName(), requestParms.get(key)));
 		}
 	}
-	
+
 	/**
 	 * Processes the custom dimensions and adds the values to list of parameters, which would be posted to GA.
-	 * 
+	 *
 	 * @param request
 	 * @param postParms
 	 */
@@ -210,7 +205,7 @@ public class GoogleAnalytics {
 		for (String requestCustomDimKey : requestCustomDims.keySet()) {
 			customDimParms.put(requestCustomDimKey, requestCustomDims.get(requestCustomDimKey));
 		}
-		
+
 		for (String key : customDimParms.keySet()) {
 			postParms.add(new BasicNameValuePair(key, customDimParms.get(key)));
 		}
@@ -218,7 +213,7 @@ public class GoogleAnalytics {
 
 	/**
 	 * Processes the custom metrics and adds the values to list of parameters, which would be posted to GA.
-	 * 
+	 *
 	 * @param request
 	 * @param postParms
 	 */
@@ -233,13 +228,13 @@ public class GoogleAnalytics {
 		for (String requestCustomDimKey : requestCustomMetrics.keySet()) {
 			customMetricParms.put(requestCustomDimKey, requestCustomMetrics.get(requestCustomDimKey));
 		}
-		
+
 		for (String key : customMetricParms.keySet()) {
 			postParms.add(new BasicNameValuePair(key, customMetricParms.get(key)));
 		}
 	}
-	
-	
+
+
 	private void gatherStats(@SuppressWarnings("rawtypes") GoogleAnalyticsRequest request) {
 		String hitType = request.hitType();
 
@@ -353,7 +348,7 @@ public class GoogleAnalytics {
 	}
 
 	protected synchronized ThreadPoolExecutor createExecutor(GoogleAnalyticsConfig config) {
-		return new ThreadPoolExecutor(0, config.getMaxThreads(), 5, TimeUnit.MINUTES, new LinkedBlockingDeque<Runnable>(), createThreadFactory());
+		return new ThreadPoolExecutor(config.getMinThreads(), config.getMaxThreads(), config.getThreadTimeOut(), TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>(config.getQueueSize()), createThreadFactory(), new ThreadPoolExecutor.CallerRunsPolicy());
 	}
 
 	protected ThreadFactory createThreadFactory() {
@@ -370,17 +365,17 @@ public class GoogleAnalytics {
 }
 
 class GoogleAnalyticsThreadFactory implements ThreadFactory {
-    private final AtomicInteger threadNumber = new AtomicInteger(1);
-    private String threadNameFormat = null;
+	private final AtomicInteger threadNumber = new AtomicInteger(1);
+	private String threadNameFormat = null;
 
-    public GoogleAnalyticsThreadFactory(String threadNameFormat) {
-    	this.threadNameFormat = threadNameFormat;
+	public GoogleAnalyticsThreadFactory(String threadNameFormat) {
+		this.threadNameFormat = threadNameFormat;
 	}
 
 	public Thread newThread(Runnable r) {
-        Thread thread = new Thread(Thread.currentThread().getThreadGroup(), r, MessageFormat.format(threadNameFormat, threadNumber.getAndIncrement()), 0);
-        thread.setDaemon(true);
-        thread.setPriority(Thread.MIN_PRIORITY);
-        return thread;
-    }
+		Thread thread = new Thread(Thread.currentThread().getThreadGroup(), r, MessageFormat.format(threadNameFormat, threadNumber.getAndIncrement()), 0);
+		thread.setDaemon(true);
+		thread.setPriority(Thread.MIN_PRIORITY);
+		return thread;
+	}
 }
