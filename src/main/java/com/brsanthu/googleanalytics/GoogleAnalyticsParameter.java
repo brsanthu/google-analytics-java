@@ -38,6 +38,9 @@ public enum GoogleAnalyticsParameter {
 	USER_IP("uip"),
 	USER_AGENT("ua"),
 	
+	//geoid
+	GEOID("geoid"),
+	
 	//Traffic Sources
 	DOCUMENT_REFERRER("dr", 2048),
 	CAMPAIGN_NAME("cn", 100),
