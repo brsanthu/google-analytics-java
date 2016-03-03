@@ -1861,6 +1861,20 @@ public class GoogleAnalyticsRequest<T> {
 	public String userIp() {
 		return getString(GoogleAnalyticsParameter.USER_IP);
 	}
+	
+	/**
+	 * GeoId Override
+	 * parameter: geoid 
+     * The geographical ID should be a two letter country code or a criteria ID representing a city or region
+     * example: geoid=US
+	 */
+	public T geoid(String value) {
+		setString(GoogleAnalyticsParameter.GEOID, value);
+	   	return (T) this;
+	}
+	public String geoid() {
+		return getString(GoogleAnalyticsParameter.GEOID);
+	}
 
 	/**
      * User Agent Override
