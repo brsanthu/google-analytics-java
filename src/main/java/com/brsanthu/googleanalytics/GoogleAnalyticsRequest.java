@@ -69,7 +69,8 @@ public class GoogleAnalyticsRequest<T> {
 	protected Map<GoogleAnalyticsParameter, String> parms = new HashMap<GoogleAnalyticsParameter, String>();
 	protected Map<String, String> customDimensions = new HashMap<String, String>();
 	protected Map<String, String> customMetrics = new HashMap<String, String>();
-
+	protected Map<String, String> contentGroup = new HashMap<String, String>();
+ 
 	public GoogleAnalyticsRequest() {
 		this(null, null, null, null);
 	}
@@ -312,6 +313,14 @@ public class GoogleAnalyticsRequest<T> {
 		return customMetrics.get("cm" + index);
 	}
 
+	public T contentGroup(int index, String value) {
+	    contentGroup.put("cg" + index, value);
+	    return (T) this;
+	}
+	
+	public String contentGroup(int index) {
+        return contentGroup.get("cg" + index);
+    }
 	/**
 	 * @deprecated Use {@link #customDimensions()} instead
 	 */
@@ -326,6 +335,10 @@ public class GoogleAnalyticsRequest<T> {
 	public Map<String, String> custommMetrics() {
 		return customMetrics;
 	}
+	
+	public Map<String, String> contentGroupMetrics() {
+        return contentGroup;
+    }
 
 	@Override
 	public String toString() {
@@ -344,6 +357,12 @@ public class GoogleAnalyticsRequest<T> {
 		if (customMetrics != null) {
 			builder.append("customMetrics=");
 			builder.append(customMetrics);
+			builder.append(", ");
+		}
+		
+		if (contentGroup != null) {
+		    builder.append("groupMetrics=");
+		    builder.append(contentGroup);
 		}
 		builder.append("]");
 		return builder.toString();

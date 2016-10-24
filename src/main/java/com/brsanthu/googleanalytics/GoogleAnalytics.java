@@ -144,6 +144,9 @@ public class GoogleAnalytics {
 
 			//Process custom metrics
 			processCustomMetricParameters(request, postParms);
+
+			//Process group params
+			processGroupParameters(request, postParms);
 			
 			logger.debug("Processed all parameters and sending the request " + postParms);
 			
@@ -215,6 +218,23 @@ public class GoogleAnalytics {
 			postParms.add(new BasicNameValuePair(key, customDimParms.get(key)));
 		}
 	}
+	
+	private void processGroupParameters(@SuppressWarnings("rawtypes") GoogleAnalyticsRequest request, List<NameValuePair> postParms) {
+        Map<String, String> customGroupParms = new HashMap<String, String>();
+        for (String defaultCustomGroup : defaultRequest.contentGroupMetrics().keySet()) {
+            customGroupParms.put(defaultCustomGroup, defaultRequest.contentGroupMetrics().get(defaultCustomGroup));
+        }
+
+        @SuppressWarnings("unchecked")
+        Map<String, String> requestCustomGroup = request.contentGroupMetrics();
+        for (String requestCustomGroupKey : requestCustomGroup.keySet()) {
+            customGroupParms.put(requestCustomGroupKey, requestCustomGroup.get(requestCustomGroupKey));
+        }
+        
+        for (String key : customGroupParms.keySet()) {
+            postParms.add(new BasicNameValuePair(key, customGroupParms.get(key)));
+        }
+    }
 
 	/**
 	 * Processes the custom metrics and adds the values to list of parameters, which would be posted to GA.
