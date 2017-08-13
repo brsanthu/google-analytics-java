@@ -1,2 +1,67 @@
-/META-INF
-/target
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+# Eclipse Core
+
+.classpath
+.project
+.settings/
+.metadata/
+.recommenders/
+run-*
+
+# Ignore build artfacts at all sub folder level
+target/
+bin/
+src/test/resources/run-*
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# Eclipse CDT-specific
+.cproject
+
+## IntelliJ
+*.iml
+.idea/
+
+# Java annotation processor (APT)
+.factorypath
+
+# PDT-specific
+.buildpath
+
+# sbteclipse plugin
+.target
+
+# TeXlipse plugin
+.texlipse
+
+# STS (Spring Tool Suite)
+.springBeans
+
+#Netbeans
+nbactions.xml
+
+#Mac finder files
+.DS_Store
+
+#node js
+node_modules/
+
+#JRebel files
+rebel.xml
+.rebel.xml.bak
+
+nohup.out
+
+core-search-service
+core-dns-service
+/.gitignore

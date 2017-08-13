@@ -1,0 +1,35 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1502659770763
+Build-Jdk: 1.8.0_121
+Built-By: brsanthu
+Bundle-Description: This is Java API for Google Analytics (Measurement P
+ rotocol). More information about the protocol is available at https://d
+ evelopers.google.com/analytics/devguides/collection/protocol/v1/.
+Bundle-DocURL: http://www.brsanthu.com
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0.txt
+Bundle-ManifestVersion: 2
+Bundle-Name: Google Analytics Java API
+Bundle-SymbolicName: com.brsanthu.google-analytics-java
+Bundle-Vendor: brsanthu Inc
+Bundle-Version: 2.0.0.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Export-Package: com.brsanthu.googleanalytics;uses:="com.brsanthu.googlea
+ nalytics.request,com.brsanthu.googleanalytics.httpclient,com.brsanthu.g
+ oogleanalytics.discovery";version="2.0.0.SNAPSHOT",com.brsanthu.googlea
+ nalytics.discovery;uses:="com.brsanthu.googleanalytics,com.brsanthu.goo
+ gleanalytics.request,org.slf4j";version="2.0.0.SNAPSHOT",com.brsanthu.g
+ oogleanalytics.httpclient;uses:="org.apache.http.client,com.brsanthu.go
+ ogleanalytics,org.apache.http.impl.conn,org.apache.http.auth,org.apache
+ .http.conn,org.apache.http,org.apache.http.impl.client";version="2.0.0.
+ SNAPSHOT",com.brsanthu.googleanalytics.request;version="2.0.0.SNAPSHOT"
+Implementation-Title: Google Analytics Java API
+Implementation-Vendor: brsanthu Inc
+Implementation-Vendor-Id: com.brsanthu
+Implementation-Version: 2.0.0-SNAPSHOT
+Import-Package: com.brsanthu.googleanalytics.request,org.apache.http,org
+ .apache.http.auth,org.apache.http.client,org.apache.http.conn,org.apach
+ e.http.impl.client,org.apache.http.impl.conn,org.slf4j
+Specification-Title: Google Analytics Java API
+Specification-Vendor: brsanthu Inc
+Specification-Version: 2.0.0-SNAPSHOT
+Tool: Bnd-1.50.0
