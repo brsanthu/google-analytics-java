@@ -7,13 +7,21 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.brsanthu.googleanalytics.internal.GoogleAnalyticsImpl;
+import com.brsanthu.googleanalytics.request.AppViewHit;
+import com.brsanthu.googleanalytics.request.DefaultRequest;
+import com.brsanthu.googleanalytics.request.GoogleAnalyticsResponse;
+import com.brsanthu.googleanalytics.request.ItemHit;
+import com.brsanthu.googleanalytics.request.PageViewHit;
+import com.brsanthu.googleanalytics.request.SocialHit;
+
 public class GoogleAnalyticsTest {
 
-	private static GoogleAnalytics ga = null;
+	private static GoogleAnalyticsImpl ga = null;
 
 	@BeforeClass
 	public static void setup() {
-		ga = new GoogleAnalytics("UA-44034973-2", "Junit Test", "1.0.0");
+		ga = new GoogleAnalyticsImpl("UA-44034973-2", "Junit Test", "1.0.0");
 		System.out.println("Creating Google Analytis Object");
 	}
 
@@ -63,7 +71,7 @@ public class GoogleAnalyticsTest {
 		final AtomicInteger value = new AtomicInteger();
 		
 		final GoogleAnalyticsConfig config = new GoogleAnalyticsConfig().setMaxThreads(10);
-		new GoogleAnalytics(config, "TrackingId") {
+		new GoogleAnalyticsImpl(config, "TrackingId") {
 			@Override
 			protected int getDefaultMaxPerRoute(GoogleAnalyticsConfig config1) {
 				value.set(super.getDefaultMaxPerRoute(config));

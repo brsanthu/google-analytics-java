@@ -1,6 +1,6 @@
 package com.brsanthu.googleanalytics.internal;
 
-import com.brsanthu.googleanalytics.GoogleAnalyticsParameter;
+import com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter;
 
 public class ParameterGetterSetterGenerator {
 

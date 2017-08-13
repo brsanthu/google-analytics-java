@@ -11,12 +11,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.brsanthu.googleanalytics;
+package com.brsanthu.googleanalytics.request;
 
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EVENT_ACTION;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EVENT_CATEGORY;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EVENT_LABEL;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EVENT_VALUE;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.EVENT_ACTION;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.EVENT_CATEGORY;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.EVENT_LABEL;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.EVENT_VALUE;
 
 /**
  * GA request to track events.

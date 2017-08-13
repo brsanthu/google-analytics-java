@@ -11,27 +11,52 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.brsanthu.googleanalytics;
+package com.brsanthu.googleanalytics.request;
 
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CURRENCY_CODE;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ITEM_CATEGORY;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ITEM_CODE;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ITEM_NAME;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ITEM_PRICE;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ITEM_QUANTITY;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRANSACTION_ID;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.CURRENCY_CODE;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.TRANSACTION_AFFILIATION;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.TRANSACTION_ID;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.TRANSACTION_REVENUE;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.TRANSACTION_SHIPPING;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.TRANSACTION_TAX;
 
 /**
- * GA request to track items as part of ecommerce transaction.
+ * GA request to track ecommerce transaction.
  *
  * <p>For more information, see <a href="https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ecomm">GA Parameters Reference</a></p>
  *
  * @author Santhosh Kumar
  */
-public class ItemHit extends GoogleAnalyticsRequest<ItemHit> {
+public class TransactionHit extends GoogleAnalyticsRequest<TransactionHit> {
 
-	public ItemHit() {
-		super("item");
+	public TransactionHit() {
+		this(null);
+	}
+
+	public TransactionHit(String txId) {
+		this(txId, null);
+	}
+
+	public TransactionHit(String txId, Double txRevenue) {
+		this(txId, null, txRevenue);
+	}
+
+	public TransactionHit(String txId, String txAffiliation, Double txRevenue) {
+		this(txId, txAffiliation, txRevenue, null, null, "USD");
+	}
+
+	public TransactionHit(String txId, String txAffiliation, Double txRevenue, String currencyCode) {
+		this(txId, txAffiliation, txRevenue, null, null, currencyCode);
+	}
+
+	public TransactionHit(String txId, String txAffiliation, Double txRevenue, Double txShipping, Double txTax, String currencyCode) {
+		super("transaction");
+		txId(txId);
+		txAffiliation(txAffiliation);
+		txRevenue(txRevenue);
+		txShipping(txShipping);
+		txTax(txTax);
+		currencyCode(currencyCode);
 	}
 
 	/**
@@ -68,7 +93,7 @@ public class ItemHit extends GoogleAnalyticsRequest<ItemHit> {
 	 * 	</div>
 	 * </div>
 	 */
-	public ItemHit txId(String value) {
+	public TransactionHit txId(String value) {
 		setString(TRANSACTION_ID, value);
 	   	return this;
 	}
@@ -79,9 +104,9 @@ public class ItemHit extends GoogleAnalyticsRequest<ItemHit> {
 	/**
 	 * <div class="ind">
 	 * 	<p>
-	 * 		<strong>Required for item hit type.</strong>
+	 * 		Optional.
 	 * 	</p>
-	 * 	<p>Specifies the item name.</p>
+	 * 	<p>Specifies the affiliation or store name.</p>
 	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
@@ -92,28 +117,28 @@ public class ItemHit extends GoogleAnalyticsRequest<ItemHit> {
 	 * 				<th>Supported Hit Types</th>
 	 * 			</tr>
 	 * 			<tr>
-	 * 				<td><code>in</code></td>
+	 * 				<td><code>ta</code></td>
 	 * 				<td>text</td>
 	 * 				<td><span class="none">None</span>
 	 * 				</td>
 	 * 				<td>500 Bytes
 	 * 				</td>
-	 * 				<td>item</td>
+	 * 				<td>transaction</td>
 	 * 			</tr>
 	 * 		</tbody>
 	 * 	</table>
 	 * 	<div>
-	 * 		Example value: <code>Shoe</code><br>
-	 * 		Example usage: <code>in=Shoe</code>
+	 * 		Example value: <code>Member</code><br>
+	 * 		Example usage: <code>ta=Member</code>
 	 * 	</div>
 	 * </div>
 	 */
-	public ItemHit itemName(String value) {
-		setString(ITEM_NAME, value);
+	public TransactionHit txAffiliation(String value) {
+		setString(TRANSACTION_AFFILIATION, value);
 	   	return this;
 	}
-	public String itemName() {
-		return getString(ITEM_NAME);
+	public String txAffiliation() {
+		return getString(TRANSACTION_AFFILIATION);
 	}
 
 	/**
@@ -121,7 +146,7 @@ public class ItemHit extends GoogleAnalyticsRequest<ItemHit> {
 	 * 	<p>
 	 * 		Optional.
 	 * 	</p>
-	 * 	<p>Specifies the price for a single item / unit.</p>
+	 * 	<p>Specifies the total revenue associated with the transaction. This value should include any shipping or tax costs.</p>
 	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
@@ -132,28 +157,68 @@ public class ItemHit extends GoogleAnalyticsRequest<ItemHit> {
 	 * 				<th>Supported Hit Types</th>
 	 * 			</tr>
 	 * 			<tr>
-	 * 				<td><code>ip</code></td>
+	 * 				<td><code>tr</code></td>
 	 * 				<td>currency</td>
 	 * 				<td><code>0</code>
 	 * 				</td>
 	 * 				<td><span class="none">None</span>
 	 * 				</td>
-	 * 				<td>item</td>
+	 * 				<td>transaction</td>
+	 * 			</tr>
+	 * 		</tbody>
+	 * 	</table>
+	 * 	<div>
+	 * 		Example value: <code>15.47</code><br>
+	 * 		Example usage: <code>tr=15.47</code>
+	 * 	</div>
+	 * </div>
+	 */
+	public TransactionHit txRevenue(Double value) {
+		setDouble(TRANSACTION_REVENUE, value);
+	   	return this;
+	}
+	public Double txRevenue() {
+		return getDouble(TRANSACTION_REVENUE);
+	}
+
+	/**
+	 * <div class="ind">
+	 * 	<p>
+	 * 		Optional.
+	 * 	</p>
+	 * 	<p>Specifies the total shipping cost of the transaction.</p>
+	 * 	<table border="1">
+	 * 		<tbody>
+	 * 			<tr>
+	 * 				<th>Parameter</th>
+	 * 				<th>Value Type</th>
+	 * 				<th>Default Value</th>
+	 * 				<th>Max Length</th>
+	 * 				<th>Supported Hit Types</th>
+	 * 			</tr>
+	 * 			<tr>
+	 * 				<td><code>ts</code></td>
+	 * 				<td>currency</td>
+	 * 				<td><code>0</code>
+	 * 				</td>
+	 * 				<td><span class="none">None</span>
+	 * 				</td>
+	 * 				<td>transaction</td>
 	 * 			</tr>
 	 * 		</tbody>
 	 * 	</table>
 	 * 	<div>
 	 * 		Example value: <code>3.50</code><br>
-	 * 		Example usage: <code>ip=3.50</code>
+	 * 		Example usage: <code>ts=3.50</code>
 	 * 	</div>
 	 * </div>
 	 */
-	public ItemHit itemPrice(Double value) {
-		setDouble(ITEM_PRICE, value);
+	public TransactionHit txShipping(Double value) {
+		setDouble(TRANSACTION_SHIPPING, value);
 	   	return this;
 	}
-	public Double itemPrice() {
-		return getDouble(ITEM_PRICE);
+	public Double txShipping() {
+		return getDouble(TRANSACTION_SHIPPING);
 	}
 
 	/**
@@ -161,7 +226,7 @@ public class ItemHit extends GoogleAnalyticsRequest<ItemHit> {
 	 * 	<p>
 	 * 		Optional.
 	 * 	</p>
-	 * 	<p>Specifies the number of items purchased.</p>
+	 * 	<p>Specifies the total tax of the transaction.</p>
 	 * 	<table border="1">
 	 * 		<tbody>
 	 * 			<tr>
@@ -172,109 +237,28 @@ public class ItemHit extends GoogleAnalyticsRequest<ItemHit> {
 	 * 				<th>Supported Hit Types</th>
 	 * 			</tr>
 	 * 			<tr>
-	 * 				<td><code>iq</code></td>
-	 * 				<td>integer</td>
+	 * 				<td><code>tt</code></td>
+	 * 				<td>currency</td>
 	 * 				<td><code>0</code>
 	 * 				</td>
 	 * 				<td><span class="none">None</span>
 	 * 				</td>
-	 * 				<td>item</td>
+	 * 				<td>transaction</td>
 	 * 			</tr>
 	 * 		</tbody>
 	 * 	</table>
 	 * 	<div>
-	 * 		Example value: <code>4</code><br>
-	 * 		Example usage: <code>iq=4</code>
+	 * 		Example value: <code>11.20</code><br>
+	 * 		Example usage: <code>tt=11.20</code>
 	 * 	</div>
 	 * </div>
 	 */
-	public ItemHit itemQuantity(Integer value) {
-		setInteger(ITEM_QUANTITY, value);
+	public TransactionHit txTax(Double value) {
+		setDouble(TRANSACTION_TAX, value);
 	   	return this;
 	}
-	public Integer itemQuantity() {
-		return getInteger(ITEM_QUANTITY);
-	}
-
-	/**
-	 * <div class="ind">
-	 * 	<p>
-	 * 		Optional.
-	 * 	</p>
-	 * 	<p>Specifies the SKU or item code.</p>
-	 * 	<table border="1">
-	 * 		<tbody>
-	 * 			<tr>
-	 * 				<th>Parameter</th>
-	 * 				<th>Value Type</th>
-	 * 				<th>Default Value</th>
-	 * 				<th>Max Length</th>
-	 * 				<th>Supported Hit Types</th>
-	 * 			</tr>
-	 * 			<tr>
-	 * 				<td><code>ic</code></td>
-	 * 				<td>text</td>
-	 * 				<td><span class="none">None</span>
-	 * 				</td>
-	 * 				<td>500 Bytes
-	 * 				</td>
-	 * 				<td>item</td>
-	 * 			</tr>
-	 * 		</tbody>
-	 * 	</table>
-	 * 	<div>
-	 * 		Example value: <code>SKU47</code><br>
-	 * 		Example usage: <code>ic=SKU47</code>
-	 * 	</div>
-	 * </div>
-	 */
-	public ItemHit itemCode(String value) {
-		setString(ITEM_CODE, value);
-	   	return this;
-	}
-	public String itemCode() {
-		return getString(ITEM_CODE);
-	}
-
-	/**
-	 * <div class="ind">
-	 * 	<p>
-	 * 		Optional.
-	 * 	</p>
-	 * 	<p>Specifies the category that the item belongs to.</p>
-	 * 	<table border="1">
-	 * 		<tbody>
-	 * 			<tr>
-	 * 				<th>Parameter</th>
-	 * 				<th>Value Type</th>
-	 * 				<th>Default Value</th>
-	 * 				<th>Max Length</th>
-	 * 				<th>Supported Hit Types</th>
-	 * 			</tr>
-	 * 			<tr>
-	 * 				<td><code>iv</code></td>
-	 * 				<td>text</td>
-	 * 				<td><span class="none">None</span>
-	 * 				</td>
-	 * 				<td>500 Bytes
-	 * 				</td>
-	 * 				<td>item</td>
-	 * 			</tr>
-	 * 		</tbody>
-	 * 	</table>
-	 * 	<div>
-	 * 		Example value: <code>Blue</code><br>
-	 * 		Example usage: <code>iv=Blue</code>
-	 * 	</div>
-	 * </div>
-	 */
-	public ItemHit itemCategory(String value) {
-		setString(ITEM_CATEGORY, value);
-	   	return this;
-	}
-
-	public String itemCategory() {
-		return getString(ITEM_CATEGORY);
+	public Double txTax() {
+		return getDouble(TRANSACTION_TAX);
 	}
 
 	/**
@@ -309,7 +293,7 @@ public class ItemHit extends GoogleAnalyticsRequest<ItemHit> {
 	 * 	</div>
 	 * </div>
 	 */
-	public ItemHit currencyCode(String value) {
+	public TransactionHit currencyCode(String value) {
 		setString(CURRENCY_CODE, value);
 	   	return this;
 	}

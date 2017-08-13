@@ -11,11 +11,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.brsanthu.googleanalytics;
+package com.brsanthu.googleanalytics.request;
 
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SOCIAL_ACTION;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SOCIAL_ACTION_TARGET;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SOCIAL_NETWORK;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.SOCIAL_ACTION;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.SOCIAL_ACTION_TARGET;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.SOCIAL_NETWORK;
 
 /**
  * GA request to track social interactions

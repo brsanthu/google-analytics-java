@@ -1,11 +1,14 @@
-package com.brsanthu.googleanalytics;
+package com.brsanthu.googleanalytics.discovery;
 
-import static com.brsanthu.googleanalytics.GaUtils.isEmpty;
+import static com.brsanthu.googleanalytics.internal.GaUtils.isEmpty;
 
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
+
+import com.brsanthu.googleanalytics.GoogleAnalyticsConfig;
+import com.brsanthu.googleanalytics.request.DefaultRequest;
 
 /**
  * Clases uses AWT classes to discover following properties.

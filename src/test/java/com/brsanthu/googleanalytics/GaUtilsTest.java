@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.brsanthu.googleanalytics.internal.GaUtils;
+
 public class GaUtilsTest {
 	
 	@Test

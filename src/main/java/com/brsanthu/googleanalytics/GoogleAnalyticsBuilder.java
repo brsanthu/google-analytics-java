@@ -1,0 +1,70 @@
+package com.brsanthu.googleanalytics;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+import com.brsanthu.googleanalytics.httpclient.ApacheHttpClientImpl;
+import com.brsanthu.googleanalytics.httpclient.HttpClient;
+import com.brsanthu.googleanalytics.internal.GaUtils;
+import com.brsanthu.googleanalytics.internal.GoogleAnalyticsImpl;
+import com.brsanthu.googleanalytics.internal.GoogleAnalyticsThreadFactory;
+import com.brsanthu.googleanalytics.request.DefaultRequest;
+
+public class GoogleAnalyticsBuilder {
+	private GoogleAnalyticsConfig config = new GoogleAnalyticsConfig();
+	private DefaultRequest defaultRequest = new DefaultRequest();
+	private HttpClient httpClient;
+	private ExecutorService executor;
+
+	public GoogleAnalyticsBuilder withConfig(GoogleAnalyticsConfig config) {
+		this.config = GaUtils.firstNotNull(config, new GoogleAnalyticsConfig());
+		return this;
+	}
+
+	public GoogleAnalyticsBuilder withTrackingId(String trackingId) {
+		defaultRequest.trackingId(trackingId);
+		return this;
+	}
+
+	public GoogleAnalyticsBuilder withDefaultRequest(DefaultRequest defaultRequest) {
+		this.defaultRequest = GaUtils.firstNotNull(defaultRequest, new DefaultRequest());
+		return this;
+	}
+
+	public GoogleAnalyticsBuilder withExecutor(ExecutorService executor) {
+		this.executor = executor;
+		return this;
+	}
+
+	public GoogleAnalyticsBuilder withHttpClient(HttpClient httpClient) {
+		this.httpClient = httpClient;
+		return this;
+	}
+
+	public GoogleAnalytics build() {
+		return new GoogleAnalyticsImpl(config, defaultRequest, createHttpClient(), createExecutor());
+	}
+
+	protected synchronized HttpClient createHttpClient() {
+		if (httpClient != null) {
+			return httpClient;
+		}
+
+		return new ApacheHttpClientImpl();
+	}
+
+	protected synchronized ExecutorService createExecutor() {
+		if (executor != null) {
+			return executor;
+		}
+
+		return new ThreadPoolExecutor(0, config.getMaxThreads(), 5, TimeUnit.MINUTES, new LinkedBlockingDeque<Runnable>(), createThreadFactory());
+	}
+
+	protected ThreadFactory createThreadFactory() {
+		return new GoogleAnalyticsThreadFactory(config.getThreadNameFormat());
+	}
+}

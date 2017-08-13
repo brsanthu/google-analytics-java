@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.brsanthu.googleanalytics.request.EventHit;
+
 public class EventHitTest {
 	
 	@Test

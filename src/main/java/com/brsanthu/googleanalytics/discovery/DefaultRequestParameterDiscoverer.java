@@ -1,10 +1,13 @@
-package com.brsanthu.googleanalytics;
+package com.brsanthu.googleanalytics.discovery;
 
-import static com.brsanthu.googleanalytics.GaUtils.appendSystemProperty;
-import static com.brsanthu.googleanalytics.GaUtils.isEmpty;
+import static com.brsanthu.googleanalytics.internal.GaUtils.appendSystemProperty;
+import static com.brsanthu.googleanalytics.internal.GaUtils.isEmpty;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.brsanthu.googleanalytics.GoogleAnalyticsConfig;
+import com.brsanthu.googleanalytics.request.DefaultRequest;
 
 /** 
  * Default request parameter discoverer. Discovers following parameters.

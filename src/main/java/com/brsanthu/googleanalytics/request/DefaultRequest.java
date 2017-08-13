@@ -12,45 +12,47 @@
  * limitations under the License.
  */
 
-package com.brsanthu.googleanalytics;
+package com.brsanthu.googleanalytics.request;
 
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CURRENCY_CODE;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DNS_TIME;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EVENT_ACTION;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EVENT_CATEGORY;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EVENT_LABEL;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EVENT_VALUE;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EXCEPTION_DESCRIPTION;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EXCEPTION_FATAL;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ITEM_CATEGORY;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ITEM_CODE;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ITEM_NAME;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ITEM_PRICE;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ITEM_QUANTITY;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.PAGE_DOWNLOAD_TIME;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.PAGE_LOAD_TIME;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.REDIRECT_RESPONSE_TIME;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SERVER_RESPONSE_TIME;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SOCIAL_ACTION;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SOCIAL_ACTION_TARGET;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SOCIAL_NETWORK;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TCP_CONNECT_TIME;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRANSACTION_AFFILIATION;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRANSACTION_ID;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRANSACTION_REVENUE;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRANSACTION_SHIPPING;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRANSACTION_TAX;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_TIMING_CATEGORY;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_TIMING_LABEL;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_TIMING_TIME;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_TIMING_VARIABLE_NAME;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.CURRENCY_CODE;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.DNS_TIME;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.EVENT_ACTION;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.EVENT_CATEGORY;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.EVENT_LABEL;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.EVENT_VALUE;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.EXCEPTION_DESCRIPTION;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.EXCEPTION_FATAL;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.ITEM_CATEGORY;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.ITEM_CODE;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.ITEM_NAME;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.ITEM_PRICE;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.ITEM_QUANTITY;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.PAGE_DOWNLOAD_TIME;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.PAGE_LOAD_TIME;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.REDIRECT_RESPONSE_TIME;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.SERVER_RESPONSE_TIME;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.SOCIAL_ACTION;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.SOCIAL_ACTION_TARGET;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.SOCIAL_NETWORK;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.TCP_CONNECT_TIME;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.TRANSACTION_AFFILIATION;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.TRANSACTION_ID;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.TRANSACTION_REVENUE;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.TRANSACTION_SHIPPING;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.TRANSACTION_TAX;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.USER_TIMING_CATEGORY;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.USER_TIMING_LABEL;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.USER_TIMING_TIME;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.USER_TIMING_VARIABLE_NAME;
 
 import java.util.UUID;
 
+import com.brsanthu.googleanalytics.internal.GoogleAnalyticsImpl;
+
 /**
  * Default request that captures default value for any of the parameters. Create an instance of
- * this object and specify as constructor parameter to {@link GoogleAnalytics} or set one any time using
- * {@link GoogleAnalytics#setDefaultRequest(DefaultRequest)} method.
+ * this object and specify as constructor parameter to {@link GoogleAnalyticsImpl} or set one any time using
+ * {@link GoogleAnalyticsImpl#setDefaultRequest(DefaultRequest)} method.
  *
  * @author Santhosh Kumar
  */

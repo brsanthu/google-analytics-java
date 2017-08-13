@@ -5,6 +5,9 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
+import com.brsanthu.googleanalytics.discovery.AwtRequestParameterDiscoverer;
+import com.brsanthu.googleanalytics.request.DefaultRequest;
+
 public class AwtRequestParameterDiscovererTest {
 	
 	@Test

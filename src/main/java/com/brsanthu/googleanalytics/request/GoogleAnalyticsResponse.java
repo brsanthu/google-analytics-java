@@ -11,13 +11,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.brsanthu.googleanalytics;
+package com.brsanthu.googleanalytics.request;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import org.apache.http.NameValuePair;
 
 /**
  * Response for GA tracking request.
@@ -26,26 +22,13 @@ import org.apache.http.NameValuePair;
  */
 public class GoogleAnalyticsResponse {
 	private int statusCode = 200;
-	private List<NameValuePair> postedParms = null;
+	private Map<String, String> postedParms = null;
 
-	public Map<String, String> getPostedParmsAsMap() {
-		if (postedParms == null) {
-			return null;
-		}
-		
-		Map<String, String> paramsMap = new HashMap<String, String>();
-		for (NameValuePair pair : postedParms) {
-			paramsMap.put(pair.getName(), pair.getValue());
-		}
-		
-		return paramsMap;
-	}
-
-	public List<NameValuePair> getPostedParms() {
+	public Map<String, String> getPostedParms() {
 		return postedParms;
 	}
 
-	public void setPostedParms(List<NameValuePair> postedParms) {
+	public void setPostedParms(Map<String, String> postedParms) {
 		this.postedParms = postedParms;
 	}
 

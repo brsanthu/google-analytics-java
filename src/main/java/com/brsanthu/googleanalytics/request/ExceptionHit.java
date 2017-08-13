@@ -11,10 +11,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.brsanthu.googleanalytics;
+package com.brsanthu.googleanalytics.request;
 
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EXCEPTION_DESCRIPTION;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EXCEPTION_FATAL;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.EXCEPTION_DESCRIPTION;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.EXCEPTION_FATAL;
 
 /**
  * GA request to track exceptions.
