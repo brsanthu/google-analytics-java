@@ -21,7 +21,6 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import java.util.function.Supplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,13 +60,13 @@ import com.brsanthu.googleanalytics.request.TransactionHit;
  * all resources. Once close method is called, this instance cannot be reused so create new instance if required.
  */
 public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExecutor {
-    private static final Logger logger = LoggerFactory.getLogger(GoogleAnalyticsImpl.class);
+    protected static final Logger logger = LoggerFactory.getLogger(GoogleAnalyticsImpl.class);
 
-    private final GoogleAnalyticsConfig config;
-    private final DefaultRequest defaultRequest;
-    private final HttpClient httpClient;
-    private final ExecutorService executor;
-    private GoogleAnalyticsStatsImpl stats = new GoogleAnalyticsStatsImpl();
+    protected final GoogleAnalyticsConfig config;
+    protected final DefaultRequest defaultRequest;
+    protected final HttpClient httpClient;
+    protected final ExecutorService executor;
+    protected GoogleAnalyticsStatsImpl stats = new GoogleAnalyticsStatsImpl();
 
     public GoogleAnalyticsImpl(GoogleAnalyticsConfig config, DefaultRequest defaultRequest, HttpClient httpClient, ExecutorService executor) {
         this.config = config;
@@ -85,21 +84,6 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
         return defaultRequest;
     }
 
-    @Override
-    public GoogleAnalyticsResponse post(Supplier<GoogleAnalyticsRequest<?>> requestProvider) {
-        if (!config.isEnabled()) {
-            return new GoogleAnalyticsResponse();
-        }
-
-        return post(requestProvider.get());
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.brsanthu.googleanalytics.internal.GoogleAnalytics#post(com.brsanthu.googleanalytics.request.
-     * GoogleAnalyticsRequest)
-     */
     @Override
     @SuppressWarnings({ "rawtypes" })
     public GoogleAnalyticsResponse post(GoogleAnalyticsRequest request) {
@@ -142,7 +126,7 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
         return response;
     }
 
-    private void processParameters(GoogleAnalyticsRequest<?> request, HttpRequest req) {
+    protected void processParameters(GoogleAnalyticsRequest<?> request, HttpRequest req) {
 
         Map<GoogleAnalyticsParameter, String> requestParms = request.getParameters();
         Map<GoogleAnalyticsParameter, String> defaultParms = defaultRequest.getParameters();
@@ -168,13 +152,12 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
      * @param request
      * @param postParms
      */
-    private void processCustomDimensionParameters(GoogleAnalyticsRequest<?> request, HttpRequest req) {
+    protected void processCustomDimensionParameters(GoogleAnalyticsRequest<?> request, HttpRequest req) {
         Map<String, String> customDimParms = new HashMap<String, String>();
         for (String defaultCustomDimKey : defaultRequest.customDimensions().keySet()) {
             customDimParms.put(defaultCustomDimKey, defaultRequest.customDimensions().get(defaultCustomDimKey));
         }
 
-        @SuppressWarnings("unchecked")
         Map<String, String> requestCustomDims = request.customDimensions();
         for (String requestCustomDimKey : requestCustomDims.keySet()) {
             customDimParms.put(requestCustomDimKey, requestCustomDims.get(requestCustomDimKey));
@@ -191,13 +174,12 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
      * @param request
      * @param postParms
      */
-    private void processCustomMetricParameters(GoogleAnalyticsRequest<?> request, HttpRequest req) {
+    protected void processCustomMetricParameters(GoogleAnalyticsRequest<?> request, HttpRequest req) {
         Map<String, String> customMetricParms = new HashMap<String, String>();
         for (String defaultCustomMetricKey : defaultRequest.custommMetrics().keySet()) {
             customMetricParms.put(defaultCustomMetricKey, defaultRequest.custommMetrics().get(defaultCustomMetricKey));
         }
 
-        @SuppressWarnings("unchecked")
         Map<String, String> requestCustomMetrics = request.custommMetrics();
         for (String requestCustomDimKey : requestCustomMetrics.keySet()) {
             customMetricParms.put(requestCustomDimKey, requestCustomMetrics.get(requestCustomDimKey));
@@ -208,7 +190,7 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
         }
     }
 
-    private void gatherStats(@SuppressWarnings("rawtypes") GoogleAnalyticsRequest request) {
+    protected void gatherStats(@SuppressWarnings("rawtypes") GoogleAnalyticsRequest request) {
         String hitType = request.hitType();
 
         if ("pageview".equalsIgnoreCase(hitType)) {
@@ -234,43 +216,6 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.brsanthu.googleanalytics.internal.GoogleAnalytics#postAsync(java.util.function.Supplier)
-     */
-    @Override
-    public Future<GoogleAnalyticsResponse> postAsync(Supplier<GoogleAnalyticsRequest<?>> requestProvider) {
-        if (!config.isEnabled()) {
-            return null;
-        }
-
-        Future<GoogleAnalyticsResponse> future = executor.submit(new Callable<GoogleAnalyticsResponse>() {
-            @Override
-            public GoogleAnalyticsResponse call() throws Exception {
-                try {
-                    @SuppressWarnings("rawtypes")
-                    GoogleAnalyticsRequest request = requestProvider.get();
-                    if (request != null) {
-                        return post(request);
-                    }
-                } catch (Exception e) {
-                    logger.warn(
-                            "Request Provider (" + requestProvider + ") thrown exception " + e.toString() + " and hence nothing is posted to GA.");
-                }
-
-                return null;
-            }
-        });
-        return future;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.brsanthu.googleanalytics.internal.GoogleAnalytics#postAsync(com.brsanthu.googleanalytics.request.
-     * GoogleAnalyticsRequest)
-     */
     @Override
     @SuppressWarnings("rawtypes")
     public Future<GoogleAnalyticsResponse> postAsync(final GoogleAnalyticsRequest request) {
@@ -287,11 +232,6 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
         return future;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.brsanthu.googleanalytics.internal.GoogleAnalytics#close()
-     */
     @Override
     public void close() {
         try {
@@ -307,21 +247,11 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.brsanthu.googleanalytics.internal.GoogleAnalytics#getStats()
-     */
     @Override
     public GoogleAnalyticsStats getStats() {
         return stats;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.brsanthu.googleanalytics.internal.GoogleAnalytics#resetStats()
-     */
     @Override
     public void resetStats() {
         stats = new GoogleAnalyticsStatsImpl();
@@ -400,6 +330,15 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
     @Override
     public TransactionHit transaction() {
         return (TransactionHit) new TransactionHit().setExecutor(this);
+    }
+
+    @Override
+    public void ifEnabled(Runnable runnable) {
+        if (!config.isEnabled()) {
+            return;
+        }
+
+        runnable.run();
     }
 
 }
