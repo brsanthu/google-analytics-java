@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.brsanthu.googleanalytics;
+package com.brsanthu.googleanalytics.request;
 
 /**
  * GA request to track a typical web page view
@@ -21,18 +21,18 @@ package com.brsanthu.googleanalytics;
  * @author Santhosh Kumar
  */
 public class PageViewHit extends GoogleAnalyticsRequest<PageViewHit> {
-	public PageViewHit() {
-		this(null, null, null);
-	}
+    public PageViewHit() {
+        this(null, null, null);
+    }
 
-	public PageViewHit(String url, String title) {
-		this(url, title, null);
-	}
+    public PageViewHit(String url, String title) {
+        this(url, title, null);
+    }
 
-	public PageViewHit(String url, String title, String description) {
-		super("pageview");
-		documentUrl(url);
-		documentTitle(title);
-		contentDescription(description);
-	}
+    public PageViewHit(String url, String title, String description) {
+        super("pageview");
+        documentUrl(url);
+        documentTitle(title);
+        contentDescription(description);
+    }
 }

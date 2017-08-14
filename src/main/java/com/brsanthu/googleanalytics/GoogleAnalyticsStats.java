@@ -1,130 +1,19 @@
-/*
- * Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.brsanthu.googleanalytics;
 
-import java.util.concurrent.atomic.AtomicLong;
+public interface GoogleAnalyticsStats {
 
-/**
- * Collects the basic stats about successful events that have been posted to GA.
- *
- * @author Santhosh Kumar
- */
-public class GoogleAnalyticsStats {
-	private AtomicLong pageViewHits = new AtomicLong();
-	private AtomicLong eventHits = new AtomicLong();
-	private AtomicLong appViewHits = new AtomicLong();
-	private AtomicLong itemHits = new AtomicLong();
-	private AtomicLong transactionHits = new AtomicLong();
-	private AtomicLong timingHits = new AtomicLong();
-	private AtomicLong socialHits = new AtomicLong();
+    long getPageViewHits();
 
-	void pageViewHit() {
-		pageViewHits.incrementAndGet();
-	}
+    long getEventHits();
 
-	void eventHit() {
-		eventHits.incrementAndGet();
-	}
+    long getAppViewHits();
 
-	void appViewHit() {
-		appViewHits.incrementAndGet();
-	}
+    long getItemHits();
 
-	void itemHit() {
-		itemHits.incrementAndGet();
-	}
+    long getTransactionHits();
 
-	void transactionHit() {
-		transactionHits.incrementAndGet();
-	}
+    long getTimingHits();
 
-	void socialHit() {
-		socialHits.incrementAndGet();
-	}
+    long getSocialHits();
 
-	void timingHit() {
-		timingHits.incrementAndGet();
-	}
-
-	public long getPageViewHits () {
-		return pageViewHits.get();
-	}
-
-	public long getEventHits () {
-		return eventHits.get();
-	}
-
-	public long getAppViewHits () {
-		return appViewHits.get();
-	}
-
-	public long getItemHits () {
-		return itemHits.get();
-	}
-
-	public long getTransactionHits () {
-		return transactionHits.get();
-	}
-
-	public long getTimingHits () {
-		return timingHits.get();
-	}
-
-	public long getSocialHits () {
-		return socialHits.get();
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("GoogleAnalyticsStats [");
-		if (pageViewHits != null) {
-			builder.append("pageViewHits=");
-			builder.append(pageViewHits);
-			builder.append(", ");
-		}
-		if (eventHits != null) {
-			builder.append("eventHits=");
-			builder.append(eventHits);
-			builder.append(", ");
-		}
-		if (appViewHits != null) {
-			builder.append("appViewHits=");
-			builder.append(appViewHits);
-			builder.append(", ");
-		}
-		if (itemHits != null) {
-			builder.append("itemHits=");
-			builder.append(itemHits);
-			builder.append(", ");
-		}
-		if (transactionHits != null) {
-			builder.append("transactionHits=");
-			builder.append(transactionHits);
-			builder.append(", ");
-		}
-		if (timingHits != null) {
-			builder.append("timingHits=");
-			builder.append(timingHits);
-			builder.append(", ");
-		}
-		if (socialHits != null) {
-			builder.append("socialHits=");
-			builder.append(socialHits);
-		}
-		builder.append("]");
-		return builder.toString();
-	}
 }
