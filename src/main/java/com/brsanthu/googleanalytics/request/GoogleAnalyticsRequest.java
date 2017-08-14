@@ -1769,12 +1769,12 @@ public class GoogleAnalyticsRequest<T> {
      * <div> Example value: <code>Qp0gahJ3RAO3DJ18b0XoUQ</code><br>
      * Example usage: <code>xid=Qp0gahJ3RAO3DJ18b0XoUQ</code> </div> </div>
      */
-    public T expirementId(String value) {
+    public T experimentId(String value) {
         setString(EXPERIMENT_ID, value);
         return (T) this;
     }
 
-    public String expirementId() {
+    public String experimentId() {
         return getString(EXPERIMENT_ID);
     }
 
@@ -1810,12 +1810,12 @@ public class GoogleAnalyticsRequest<T> {
      * <div> Example value: <code>1</code><br>
      * Example usage: <code>xvar=1</code> </div> </div>
      */
-    public T expirementVariant(String value) {
+    public T experimentVariant(String value) {
         setString(EXPERIMENT_VARIANT, value);
         return (T) this;
     }
 
-    public String expirementVariant() {
+    public String experimentVariant() {
         return getString(EXPERIMENT_VARIANT);
     }
 
