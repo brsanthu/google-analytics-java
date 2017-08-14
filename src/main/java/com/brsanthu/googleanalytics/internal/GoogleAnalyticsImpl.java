@@ -333,6 +333,16 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
     }
 
     @Override
+    public AppViewHit appView(String contentDescription) {
+        return appView().contentDescription(contentDescription);
+    }
+
+    @Override
+    public AppViewHit appView(String appName, String appVersion, String contentDescription) {
+        return appView().applicationName(appName).applicationVersion(appVersion).contentDescription(contentDescription);
+    }
+
+    @Override
     public EventHit event() {
         return (EventHit) new EventHit().setExecutor(this);
     }

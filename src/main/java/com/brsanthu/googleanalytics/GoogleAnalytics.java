@@ -14,6 +14,10 @@ public interface GoogleAnalytics extends AutoCloseable {
 
     AppViewHit appView();
 
+    AppViewHit appView(String contentDescription);
+
+    AppViewHit appView(String appName, String appVersion, String contentDescription);
+
     EventHit event();
 
     ExceptionHit exception();
