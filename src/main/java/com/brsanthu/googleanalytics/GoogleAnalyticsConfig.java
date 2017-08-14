@@ -36,7 +36,7 @@ public class GoogleAnalyticsConfig {
     private String threadNameFormat = "googleanalytics-thread-{0}";
     private boolean enabled = true;
     private int minThreads = 0;
-    private int maxThreads = 1;
+    private int maxThreads = 5;
     private int threadTimeoutSecs = 300;
     private int threadQueueSize = 1000;
     private int maxHttpConnectionsPerRoute = 10;
@@ -355,61 +355,12 @@ public class GoogleAnalyticsConfig {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("GoogleAnalyticsConfig [");
-        if (threadNameFormat != null) {
-            builder.append("threadNameFormat=");
-            builder.append(threadNameFormat);
-            builder.append(", ");
-        }
-        builder.append("enabled=");
-        builder.append(enabled);
-        builder.append(", maxThreads=");
-        builder.append(maxThreads);
-        builder.append(", useHttps=");
-        builder.append(useHttps);
-        builder.append(", validate=");
-        builder.append(validate);
-        builder.append(", ");
-        if (httpUrl != null) {
-            builder.append("httpUrl=");
-            builder.append(httpUrl);
-            builder.append(", ");
-        }
-        if (httpsUrl != null) {
-            builder.append("httpsUrl=");
-            builder.append(httpsUrl);
-            builder.append(", ");
-        }
-        if (userAgent != null) {
-            builder.append("userAgent=");
-            builder.append(userAgent);
-            builder.append(", ");
-        }
-        if (proxyHost != null) {
-            builder.append("proxyHost=");
-            builder.append(proxyHost);
-            builder.append(", ");
-        }
-        builder.append("proxyPort=");
-        builder.append(proxyPort);
-        builder.append(", ");
-        if (proxyUserName != null) {
-            builder.append("proxyUserName=");
-            builder.append(proxyUserName);
-            builder.append(", ");
-        }
-        if (proxyPassword != null) {
-            builder.append("proxyPassword=");
-            builder.append(mask(proxyPassword));
-            builder.append(", ");
-        }
-        builder.append("deriveSystemParameters=");
-        builder.append(discoverRequestParameters);
-        builder.append(", gatherStats=");
-        builder.append(gatherStats);
-        builder.append("]");
-        return builder.toString();
+        return "GoogleAnalyticsConfig [threadNameFormat=" + threadNameFormat + ", enabled=" + enabled + ", minThreads=" + minThreads + ", maxThreads="
+                + maxThreads + ", threadTimeoutSecs=" + threadTimeoutSecs + ", threadQueueSize=" + threadQueueSize + ", maxHttpConnectionsPerRoute="
+                + maxHttpConnectionsPerRoute + ", useHttps=" + useHttps + ", validate=" + validate + ", httpUrl=" + httpUrl + ", httpsUrl=" + httpsUrl
+                + ", userAgent=" + userAgent + ", proxyHost=" + proxyHost + ", proxyPort=" + proxyPort + ", proxyUserName=" + proxyUserName
+                + ", proxyPassword=" + mask(proxyPassword) + ", discoverRequestParameters=" + discoverRequestParameters + ", gatherStats="
+                + gatherStats + ", requestParameterDiscoverer=" + requestParameterDiscoverer + "]";
     }
 
     public static String mask(String value) {
