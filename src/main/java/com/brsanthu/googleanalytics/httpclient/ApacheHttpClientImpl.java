@@ -60,4 +60,14 @@ public class ApacheHttpClientImpl implements HttpClient {
 
         return builder.build();
     }
+
+    @Override
+    public boolean isBatchSupported() {
+        return true;
+    }
+
+    @Override
+    public HttpBatchResponse postBatch(HttpBatchRequest req) {
+        return null;
+    }
 }

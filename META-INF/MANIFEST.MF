@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1502689084383
+Bnd-LastModified: 1502690439476
 Build-Jdk: 1.8.0_121
 Built-By: brsanthu
 Bundle-Description: This is Java API for Google Analytics (Measurement P
