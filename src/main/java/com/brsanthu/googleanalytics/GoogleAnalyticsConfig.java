@@ -42,6 +42,8 @@ public class GoogleAnalyticsConfig {
     private int maxHttpConnectionsPerRoute = 10;
     private boolean useHttps = true;
     private boolean validate = true;
+    private boolean batchingEnabled = true;
+    private int batchSize = 1000;
     private String httpUrl = "http://www.google-analytics.com/collect";
     private String httpsUrl = "https://www.google-analytics.com/collect";
     private String batchUrl = "https://www.google-analytics.com/batch";
@@ -392,6 +394,24 @@ public class GoogleAnalyticsConfig {
 
     public GoogleAnalyticsConfig setBatchUrl(String batchUrl) {
         this.batchUrl = batchUrl;
+        return this;
+    }
+
+    public boolean isBatchingEnabled() {
+        return batchingEnabled;
+    }
+
+    public GoogleAnalyticsConfig setBatchingEnabled(boolean batchingEnabled) {
+        this.batchingEnabled = batchingEnabled;
+        return this;
+    }
+
+    public int getBatchSize() {
+        return batchSize;
+    }
+
+    public GoogleAnalyticsConfig setBatchSize(int batchSize) {
+        this.batchSize = batchSize;
         return this;
     }
 
