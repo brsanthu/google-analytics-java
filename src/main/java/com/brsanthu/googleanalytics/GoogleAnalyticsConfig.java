@@ -44,6 +44,7 @@ public class GoogleAnalyticsConfig {
     private boolean validate = true;
     private String httpUrl = "http://www.google-analytics.com/collect";
     private String httpsUrl = "https://www.google-analytics.com/collect";
+    private String batchUrl = "https://www.google-analytics.com/batch";
     private String userAgent = null;
     private String proxyHost = null;
     private int proxyPort = 80;
@@ -382,6 +383,15 @@ public class GoogleAnalyticsConfig {
 
     public GoogleAnalyticsConfig setThreadTimeoutSecs(int threadTimeoutSecs) {
         this.threadTimeoutSecs = threadTimeoutSecs;
+        return this;
+    }
+
+    public String getBatchUrl() {
+        return batchUrl;
+    }
+
+    public GoogleAnalyticsConfig setBatchUrl(String batchUrl) {
+        this.batchUrl = batchUrl;
         return this;
     }
 
