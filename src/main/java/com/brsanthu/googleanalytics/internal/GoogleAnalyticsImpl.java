@@ -18,7 +18,6 @@ import static com.brsanthu.googleanalytics.internal.GaUtils.isEmpty;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
@@ -223,13 +222,7 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
             return null;
         }
 
-        Future<GoogleAnalyticsResponse> future = executor.submit(new Callable<GoogleAnalyticsResponse>() {
-            @Override
-            public GoogleAnalyticsResponse call() throws Exception {
-                return post(request);
-            }
-        });
-        return future;
+        return executor.submit(() -> post(request));
     }
 
     @Override
