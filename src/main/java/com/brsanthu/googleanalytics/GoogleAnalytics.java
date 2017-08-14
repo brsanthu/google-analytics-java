@@ -1,25 +1,41 @@
 package com.brsanthu.googleanalytics;
 
-import java.util.concurrent.Future;
-import java.util.function.Supplier;
-
-import com.brsanthu.googleanalytics.request.GoogleAnalyticsRequest;
-import com.brsanthu.googleanalytics.request.GoogleAnalyticsResponse;
+import com.brsanthu.googleanalytics.request.AppViewHit;
+import com.brsanthu.googleanalytics.request.EventHit;
+import com.brsanthu.googleanalytics.request.ExceptionHit;
+import com.brsanthu.googleanalytics.request.ItemHit;
+import com.brsanthu.googleanalytics.request.PageViewHit;
+import com.brsanthu.googleanalytics.request.SocialHit;
+import com.brsanthu.googleanalytics.request.TimingHit;
+import com.brsanthu.googleanalytics.request.TransactionHit;
 
 public interface GoogleAnalytics extends AutoCloseable {
 
-	GoogleAnalyticsResponse post(GoogleAnalyticsRequest<?> request);
+	AppViewHit appView();
 
-	GoogleAnalyticsResponse post(Supplier<GoogleAnalyticsRequest<?>> requestProvider);
+	EventHit event();
 
-	Future<GoogleAnalyticsResponse> postAsync(Supplier<GoogleAnalyticsRequest<?>> requestProvider);
+	ExceptionHit exception();
 
-	Future<GoogleAnalyticsResponse> postAsync(GoogleAnalyticsRequest<?> request);
+	ItemHit item();
 
-	@Override
-	void close();
+	PageViewHit pageView();
+
+	PageViewHit pageView(String url, String title);
+
+	PageViewHit pageView(String url, String title, String description);
+
+	SocialHit social();
+
+	SocialHit social(String socialNetwork, String socialAction, String socialTarget);
+
+	TimingHit timing();
+
+	TransactionHit transaction();
 
 	GoogleAnalyticsStats getStats();
+
+	GoogleAnalyticsConfig getConfig();
 
 	void resetStats();
 

@@ -22,14 +22,14 @@ import java.util.Map;
  */
 public class GoogleAnalyticsResponse {
 	private int statusCode = 200;
-	private Map<String, String> postedParms = null;
+	private Map<String, String> requestParams = null;
 
-	public Map<String, String> getPostedParms() {
-		return postedParms;
+	public Map<String, String> getRequestParams() {
+		return requestParams;
 	}
 
-	public void setPostedParms(Map<String, String> postedParms) {
-		this.postedParms = postedParms;
+	public void setRequestParams(Map<String, String> postedParms) {
+		this.requestParams = postedParms;
 	}
 
 	public void setStatusCode(int statusCode) {

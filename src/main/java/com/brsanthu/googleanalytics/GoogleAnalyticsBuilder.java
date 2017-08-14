@@ -29,6 +29,16 @@ public class GoogleAnalyticsBuilder {
 		return this;
 	}
 
+	public GoogleAnalyticsBuilder withAppName(String value) {
+		defaultRequest.applicationName(value);
+		return this;
+	}
+
+	public GoogleAnalyticsBuilder withAppVersion(String value) {
+		defaultRequest.applicationVersion(value);
+		return this;
+	}
+
 	public GoogleAnalyticsBuilder withDefaultRequest(DefaultRequest defaultRequest) {
 		this.defaultRequest = GaUtils.firstNotNull(defaultRequest, new DefaultRequest());
 		return this;

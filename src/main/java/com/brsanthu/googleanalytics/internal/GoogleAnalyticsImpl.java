@@ -28,14 +28,23 @@ import org.slf4j.LoggerFactory;
 
 import com.brsanthu.googleanalytics.GoogleAnalytics;
 import com.brsanthu.googleanalytics.GoogleAnalyticsConfig;
+import com.brsanthu.googleanalytics.GoogleAnalyticsExecutor;
 import com.brsanthu.googleanalytics.GoogleAnalyticsStats;
 import com.brsanthu.googleanalytics.httpclient.HttpClient;
 import com.brsanthu.googleanalytics.httpclient.HttpRequest;
 import com.brsanthu.googleanalytics.httpclient.HttpResponse;
+import com.brsanthu.googleanalytics.request.AppViewHit;
 import com.brsanthu.googleanalytics.request.DefaultRequest;
+import com.brsanthu.googleanalytics.request.EventHit;
+import com.brsanthu.googleanalytics.request.ExceptionHit;
 import com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter;
 import com.brsanthu.googleanalytics.request.GoogleAnalyticsRequest;
 import com.brsanthu.googleanalytics.request.GoogleAnalyticsResponse;
+import com.brsanthu.googleanalytics.request.ItemHit;
+import com.brsanthu.googleanalytics.request.PageViewHit;
+import com.brsanthu.googleanalytics.request.SocialHit;
+import com.brsanthu.googleanalytics.request.TimingHit;
+import com.brsanthu.googleanalytics.request.TransactionHit;
 
 /**
  * This is the main class of this library that accepts the requests from clients and sends the events to Google
@@ -50,7 +59,7 @@ import com.brsanthu.googleanalytics.request.GoogleAnalyticsResponse;
  * This object contains resources which needs to be shutdown/disposed. So {@link #close()} method is called to release
  * all resources. Once close method is called, this instance cannot be reused so create new instance if required.
  */
-public class GoogleAnalyticsImpl implements GoogleAnalytics {
+public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExecutor {
 	private static final Logger logger = LoggerFactory.getLogger(GoogleAnalyticsImpl.class);
 
 	private final GoogleAnalyticsConfig config;
@@ -114,7 +123,7 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics {
 
 			httpResp = httpClient.post(req);
 			response.setStatusCode(httpResp.getStatusCode());
-			response.setPostedParms(req.getBodyParams());
+			response.setRequestParams(req.getBodyParams());
 
 			if (config.isGatherStats()) {
 				gatherStats(request);
@@ -314,6 +323,61 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics {
 	@Override
 	public void resetStats() {
 		stats = new GoogleAnalyticsStatsImpl();
+	}
+
+	@Override
+	public AppViewHit appView() {
+		return (AppViewHit) new AppViewHit().setExecutor(this);
+	}
+
+	@Override
+	public EventHit event() {
+		return (EventHit) new EventHit().setExecutor(this);
+	}
+
+	@Override
+	public ExceptionHit exception() {
+		return (ExceptionHit) new ExceptionHit().setExecutor(this);
+	}
+
+	@Override
+	public ItemHit item() {
+		return (ItemHit) new ItemHit().setExecutor(this);
+	}
+
+	@Override
+	public PageViewHit pageView() {
+		return (PageViewHit) new PageViewHit().setExecutor(this);
+	}
+
+	@Override
+	public PageViewHit pageView(String url, String title) {
+		return pageView().documentUrl(url).documentTitle(title);
+	}
+
+	@Override
+	public PageViewHit pageView(String url, String title, String description) {
+		return pageView(url, title).contentDescription(description);
+	}
+
+	@Override
+	public SocialHit social() {
+		return (SocialHit) new SocialHit().setExecutor(this);
+	}
+
+	@Override
+	public SocialHit social(String socialNetwork, String socialAction, String socialTarget) {
+		return social().socialNetwork(socialNetwork).socialAction(socialAction).socialActionTarget(socialTarget);
+	}
+
+	@Override
+	public TimingHit timing() {
+		return (TimingHit) new TimingHit().setExecutor(this);
+	}
+
+	@Override
+	public TransactionHit transaction() {
+		return (TransactionHit) new TransactionHit().setExecutor(this);
 	}
 
 }

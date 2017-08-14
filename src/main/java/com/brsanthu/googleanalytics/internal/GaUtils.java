@@ -33,4 +33,9 @@ public class GaUtils {
 
 		return null;
 	}
+
+	public static boolean isBlank(String string) {
+		return string == null || string.trim().length() == 0;
+	}
+
 }

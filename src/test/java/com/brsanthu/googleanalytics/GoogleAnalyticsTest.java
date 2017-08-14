@@ -1,6 +1,7 @@
 package com.brsanthu.googleanalytics;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -8,47 +9,42 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.brsanthu.googleanalytics.internal.GoogleAnalyticsImpl;
-import com.brsanthu.googleanalytics.request.AppViewHit;
 import com.brsanthu.googleanalytics.request.DefaultRequest;
 import com.brsanthu.googleanalytics.request.GoogleAnalyticsResponse;
-import com.brsanthu.googleanalytics.request.ItemHit;
 import com.brsanthu.googleanalytics.request.PageViewHit;
-import com.brsanthu.googleanalytics.request.SocialHit;
 
 public class GoogleAnalyticsTest {
 
-	private static GoogleAnalyticsImpl ga = null;
+	private static GoogleAnalytics ga = null;
 
 	@BeforeClass
 	public static void setup() {
-		GoogleAnalytics.builder().withTrackingId("UA-44034973-2").de
-		
-		ga = new GoogleAnalyticsImpl("UA-44034973-2", "Junit Test", "1.0.0");
+		ga = GoogleAnalytics.builder().withTrackingId("UA-44034973-2").withAppName("Junit Test").withAppVersion("1.0.0").build();
 		System.out.println("Creating Google Analytis Object");
 	}
 
 	@Test
 	public void testPageView() throws Exception {
-		ga.post(new PageViewHit("http://www.google.com", "Search"));
+		ga.pageView("http://www.google.com", "Search").post();
 	}
 
 	@Test
 	public void testSocial() throws Exception {
-		ga.post(new SocialHit("Facebook", "Like", "https://www.google.com"));
-		ga.post(new SocialHit("Google+", "Post", "It is a comment"));
-		ga.post(new SocialHit("Twitter", "Repost", "Post"));
+		ga.social("Facebook", "Like", "https://www.google.com").post();
+		ga.social("Google+", "Post", "It is a comment").post();
+		ga.social("Twitter", "Repost", "Post").post();
 	}
 
 	@Test
 	public void testGatherStats() throws Exception {
 		ga.getConfig().setGatherStats(false);
 		ga.resetStats();
-		ga.post(new PageViewHit());
-		ga.post(new PageViewHit());
-		ga.post(new PageViewHit());
-		ga.post(new AppViewHit());
-		ga.post(new AppViewHit());
-		ga.post(new ItemHit());
+		ga.pageView().post();
+		ga.pageView().post();
+		ga.pageView().post();
+		ga.appView().post();
+		ga.appView().post();
+		ga.item().post();
 
 		assertEquals(0, ga.getStats().getPageViewHits());
 		assertEquals(0, ga.getStats().getAppViewHits());
@@ -56,12 +52,12 @@ public class GoogleAnalyticsTest {
 
 		ga.getConfig().setGatherStats(true);
 		ga.resetStats();
-		ga.post(new PageViewHit());
-		ga.post(new PageViewHit());
-		ga.post(new PageViewHit());
-		ga.post(new AppViewHit());
-		ga.post(new AppViewHit());
-		ga.post(new ItemHit());
+		ga.pageView().post();
+		ga.pageView().post();
+		ga.pageView().post();
+		ga.appView().post();
+		ga.appView().post();
+		ga.item().post();
 
 		assertEquals(3, ga.getStats().getPageViewHits());
 		assertEquals(2, ga.getStats().getAppViewHits());
@@ -98,9 +94,9 @@ public class GoogleAnalyticsTest {
 
 		GoogleAnalyticsResponse response = ga.post(request);
 
-		assertEquals("foo", response.getPostedParmsAsMap().get("cd1"));
-		assertEquals("bob", response.getPostedParmsAsMap().get("cd2"));
-		assertEquals("alice", response.getPostedParmsAsMap().get("cd5"));
+		assertEquals("foo", response.getRequestParams().get("cd1"));
+		assertEquals("bob", response.getRequestParams().get("cd2"));
+		assertEquals("alice", response.getRequestParams().get("cd5"));
 	}
 
 	@Test
@@ -151,15 +147,15 @@ public class GoogleAnalyticsTest {
 
 		request = new PageViewHit("http://www.google.com", "Search");
 		response = ga.post(request);
-		assertEquals("1234", response.getPostedParmsAsMap().get("cid"));
-		assertEquals("user1", response.getPostedParmsAsMap().get("uid"));
+		assertEquals("1234", response.getRequestParams().get("cid"));
+		assertEquals("user1", response.getRequestParams().get("uid"));
 
 		request = new PageViewHit("http://www.google.com", "Search");
 		request.clientId("12345");
 		request.userId("user2");
 
 		response = ga.post(request);
-		assertEquals("12345", response.getPostedParmsAsMap().get("cid"));
-		assertEquals("user2", response.getPostedParmsAsMap().get("uid"));
+		assertEquals("12345", response.getRequestParams().get("cid"));
+		assertEquals("user2", response.getRequestParams().get("uid"));
 	}
 }
