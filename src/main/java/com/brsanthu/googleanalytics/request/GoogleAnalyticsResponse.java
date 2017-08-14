@@ -21,31 +21,31 @@ import java.util.Map;
  * @author Santhosh Kumar
  */
 public class GoogleAnalyticsResponse {
-	private int statusCode = 200;
-	private Map<String, String> requestParams = null;
+    private int statusCode = 200;
+    private Map<String, String> requestParams = null;
 
-	public Map<String, String> getRequestParams() {
-		return requestParams;
-	}
+    public Map<String, String> getRequestParams() {
+        return requestParams;
+    }
 
-	public void setRequestParams(Map<String, String> postedParms) {
-		this.requestParams = postedParms;
-	}
+    public void setRequestParams(Map<String, String> postedParms) {
+        this.requestParams = postedParms;
+    }
 
-	public void setStatusCode(int statusCode) {
-		this.statusCode = statusCode;
-	}
+    public void setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
+    }
 
-	public int getStatusCode() {
-		return statusCode;
-	}
+    public int getStatusCode() {
+        return statusCode;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Response [statusCode=");
-		builder.append(statusCode);
-		builder.append("]");
-		return builder.toString();
-	}
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Response [statusCode=");
+        builder.append(statusCode);
+        builder.append("]");
+        return builder.toString();
+    }
 }

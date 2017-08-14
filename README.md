@@ -8,16 +8,16 @@ This protocol is documented at https://developers.google.com/analytics/devguides
 
 The library is available in Maven Central. Add the following dependency and you are good to go.
 
-	<dependency>
-		<groupId>com.brsanthu</groupId>
-		<artifactId>google-analytics-java</artifactId>
-		<version>1.1.2</version>
-	</dependency>
+    <dependency>
+        <groupId>com.brsanthu</groupId>
+        <artifactId>google-analytics-java</artifactId>
+        <version>1.1.2</version>
+    </dependency>
 
 To get a local build, do
 
-	git clone https://github.com/brsanthu/google-analytics-java.git
-	mvn install
+    git clone https://github.com/brsanthu/google-analytics-java.git
+    mvn install
 
 View Javadocs here http://brsanthu.github.io/google-analytics-java/javadocs/
 
@@ -74,22 +74,22 @@ Version 1.0.3 - Jan 20 2014
 Examples
 -------------
 
-	GoogleAnalytics ga = new GoogleAnalytics("UA-12345678-1");
-	ga.post(new PageViewHit("https://www.google.com", "Google Search"));
+    GoogleAnalytics ga = new GoogleAnalytics("UA-12345678-1");
+    ga.post(new PageViewHit("https://www.google.com", "Google Search"));
 
 Or
 
-	GoogleAnalytics ga = new GoogleAnalytics("UA-12345678-1");
-	ga.postAsync(new PageViewHit("https://www.google.com", "Google Search"));
+    GoogleAnalytics ga = new GoogleAnalytics("UA-12345678-1");
+    ga.postAsync(new PageViewHit("https://www.google.com", "Google Search"));
 
 Or
 
-	GoogleAnalytics ga = new GoogleAnalytics("UA-12345678-1");
-	ga.postAsync(new RequestProvider() {
-		public GoogleAnalyticsRequest getRequest() {
-			return new PageViewHit("https://www.google.com", "Google Search");
-		}
-	});
+    GoogleAnalytics ga = new GoogleAnalytics("UA-12345678-1");
+    ga.postAsync(new RequestProvider() {
+        public GoogleAnalyticsRequest getRequest() {
+            return new PageViewHit("https://www.google.com", "Google Search");
+        }
+    });
 
 
 Other Implementations

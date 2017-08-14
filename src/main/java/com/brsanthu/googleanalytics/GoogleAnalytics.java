@@ -11,35 +11,35 @@ import com.brsanthu.googleanalytics.request.TransactionHit;
 
 public interface GoogleAnalytics extends AutoCloseable {
 
-	AppViewHit appView();
+    AppViewHit appView();
 
-	EventHit event();
+    EventHit event();
 
-	ExceptionHit exception();
+    ExceptionHit exception();
 
-	ItemHit item();
+    ItemHit item();
 
-	PageViewHit pageView();
+    PageViewHit pageView();
 
-	PageViewHit pageView(String url, String title);
+    PageViewHit pageView(String url, String title);
 
-	PageViewHit pageView(String url, String title, String description);
+    PageViewHit pageView(String url, String title, String description);
 
-	SocialHit social();
+    SocialHit social();
 
-	SocialHit social(String socialNetwork, String socialAction, String socialTarget);
+    SocialHit social(String socialNetwork, String socialAction, String socialTarget);
 
-	TimingHit timing();
+    TimingHit timing();
 
-	TransactionHit transaction();
+    TransactionHit transaction();
 
-	GoogleAnalyticsStats getStats();
+    GoogleAnalyticsStats getStats();
 
-	GoogleAnalyticsConfig getConfig();
+    GoogleAnalyticsConfig getConfig();
 
-	void resetStats();
+    void resetStats();
 
-	static GoogleAnalyticsBuilder builder() {
-		return new GoogleAnalyticsBuilder();
-	}
+    static GoogleAnalyticsBuilder builder() {
+        return new GoogleAnalyticsBuilder();
+    }
 }

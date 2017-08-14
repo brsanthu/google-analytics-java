@@ -14,67 +14,68 @@ import com.brsanthu.googleanalytics.internal.GoogleAnalyticsThreadFactory;
 import com.brsanthu.googleanalytics.request.DefaultRequest;
 
 public class GoogleAnalyticsBuilder {
-	private GoogleAnalyticsConfig config = new GoogleAnalyticsConfig();
-	private DefaultRequest defaultRequest = new DefaultRequest();
-	private HttpClient httpClient;
-	private ExecutorService executor;
+    private GoogleAnalyticsConfig config = new GoogleAnalyticsConfig();
+    private DefaultRequest defaultRequest = new DefaultRequest();
+    private HttpClient httpClient;
+    private ExecutorService executor;
 
-	public GoogleAnalyticsBuilder withConfig(GoogleAnalyticsConfig config) {
-		this.config = GaUtils.firstNotNull(config, new GoogleAnalyticsConfig());
-		return this;
-	}
+    public GoogleAnalyticsBuilder withConfig(GoogleAnalyticsConfig config) {
+        this.config = GaUtils.firstNotNull(config, new GoogleAnalyticsConfig());
+        return this;
+    }
 
-	public GoogleAnalyticsBuilder withTrackingId(String trackingId) {
-		defaultRequest.trackingId(trackingId);
-		return this;
-	}
+    public GoogleAnalyticsBuilder withTrackingId(String trackingId) {
+        defaultRequest.trackingId(trackingId);
+        return this;
+    }
 
-	public GoogleAnalyticsBuilder withAppName(String value) {
-		defaultRequest.applicationName(value);
-		return this;
-	}
+    public GoogleAnalyticsBuilder withAppName(String value) {
+        defaultRequest.applicationName(value);
+        return this;
+    }
 
-	public GoogleAnalyticsBuilder withAppVersion(String value) {
-		defaultRequest.applicationVersion(value);
-		return this;
-	}
+    public GoogleAnalyticsBuilder withAppVersion(String value) {
+        defaultRequest.applicationVersion(value);
+        return this;
+    }
 
-	public GoogleAnalyticsBuilder withDefaultRequest(DefaultRequest defaultRequest) {
-		this.defaultRequest = GaUtils.firstNotNull(defaultRequest, new DefaultRequest());
-		return this;
-	}
+    public GoogleAnalyticsBuilder withDefaultRequest(DefaultRequest defaultRequest) {
+        this.defaultRequest = GaUtils.firstNotNull(defaultRequest, new DefaultRequest());
+        return this;
+    }
 
-	public GoogleAnalyticsBuilder withExecutor(ExecutorService executor) {
-		this.executor = executor;
-		return this;
-	}
+    public GoogleAnalyticsBuilder withExecutor(ExecutorService executor) {
+        this.executor = executor;
+        return this;
+    }
 
-	public GoogleAnalyticsBuilder withHttpClient(HttpClient httpClient) {
-		this.httpClient = httpClient;
-		return this;
-	}
+    public GoogleAnalyticsBuilder withHttpClient(HttpClient httpClient) {
+        this.httpClient = httpClient;
+        return this;
+    }
 
-	public GoogleAnalytics build() {
-		return new GoogleAnalyticsImpl(config, defaultRequest, createHttpClient(), createExecutor());
-	}
+    public GoogleAnalytics build() {
+        return new GoogleAnalyticsImpl(config, defaultRequest, createHttpClient(), createExecutor());
+    }
 
-	protected synchronized HttpClient createHttpClient() {
-		if (httpClient != null) {
-			return httpClient;
-		}
+    protected HttpClient createHttpClient() {
+        if (httpClient != null) {
+            return httpClient;
+        }
 
-		return new ApacheHttpClientImpl();
-	}
+        return new ApacheHttpClientImpl(config);
+    }
 
-	protected synchronized ExecutorService createExecutor() {
-		if (executor != null) {
-			return executor;
-		}
+    protected ExecutorService createExecutor() {
+        if (executor != null) {
+            return executor;
+        }
 
-		return new ThreadPoolExecutor(0, config.getMaxThreads(), 5, TimeUnit.MINUTES, new LinkedBlockingDeque<Runnable>(), createThreadFactory());
-	}
+        return new ThreadPoolExecutor(config.getMinThreads(), config.getMaxThreads(), config.getThreadTimeoutSecs(), TimeUnit.SECONDS,
+                new LinkedBlockingDeque<Runnable>(config.getThreadQueueSize()), createThreadFactory(), new ThreadPoolExecutor.CallerRunsPolicy());
+    }
 
-	protected ThreadFactory createThreadFactory() {
-		return new GoogleAnalyticsThreadFactory(config.getThreadNameFormat());
-	}
+    protected ThreadFactory createThreadFactory() {
+        return new GoogleAnalyticsThreadFactory(config.getThreadNameFormat());
+    }
 }

@@ -2,18 +2,18 @@ package com.brsanthu.googleanalytics;
 
 public interface GoogleAnalyticsStats {
 
-	long getPageViewHits();
+    long getPageViewHits();
 
-	long getEventHits();
+    long getEventHits();
 
-	long getAppViewHits();
+    long getAppViewHits();
 
-	long getItemHits();
+    long getItemHits();
 
-	long getTransactionHits();
+    long getTransactionHits();
 
-	long getTimingHits();
+    long getTimingHits();
 
-	long getSocialHits();
+    long getSocialHits();
 
 }

@@ -21,19 +21,19 @@ package com.brsanthu.googleanalytics.request;
  * @author Santhosh Kumar
  */
 public class AppViewHit extends GoogleAnalyticsRequest<AppViewHit> {
-	public AppViewHit() {
-		this(null);
-	}
+    public AppViewHit() {
+        this(null);
+    }
 
-	public AppViewHit(String contentDescription) {
-		this(null, null, contentDescription);
-	}
+    public AppViewHit(String contentDescription) {
+        this(null, null, contentDescription);
+    }
 
-	public AppViewHit(String applicationName, String applicationVersion, String contentDescription) {
-		super("appview");
-		applicationName(applicationName);
-		applicationVersion(applicationVersion);
-		contentDescription(contentDescription);
-	}
+    public AppViewHit(String applicationName, String applicationVersion, String contentDescription) {
+        super("appview");
+        applicationName(applicationName);
+        applicationVersion(applicationVersion);
+        contentDescription(contentDescription);
+    }
 
 }

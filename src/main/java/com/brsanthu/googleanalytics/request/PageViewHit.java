@@ -21,18 +21,18 @@ package com.brsanthu.googleanalytics.request;
  * @author Santhosh Kumar
  */
 public class PageViewHit extends GoogleAnalyticsRequest<PageViewHit> {
-	public PageViewHit() {
-		this(null, null, null);
-	}
+    public PageViewHit() {
+        this(null, null, null);
+    }
 
-	public PageViewHit(String url, String title) {
-		this(url, title, null);
-	}
+    public PageViewHit(String url, String title) {
+        this(url, title, null);
+    }
 
-	public PageViewHit(String url, String title, String description) {
-		super("pageview");
-		documentUrl(url);
-		documentTitle(title);
-		contentDescription(description);
-	}
+    public PageViewHit(String url, String title, String description) {
+        super("pageview");
+        documentUrl(url);
+        documentTitle(title);
+        contentDescription(description);
+    }
 }

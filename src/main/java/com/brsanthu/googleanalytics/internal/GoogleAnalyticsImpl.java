@@ -60,324 +60,324 @@ import com.brsanthu.googleanalytics.request.TransactionHit;
  * all resources. Once close method is called, this instance cannot be reused so create new instance if required.
  */
 public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExecutor {
-	private static final Logger logger = LoggerFactory.getLogger(GoogleAnalyticsImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(GoogleAnalyticsImpl.class);
 
-	private final GoogleAnalyticsConfig config;
-	private final DefaultRequest defaultRequest;
-	private final HttpClient httpClient;
-	private final ExecutorService executor;
-	private GoogleAnalyticsStatsImpl stats = new GoogleAnalyticsStatsImpl();
+    private final GoogleAnalyticsConfig config;
+    private final DefaultRequest defaultRequest;
+    private final HttpClient httpClient;
+    private final ExecutorService executor;
+    private GoogleAnalyticsStatsImpl stats = new GoogleAnalyticsStatsImpl();
 
-	public GoogleAnalyticsImpl(GoogleAnalyticsConfig config, DefaultRequest defaultRequest, HttpClient httpClient, ExecutorService executor) {
-		this.config = config;
-		this.defaultRequest = defaultRequest;
-		this.httpClient = httpClient;
-		this.executor = executor;
-	}
+    public GoogleAnalyticsImpl(GoogleAnalyticsConfig config, DefaultRequest defaultRequest, HttpClient httpClient, ExecutorService executor) {
+        this.config = config;
+        this.defaultRequest = defaultRequest;
+        this.httpClient = httpClient;
+        this.executor = executor;
+    }
 
-	public GoogleAnalyticsConfig getConfig() {
-		return config;
-	}
+    public GoogleAnalyticsConfig getConfig() {
+        return config;
+    }
 
-	public DefaultRequest getDefaultRequest() {
-		return defaultRequest;
-	}
+    public DefaultRequest getDefaultRequest() {
+        return defaultRequest;
+    }
 
-	@Override
-	public GoogleAnalyticsResponse post(Supplier<GoogleAnalyticsRequest<?>> requestProvider) {
-		if (!config.isEnabled()) {
-			return new GoogleAnalyticsResponse();
-		}
+    @Override
+    public GoogleAnalyticsResponse post(Supplier<GoogleAnalyticsRequest<?>> requestProvider) {
+        if (!config.isEnabled()) {
+            return new GoogleAnalyticsResponse();
+        }
 
-		return post(requestProvider.get());
-	}
+        return post(requestProvider.get());
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.brsanthu.googleanalytics.internal.GoogleAnalytics#post(com.brsanthu.googleanalytics.request.
-	 * GoogleAnalyticsRequest)
-	 */
-	@Override
-	@SuppressWarnings({ "rawtypes" })
-	public GoogleAnalyticsResponse post(GoogleAnalyticsRequest request) {
-		GoogleAnalyticsResponse response = new GoogleAnalyticsResponse();
-		if (!config.isEnabled()) {
-			return response;
-		}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.brsanthu.googleanalytics.internal.GoogleAnalytics#post(com.brsanthu.googleanalytics.request.
+     * GoogleAnalyticsRequest)
+     */
+    @Override
+    @SuppressWarnings({ "rawtypes" })
+    public GoogleAnalyticsResponse post(GoogleAnalyticsRequest request) {
+        GoogleAnalyticsResponse response = new GoogleAnalyticsResponse();
+        if (!config.isEnabled()) {
+            return response;
+        }
 
-		HttpResponse httpResp = null;
-		try {
-			HttpRequest req = new HttpRequest(config.getUrl());
+        HttpResponse httpResp = null;
+        try {
+            HttpRequest req = new HttpRequest(config.getUrl());
 
-			// Process the parameters
-			processParameters(request, req);
+            // Process the parameters
+            processParameters(request, req);
 
-			// Process custom dimensions
-			processCustomDimensionParameters(request, req);
+            // Process custom dimensions
+            processCustomDimensionParameters(request, req);
 
-			// Process custom metrics
-			processCustomMetricParameters(request, req);
+            // Process custom metrics
+            processCustomMetricParameters(request, req);
 
-			logger.debug("Processed all parameters and sending the request " + req);
+            logger.debug("Processed all parameters and sending the request " + req);
 
-			httpResp = httpClient.post(req);
-			response.setStatusCode(httpResp.getStatusCode());
-			response.setRequestParams(req.getBodyParams());
+            httpResp = httpClient.post(req);
+            response.setStatusCode(httpResp.getStatusCode());
+            response.setRequestParams(req.getBodyParams());
 
-			if (config.isGatherStats()) {
-				gatherStats(request);
-			}
+            if (config.isGatherStats()) {
+                gatherStats(request);
+            }
 
-		} catch (Exception e) {
-			if (e instanceof UnknownHostException) {
-				logger.warn("Coudln't connect to Google Analytics. Internet may not be available. " + e.toString());
-			} else {
-				logger.warn("Exception while sending the Google Analytics tracker request " + request, e);
-			}
-		}
+        } catch (Exception e) {
+            if (e instanceof UnknownHostException) {
+                logger.warn("Coudln't connect to Google Analytics. Internet may not be available. " + e.toString());
+            } else {
+                logger.warn("Exception while sending the Google Analytics tracker request " + request, e);
+            }
+        }
 
-		return response;
-	}
+        return response;
+    }
 
-	private void processParameters(GoogleAnalyticsRequest<?> request, HttpRequest req) {
+    private void processParameters(GoogleAnalyticsRequest<?> request, HttpRequest req) {
 
-		Map<GoogleAnalyticsParameter, String> requestParms = request.getParameters();
-		Map<GoogleAnalyticsParameter, String> defaultParms = defaultRequest.getParameters();
+        Map<GoogleAnalyticsParameter, String> requestParms = request.getParameters();
+        Map<GoogleAnalyticsParameter, String> defaultParms = defaultRequest.getParameters();
 
-		for (GoogleAnalyticsParameter parm : defaultParms.keySet()) {
+        for (GoogleAnalyticsParameter parm : defaultParms.keySet()) {
 
-			String value = requestParms.get(parm);
-			String defaultValue = defaultParms.get(parm);
+            String value = requestParms.get(parm);
+            String defaultValue = defaultParms.get(parm);
 
-			if (isEmpty(value) && !isEmpty(defaultValue)) {
-				requestParms.put(parm, defaultValue);
-			}
-		}
+            if (isEmpty(value) && !isEmpty(defaultValue)) {
+                requestParms.put(parm, defaultValue);
+            }
+        }
 
-		for (GoogleAnalyticsParameter key : requestParms.keySet()) {
-			req.addBodyParam(key.getParameterName(), requestParms.get(key));
-		}
-	}
+        for (GoogleAnalyticsParameter key : requestParms.keySet()) {
+            req.addBodyParam(key.getParameterName(), requestParms.get(key));
+        }
+    }
 
-	/**
-	 * Processes the custom dimensions and adds the values to list of parameters, which would be posted to GA.
-	 * 
-	 * @param request
-	 * @param postParms
-	 */
-	private void processCustomDimensionParameters(GoogleAnalyticsRequest<?> request, HttpRequest req) {
-		Map<String, String> customDimParms = new HashMap<String, String>();
-		for (String defaultCustomDimKey : defaultRequest.customDimensions().keySet()) {
-			customDimParms.put(defaultCustomDimKey, defaultRequest.customDimensions().get(defaultCustomDimKey));
-		}
+    /**
+     * Processes the custom dimensions and adds the values to list of parameters, which would be posted to GA.
+     * 
+     * @param request
+     * @param postParms
+     */
+    private void processCustomDimensionParameters(GoogleAnalyticsRequest<?> request, HttpRequest req) {
+        Map<String, String> customDimParms = new HashMap<String, String>();
+        for (String defaultCustomDimKey : defaultRequest.customDimensions().keySet()) {
+            customDimParms.put(defaultCustomDimKey, defaultRequest.customDimensions().get(defaultCustomDimKey));
+        }
 
-		@SuppressWarnings("unchecked")
-		Map<String, String> requestCustomDims = request.customDimensions();
-		for (String requestCustomDimKey : requestCustomDims.keySet()) {
-			customDimParms.put(requestCustomDimKey, requestCustomDims.get(requestCustomDimKey));
-		}
+        @SuppressWarnings("unchecked")
+        Map<String, String> requestCustomDims = request.customDimensions();
+        for (String requestCustomDimKey : requestCustomDims.keySet()) {
+            customDimParms.put(requestCustomDimKey, requestCustomDims.get(requestCustomDimKey));
+        }
 
-		for (String key : customDimParms.keySet()) {
-			req.addBodyParam(key, customDimParms.get(key));
-		}
-	}
+        for (String key : customDimParms.keySet()) {
+            req.addBodyParam(key, customDimParms.get(key));
+        }
+    }
 
-	/**
-	 * Processes the custom metrics and adds the values to list of parameters, which would be posted to GA.
-	 * 
-	 * @param request
-	 * @param postParms
-	 */
-	private void processCustomMetricParameters(GoogleAnalyticsRequest<?> request, HttpRequest req) {
-		Map<String, String> customMetricParms = new HashMap<String, String>();
-		for (String defaultCustomMetricKey : defaultRequest.custommMetrics().keySet()) {
-			customMetricParms.put(defaultCustomMetricKey, defaultRequest.custommMetrics().get(defaultCustomMetricKey));
-		}
+    /**
+     * Processes the custom metrics and adds the values to list of parameters, which would be posted to GA.
+     * 
+     * @param request
+     * @param postParms
+     */
+    private void processCustomMetricParameters(GoogleAnalyticsRequest<?> request, HttpRequest req) {
+        Map<String, String> customMetricParms = new HashMap<String, String>();
+        for (String defaultCustomMetricKey : defaultRequest.custommMetrics().keySet()) {
+            customMetricParms.put(defaultCustomMetricKey, defaultRequest.custommMetrics().get(defaultCustomMetricKey));
+        }
 
-		@SuppressWarnings("unchecked")
-		Map<String, String> requestCustomMetrics = request.custommMetrics();
-		for (String requestCustomDimKey : requestCustomMetrics.keySet()) {
-			customMetricParms.put(requestCustomDimKey, requestCustomMetrics.get(requestCustomDimKey));
-		}
+        @SuppressWarnings("unchecked")
+        Map<String, String> requestCustomMetrics = request.custommMetrics();
+        for (String requestCustomDimKey : requestCustomMetrics.keySet()) {
+            customMetricParms.put(requestCustomDimKey, requestCustomMetrics.get(requestCustomDimKey));
+        }
 
-		for (String key : customMetricParms.keySet()) {
-			req.addBodyParam(key, customMetricParms.get(key));
-		}
-	}
+        for (String key : customMetricParms.keySet()) {
+            req.addBodyParam(key, customMetricParms.get(key));
+        }
+    }
 
-	private void gatherStats(@SuppressWarnings("rawtypes") GoogleAnalyticsRequest request) {
-		String hitType = request.hitType();
+    private void gatherStats(@SuppressWarnings("rawtypes") GoogleAnalyticsRequest request) {
+        String hitType = request.hitType();
 
-		if ("pageview".equalsIgnoreCase(hitType)) {
-			stats.pageViewHit();
+        if ("pageview".equalsIgnoreCase(hitType)) {
+            stats.pageViewHit();
 
-		} else if ("appview".equalsIgnoreCase(hitType)) {
-			stats.appViewHit();
+        } else if ("appview".equalsIgnoreCase(hitType)) {
+            stats.appViewHit();
 
-		} else if ("event".equalsIgnoreCase(hitType)) {
-			stats.eventHit();
+        } else if ("event".equalsIgnoreCase(hitType)) {
+            stats.eventHit();
 
-		} else if ("item".equalsIgnoreCase(hitType)) {
-			stats.itemHit();
+        } else if ("item".equalsIgnoreCase(hitType)) {
+            stats.itemHit();
 
-		} else if ("transaction".equalsIgnoreCase(hitType)) {
-			stats.transactionHit();
+        } else if ("transaction".equalsIgnoreCase(hitType)) {
+            stats.transactionHit();
 
-		} else if ("social".equalsIgnoreCase(hitType)) {
-			stats.socialHit();
+        } else if ("social".equalsIgnoreCase(hitType)) {
+            stats.socialHit();
 
-		} else if ("timing".equalsIgnoreCase(hitType)) {
-			stats.timingHit();
-		}
-	}
+        } else if ("timing".equalsIgnoreCase(hitType)) {
+            stats.timingHit();
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.brsanthu.googleanalytics.internal.GoogleAnalytics#postAsync(java.util.function.Supplier)
-	 */
-	@Override
-	public Future<GoogleAnalyticsResponse> postAsync(Supplier<GoogleAnalyticsRequest<?>> requestProvider) {
-		if (!config.isEnabled()) {
-			return null;
-		}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.brsanthu.googleanalytics.internal.GoogleAnalytics#postAsync(java.util.function.Supplier)
+     */
+    @Override
+    public Future<GoogleAnalyticsResponse> postAsync(Supplier<GoogleAnalyticsRequest<?>> requestProvider) {
+        if (!config.isEnabled()) {
+            return null;
+        }
 
-		Future<GoogleAnalyticsResponse> future = executor.submit(new Callable<GoogleAnalyticsResponse>() {
-			@Override
-			public GoogleAnalyticsResponse call() throws Exception {
-				try {
-					@SuppressWarnings("rawtypes")
-					GoogleAnalyticsRequest request = requestProvider.get();
-					if (request != null) {
-						return post(request);
-					}
-				} catch (Exception e) {
-					logger.warn(
-							"Request Provider (" + requestProvider + ") thrown exception " + e.toString() + " and hence nothing is posted to GA.");
-				}
+        Future<GoogleAnalyticsResponse> future = executor.submit(new Callable<GoogleAnalyticsResponse>() {
+            @Override
+            public GoogleAnalyticsResponse call() throws Exception {
+                try {
+                    @SuppressWarnings("rawtypes")
+                    GoogleAnalyticsRequest request = requestProvider.get();
+                    if (request != null) {
+                        return post(request);
+                    }
+                } catch (Exception e) {
+                    logger.warn(
+                            "Request Provider (" + requestProvider + ") thrown exception " + e.toString() + " and hence nothing is posted to GA.");
+                }
 
-				return null;
-			}
-		});
-		return future;
-	}
+                return null;
+            }
+        });
+        return future;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.brsanthu.googleanalytics.internal.GoogleAnalytics#postAsync(com.brsanthu.googleanalytics.request.
-	 * GoogleAnalyticsRequest)
-	 */
-	@Override
-	@SuppressWarnings("rawtypes")
-	public Future<GoogleAnalyticsResponse> postAsync(final GoogleAnalyticsRequest request) {
-		if (!config.isEnabled()) {
-			return null;
-		}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.brsanthu.googleanalytics.internal.GoogleAnalytics#postAsync(com.brsanthu.googleanalytics.request.
+     * GoogleAnalyticsRequest)
+     */
+    @Override
+    @SuppressWarnings("rawtypes")
+    public Future<GoogleAnalyticsResponse> postAsync(final GoogleAnalyticsRequest request) {
+        if (!config.isEnabled()) {
+            return null;
+        }
 
-		Future<GoogleAnalyticsResponse> future = executor.submit(new Callable<GoogleAnalyticsResponse>() {
-			@Override
-			public GoogleAnalyticsResponse call() throws Exception {
-				return post(request);
-			}
-		});
-		return future;
-	}
+        Future<GoogleAnalyticsResponse> future = executor.submit(new Callable<GoogleAnalyticsResponse>() {
+            @Override
+            public GoogleAnalyticsResponse call() throws Exception {
+                return post(request);
+            }
+        });
+        return future;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.brsanthu.googleanalytics.internal.GoogleAnalytics#close()
-	 */
-	@Override
-	public void close() {
-		try {
-			executor.shutdown();
-		} catch (Exception e) {
-			// ignore
-		}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.brsanthu.googleanalytics.internal.GoogleAnalytics#close()
+     */
+    @Override
+    public void close() {
+        try {
+            executor.shutdown();
+        } catch (Exception e) {
+            // ignore
+        }
 
-		try {
-			httpClient.close();
-		} catch (Exception e) {
-			// ignore
-		}
-	}
+        try {
+            httpClient.close();
+        } catch (Exception e) {
+            // ignore
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.brsanthu.googleanalytics.internal.GoogleAnalytics#getStats()
-	 */
-	@Override
-	public GoogleAnalyticsStats getStats() {
-		return stats;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.brsanthu.googleanalytics.internal.GoogleAnalytics#getStats()
+     */
+    @Override
+    public GoogleAnalyticsStats getStats() {
+        return stats;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.brsanthu.googleanalytics.internal.GoogleAnalytics#resetStats()
-	 */
-	@Override
-	public void resetStats() {
-		stats = new GoogleAnalyticsStatsImpl();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.brsanthu.googleanalytics.internal.GoogleAnalytics#resetStats()
+     */
+    @Override
+    public void resetStats() {
+        stats = new GoogleAnalyticsStatsImpl();
+    }
 
-	@Override
-	public AppViewHit appView() {
-		return (AppViewHit) new AppViewHit().setExecutor(this);
-	}
+    @Override
+    public AppViewHit appView() {
+        return (AppViewHit) new AppViewHit().setExecutor(this);
+    }
 
-	@Override
-	public EventHit event() {
-		return (EventHit) new EventHit().setExecutor(this);
-	}
+    @Override
+    public EventHit event() {
+        return (EventHit) new EventHit().setExecutor(this);
+    }
 
-	@Override
-	public ExceptionHit exception() {
-		return (ExceptionHit) new ExceptionHit().setExecutor(this);
-	}
+    @Override
+    public ExceptionHit exception() {
+        return (ExceptionHit) new ExceptionHit().setExecutor(this);
+    }
 
-	@Override
-	public ItemHit item() {
-		return (ItemHit) new ItemHit().setExecutor(this);
-	}
+    @Override
+    public ItemHit item() {
+        return (ItemHit) new ItemHit().setExecutor(this);
+    }
 
-	@Override
-	public PageViewHit pageView() {
-		return (PageViewHit) new PageViewHit().setExecutor(this);
-	}
+    @Override
+    public PageViewHit pageView() {
+        return (PageViewHit) new PageViewHit().setExecutor(this);
+    }
 
-	@Override
-	public PageViewHit pageView(String url, String title) {
-		return pageView().documentUrl(url).documentTitle(title);
-	}
+    @Override
+    public PageViewHit pageView(String url, String title) {
+        return pageView().documentUrl(url).documentTitle(title);
+    }
 
-	@Override
-	public PageViewHit pageView(String url, String title, String description) {
-		return pageView(url, title).contentDescription(description);
-	}
+    @Override
+    public PageViewHit pageView(String url, String title, String description) {
+        return pageView(url, title).contentDescription(description);
+    }
 
-	@Override
-	public SocialHit social() {
-		return (SocialHit) new SocialHit().setExecutor(this);
-	}
+    @Override
+    public SocialHit social() {
+        return (SocialHit) new SocialHit().setExecutor(this);
+    }
 
-	@Override
-	public SocialHit social(String socialNetwork, String socialAction, String socialTarget) {
-		return social().socialNetwork(socialNetwork).socialAction(socialAction).socialActionTarget(socialTarget);
-	}
+    @Override
+    public SocialHit social(String socialNetwork, String socialAction, String socialTarget) {
+        return social().socialNetwork(socialNetwork).socialAction(socialAction).socialActionTarget(socialTarget);
+    }
 
-	@Override
-	public TimingHit timing() {
-		return (TimingHit) new TimingHit().setExecutor(this);
-	}
+    @Override
+    public TimingHit timing() {
+        return (TimingHit) new TimingHit().setExecutor(this);
+    }
 
-	@Override
-	public TransactionHit transaction() {
-		return (TransactionHit) new TransactionHit().setExecutor(this);
-	}
+    @Override
+    public TransactionHit transaction() {
+        return (TransactionHit) new TransactionHit().setExecutor(this);
+    }
 
 }

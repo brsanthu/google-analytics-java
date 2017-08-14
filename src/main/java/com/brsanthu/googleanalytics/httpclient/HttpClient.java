@@ -1,8 +1,8 @@
 package com.brsanthu.googleanalytics.httpclient;
 
 public interface HttpClient extends AutoCloseable {
-	HttpResponse post(HttpRequest req);
+    HttpResponse post(HttpRequest req);
 
-	@Override
-	void close();
+    @Override
+    void close();
 }
