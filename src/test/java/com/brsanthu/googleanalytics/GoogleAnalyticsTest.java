@@ -11,7 +11,7 @@ import com.brsanthu.googleanalytics.request.GoogleAnalyticsResponse;
 
 public class GoogleAnalyticsTest {
 
-    private static final String TRACKING_ID = "UA-44034973-2";
+    private static final String TRACKING_ID = "UA-612100-12";
     private static GoogleAnalytics ga = null;
 
     @BeforeClass
@@ -22,6 +22,7 @@ public class GoogleAnalyticsTest {
     @Test
     public void testPageView() throws Exception {
         ga.pageView("http://www.google.com", "Search").post();
+        ga.pageView("http://www.google.com", "Search").postAsync();
     }
 
     @Test
@@ -85,8 +86,7 @@ public class GoogleAnalyticsTest {
 
         GoogleAnalytics lga = GoogleAnalytics.builder().withDefaultRequest(defaultRequest).withTrackingId(TRACKING_ID).build();
 
-        GoogleAnalyticsResponse response = lga.pageView("http://www.google.com", "Search").customDimension(2, "bob").customDimension(5, "alice")
-                .post();
+        GoogleAnalyticsResponse response = lga.pageView("http://www.google.com", "Search").customMetric(2, "bob").customMetric(5, "alice").post();
 
         assertEquals("foo", response.getRequestParams().get("cm1"));
         assertEquals("bob", response.getRequestParams().get("cm2"));

@@ -2,8 +2,15 @@ package com.brsanthu.googleanalytics.httpclient;
 
 public class HttpResponse {
 
+    private int statusCode;
+
     public int getStatusCode() {
-        return 0;
+        return statusCode;
+    }
+
+    public HttpResponse setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
+        return this;
     }
 
 }
