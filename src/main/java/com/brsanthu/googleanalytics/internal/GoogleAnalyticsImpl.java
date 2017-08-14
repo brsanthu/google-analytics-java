@@ -42,6 +42,7 @@ import com.brsanthu.googleanalytics.request.GoogleAnalyticsRequest;
 import com.brsanthu.googleanalytics.request.GoogleAnalyticsResponse;
 import com.brsanthu.googleanalytics.request.ItemHit;
 import com.brsanthu.googleanalytics.request.PageViewHit;
+import com.brsanthu.googleanalytics.request.ScreenViewHit;
 import com.brsanthu.googleanalytics.request.SocialHit;
 import com.brsanthu.googleanalytics.request.TimingHit;
 import com.brsanthu.googleanalytics.request.TransactionHit;
@@ -75,6 +76,7 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
         this.executor = executor;
     }
 
+    @Override
     public GoogleAnalyticsConfig getConfig() {
         return config;
     }
@@ -358,6 +360,16 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
     @Override
     public PageViewHit pageView(String url, String title, String description) {
         return pageView(url, title).contentDescription(description);
+    }
+
+    @Override
+    public ScreenViewHit screenView() {
+        return (ScreenViewHit) new ScreenViewHit().setExecutor(this);
+    }
+
+    @Override
+    public ScreenViewHit screenView(String appName, String screenName) {
+        return screenView().applicationName(appName).screenName(screenName);
     }
 
     @Override

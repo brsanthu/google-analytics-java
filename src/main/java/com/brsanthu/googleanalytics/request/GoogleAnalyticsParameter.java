@@ -129,8 +129,8 @@ public enum GoogleAnalyticsParameter {
     EXPERIMENT_ID("xid", 40),
     EXPERIMENT_VARIANT("xvar"),
 
-    // Experiment Variations
-    SCREEN_NAME("screenName", 40);
+    // Screen view parameters
+    SCREEN_NAME("cd", true, "text", new String[] { "screenview" }, 2048);
 
     private String parameterName = null;
     private boolean required = false;
