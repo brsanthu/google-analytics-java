@@ -13,8 +13,8 @@ import com.brsanthu.googleanalytics.request.DefaultRequest;
 /**
  * Clases uses AWT classes to discover following properties.
  * <ul>
- *     <li>Screen Resolution</li>
- *  <li>Screen Colors</li>
+ * <li>Screen Resolution</li>
+ * <li>Screen Colors</li>
  * </ul>
  * 
  * @author Santhosh Kumar
@@ -24,12 +24,13 @@ public class AwtRequestParameterDiscoverer extends DefaultRequestParameterDiscov
     @Override
     public DefaultRequest discoverParameters(GoogleAnalyticsConfig config, DefaultRequest request) {
         super.discoverParameters(config, request);
-        
+
         Toolkit toolkit = Toolkit.getDefaultToolkit();
 
         if (isEmpty(request.screenResolution())) {
             Dimension screenSize = toolkit.getScreenSize();
-            request.screenResolution(((int) screenSize.getWidth()) + "x" + ((int) screenSize.getHeight()) + ", " + toolkit.getScreenResolution() + " dpi");
+            request.screenResolution(
+                    ((int) screenSize.getWidth()) + "x" + ((int) screenSize.getHeight()) + ", " + toolkit.getScreenResolution() + " dpi");
         }
 
         if (isEmpty(request.screenColors())) {
@@ -45,7 +46,7 @@ public class AwtRequestParameterDiscoverer extends DefaultRequestParameterDiscov
             }
             request.screenColors(sb.toString());
         }
-        
+
         return request;
     }
 }

@@ -60,7 +60,9 @@ public class GoogleAnalyticsStatsImpl implements GoogleAnalyticsStats {
         timingHits.incrementAndGet();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.brsanthu.googleanalytics.internal.GoogleAnalyticsStats#getPageViewHits()
      */
     @Override
@@ -68,7 +70,9 @@ public class GoogleAnalyticsStatsImpl implements GoogleAnalyticsStats {
         return pageViewHits.get();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.brsanthu.googleanalytics.internal.GoogleAnalyticsStats#getEventHits()
      */
     @Override
@@ -76,7 +80,9 @@ public class GoogleAnalyticsStatsImpl implements GoogleAnalyticsStats {
         return eventHits.get();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.brsanthu.googleanalytics.internal.GoogleAnalyticsStats#getAppViewHits()
      */
     @Override
@@ -84,7 +90,9 @@ public class GoogleAnalyticsStatsImpl implements GoogleAnalyticsStats {
         return appViewHits.get();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.brsanthu.googleanalytics.internal.GoogleAnalyticsStats#getItemHits()
      */
     @Override
@@ -92,7 +100,9 @@ public class GoogleAnalyticsStatsImpl implements GoogleAnalyticsStats {
         return itemHits.get();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.brsanthu.googleanalytics.internal.GoogleAnalyticsStats#getTransactionHits()
      */
     @Override
@@ -100,7 +110,9 @@ public class GoogleAnalyticsStatsImpl implements GoogleAnalyticsStats {
         return transactionHits.get();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.brsanthu.googleanalytics.internal.GoogleAnalyticsStats#getTimingHits()
      */
     @Override
@@ -108,7 +120,9 @@ public class GoogleAnalyticsStatsImpl implements GoogleAnalyticsStats {
         return timingHits.get();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.brsanthu.googleanalytics.internal.GoogleAnalyticsStats#getSocialHits()
      */
     @Override

@@ -9,20 +9,21 @@ import org.slf4j.LoggerFactory;
 import com.brsanthu.googleanalytics.GoogleAnalyticsConfig;
 import com.brsanthu.googleanalytics.request.DefaultRequest;
 
-/** 
+/**
  * Default request parameter discoverer. Discovers following parameters.
  * <ul>
- *     <li>Creates User Agent as java/1.6.0_45-b06/Sun Microsystems Inc./Java HotSpot(TM) 64-Bit Server VM/Windows 7/6.1/amd64</li>
- *  <li>User Language, and Country</li>
- *  <li>File Encoding</li>
+ * <li>Creates User Agent as java/1.6.0_45-b06/Sun Microsystems Inc./Java HotSpot(TM) 64-Bit Server VM/Windows
+ * 7/6.1/amd64</li>
+ * <li>User Language, and Country</li>
+ * <li>File Encoding</li>
  * </ul>
  * 
  * @author Santhosh Kumar
  */
 public class DefaultRequestParameterDiscoverer implements RequestParameterDiscoverer {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(DefaultRequestParameterDiscoverer.class);
-    
+
     @Override
     public DefaultRequest discoverParameters(GoogleAnalyticsConfig config, DefaultRequest request) {
         try {
@@ -45,10 +46,10 @@ public class DefaultRequestParameterDiscoverer implements RequestParameterDiscov
         } catch (Exception e) {
             logger.warn("Exception while deriving the System properties for request " + request, e);
         }
-        
+
         return request;
     }
-    
+
     protected String getUserAgentString() {
         StringBuilder sb = new StringBuilder("java");
         appendSystemProperty(sb, "java.runtime.version");
@@ -60,5 +61,5 @@ public class DefaultRequestParameterDiscoverer implements RequestParameterDiscov
 
         return sb.toString();
     }
-    
+
 }
