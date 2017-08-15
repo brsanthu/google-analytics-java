@@ -30,7 +30,6 @@ import com.brsanthu.googleanalytics.GoogleAnalyticsConfig;
 import com.brsanthu.googleanalytics.GoogleAnalyticsExecutor;
 import com.brsanthu.googleanalytics.GoogleAnalyticsStats;
 import com.brsanthu.googleanalytics.httpclient.HttpBatchRequest;
-import com.brsanthu.googleanalytics.httpclient.HttpBatchResponse;
 import com.brsanthu.googleanalytics.httpclient.HttpClient;
 import com.brsanthu.googleanalytics.httpclient.HttpRequest;
 import com.brsanthu.googleanalytics.httpclient.HttpResponse;
@@ -127,21 +126,23 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
 
         synchronized (currentBatch) {
             currentBatch.add(httpReq);
-
             // If the batch size has reached the configured max,
             // then send the batch to google then clear the batch to start a new batch
-            submitBatchIfFull(resp);
+            submitBatch(false);
         }
 
         return resp;
     }
 
-    private void submitBatchIfFull(GoogleAnalyticsResponse resp) {
-        if (currentBatch.size() >= config.getBatchSize()) {
+    private void submitBatch(boolean force) {
+        if (currentBatch.isEmpty()) {
+            return;
+        }
+
+        if (force || currentBatch.size() >= config.getBatchSize()) {
             logger.debug("Submitting a batch of " + currentBatch.size() + " requests to GA");
 
-            HttpBatchResponse httpResp = httpClient.postBatch(new HttpBatchRequest().setUrl(config.getBatchUrl()).setRequests(currentBatch));
-            resp.setStatusCode(httpResp.getStatusCode());
+            httpClient.postBatch(new HttpBatchRequest().setUrl(config.getBatchUrl()).setRequests(currentBatch));
             currentBatch.clear();
         }
     }
@@ -362,6 +363,11 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
         }
 
         runnable.run();
+    }
+
+    @Override
+    public void flush() {
+        submitBatch(true);
     }
 
 }
