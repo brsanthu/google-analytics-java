@@ -69,9 +69,11 @@ public class GoogleAnalyticsConfig {
      * 
      * @param requestParameterDiscoverer
      *            can be null and is so, parameters will not be discovered.
+     * @return
      */
-    public void setRequestParameterDiscoverer(RequestParameterDiscoverer requestParameterDiscoverer) {
+    public GoogleAnalyticsConfig setRequestParameterDiscoverer(RequestParameterDiscoverer requestParameterDiscoverer) {
         this.requestParameterDiscoverer = requestParameterDiscoverer;
+        return this;
     }
 
     public boolean isGatherStats() {
@@ -84,9 +86,11 @@ public class GoogleAnalyticsConfig {
      * {@link GoogleAnalyticsImpl#getStats()}
      *
      * @param gatherStats
+     * @return
      */
-    public void setGatherStats(boolean gatherStats) {
+    public GoogleAnalyticsConfig setGatherStats(boolean gatherStats) {
         this.gatherStats = gatherStats;
+        return this;
     }
 
     /**
@@ -128,16 +132,6 @@ public class GoogleAnalyticsConfig {
     public GoogleAnalyticsConfig setDiscoverRequestParameters(boolean discoverSystemParameters) {
         this.discoverRequestParameters = discoverSystemParameters;
         return this;
-    }
-
-    /**
-     * Deprecated since 1.0.6
-     * 
-     * @deprecated Use {@link #isDiscoverRequestParameters()} instead
-     */
-    @Deprecated
-    public boolean isDeriveSystemParameters() {
-        return isDiscoverRequestParameters();
     }
 
     public boolean isDiscoverRequestParameters() {

@@ -6,6 +6,8 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import com.brsanthu.googleanalytics.discovery.DefaultRequestParameterDiscoverer;
+import com.brsanthu.googleanalytics.discovery.RequestParameterDiscoverer;
 import com.brsanthu.googleanalytics.httpclient.ApacheHttpClientImpl;
 import com.brsanthu.googleanalytics.httpclient.HttpClient;
 import com.brsanthu.googleanalytics.internal.GaUtils;
@@ -55,6 +57,13 @@ public class GoogleAnalyticsBuilder {
     }
 
     public GoogleAnalytics build() {
+        if (config.isDiscoverRequestParameters()) {
+            RequestParameterDiscoverer discoverer = GaUtils.firstNotNull(config.getRequestParameterDiscoverer(),
+                    DefaultRequestParameterDiscoverer.INSTANCE);
+
+            discoverer.discoverParameters(config, defaultRequest);
+        }
+
         return new GoogleAnalyticsImpl(config, defaultRequest, createHttpClient(), createExecutor());
     }
 

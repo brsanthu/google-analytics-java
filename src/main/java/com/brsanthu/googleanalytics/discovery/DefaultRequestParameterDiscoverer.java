@@ -23,6 +23,7 @@ import com.brsanthu.googleanalytics.request.DefaultRequest;
 public class DefaultRequestParameterDiscoverer implements RequestParameterDiscoverer {
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultRequestParameterDiscoverer.class);
+    public static final DefaultRequestParameterDiscoverer INSTANCE = new DefaultRequestParameterDiscoverer();
 
     @Override
     public DefaultRequest discoverParameters(GoogleAnalyticsConfig config, DefaultRequest request) {
