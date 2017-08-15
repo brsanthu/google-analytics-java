@@ -1,4 +1,4 @@
-** Breaking Changes in upcoming 2.0.0 (Not ready for consumption yet) **
+** Breaking Changes in upcoming 2.0.0 **
 --
 Version 2.0.0 is refactoring of majority of structure of the library with goal of making library
 easy to use and make it feel fluently. It is based on Java 1.8.
