@@ -13,7 +13,7 @@
  */
 package com.brsanthu.googleanalytics.request;
 
-import com.brsanthu.googleanalytics.internal.Constants;
+import static com.brsanthu.googleanalytics.internal.Constants.HIT_PAGEVIEW;
 
 /**
  * GA request to track a typical web page view
@@ -36,7 +36,7 @@ public class PageViewHit extends GoogleAnalyticsRequest<PageViewHit> {
     }
 
     public PageViewHit(String url, String title, String description) {
-        super(Constants.HIT_PAGEVIEW);
+        super(HIT_PAGEVIEW);
         documentUrl(url);
         documentTitle(title);
         contentDescription(description);

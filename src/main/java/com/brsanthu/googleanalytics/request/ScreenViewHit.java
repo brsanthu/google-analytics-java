@@ -13,6 +13,7 @@
  */
 package com.brsanthu.googleanalytics.request;
 
+import static com.brsanthu.googleanalytics.internal.Constants.HIT_SCREENVIEW;
 import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.SCREEN_NAME;
 
 /**
@@ -32,7 +33,7 @@ public class ScreenViewHit extends GoogleAnalyticsRequest<ScreenViewHit> {
     }
 
     public ScreenViewHit(String appName, String screenName) {
-        super("screenview");
+        super(HIT_SCREENVIEW);
         screenName(screenName);
         applicationName(appName);
     }
