@@ -273,6 +273,8 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
 
     @Override
     public void close() {
+        flush();
+
         try {
             executor.shutdown();
         } catch (Exception e) {
