@@ -43,7 +43,7 @@ public class GoogleAnalyticsConfig {
     private boolean useHttps = true;
     private boolean validate = true;
     private boolean batchingEnabled = false;
-    private int batchSize = 500;
+    private int batchSize = 20;
     private String httpUrl = "http://www.google-analytics.com/collect";
     private String httpsUrl = "https://www.google-analytics.com/collect";
     private String batchUrl = "https://www.google-analytics.com/batch";
