@@ -1,6 +1,5 @@
 package com.brsanthu.googleanalytics;
 
-import com.brsanthu.googleanalytics.request.AppViewHit;
 import com.brsanthu.googleanalytics.request.EventHit;
 import com.brsanthu.googleanalytics.request.ExceptionHit;
 import com.brsanthu.googleanalytics.request.ItemHit;
@@ -11,12 +10,6 @@ import com.brsanthu.googleanalytics.request.TimingHit;
 import com.brsanthu.googleanalytics.request.TransactionHit;
 
 public interface GoogleAnalytics extends AutoCloseable {
-
-    AppViewHit appView();
-
-    AppViewHit appView(String contentDescription);
-
-    AppViewHit appView(String appName, String appVersion, String contentDescription);
 
     EventHit event();
 

@@ -54,7 +54,7 @@ public class ApacheHttpClientImpl implements HttpClient {
 
         } catch (Exception e) {
             if (e instanceof UnknownHostException) {
-                logger.warn("Coudln't connect to Google Analytics. Internet may not be available. " + e.toString());
+                logger.warn("Couldn't connect to Google Analytics. Internet may not be available. " + e.toString());
             } else {
                 logger.warn("Exception while sending the Google Analytics tracker request " + req, e);
             }

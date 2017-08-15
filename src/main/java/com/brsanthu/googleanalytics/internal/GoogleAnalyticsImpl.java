@@ -31,7 +31,6 @@ import com.brsanthu.googleanalytics.GoogleAnalyticsStats;
 import com.brsanthu.googleanalytics.httpclient.HttpClient;
 import com.brsanthu.googleanalytics.httpclient.HttpRequest;
 import com.brsanthu.googleanalytics.httpclient.HttpResponse;
-import com.brsanthu.googleanalytics.request.AppViewHit;
 import com.brsanthu.googleanalytics.request.DefaultRequest;
 import com.brsanthu.googleanalytics.request.EventHit;
 import com.brsanthu.googleanalytics.request.ExceptionHit;
@@ -116,7 +115,7 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
 
         } catch (Exception e) {
             if (e instanceof UnknownHostException) {
-                logger.warn("Coudln't connect to Google Analytics. Internet may not be available. " + e.toString());
+                logger.warn("Couldn't connect to Google Analytics. Internet may not be available. " + e.toString());
             } else {
                 logger.warn("Exception while sending the Google Analytics tracker request " + request, e);
             }
@@ -189,28 +188,28 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
         }
     }
 
-    protected void gatherStats(@SuppressWarnings("rawtypes") GoogleAnalyticsRequest request) {
+    protected void gatherStats(GoogleAnalyticsRequest<?> request) {
         String hitType = request.hitType();
 
-        if ("pageview".equalsIgnoreCase(hitType)) {
+        if (Constants.HIT_PAGEVIEW.equalsIgnoreCase(hitType)) {
             stats.pageViewHit();
 
-        } else if ("appview".equalsIgnoreCase(hitType)) {
-            stats.appViewHit();
+        } else if (Constants.HIT_SCREENVIEW.equalsIgnoreCase(hitType)) {
+            stats.screenViewHit();
 
-        } else if ("event".equalsIgnoreCase(hitType)) {
+        } else if (Constants.HIT_EVENT.equalsIgnoreCase(hitType)) {
             stats.eventHit();
 
-        } else if ("item".equalsIgnoreCase(hitType)) {
+        } else if (Constants.HIT_ITEM.equalsIgnoreCase(hitType)) {
             stats.itemHit();
 
-        } else if ("transaction".equalsIgnoreCase(hitType)) {
+        } else if (Constants.HIT_TXN.equalsIgnoreCase(hitType)) {
             stats.transactionHit();
 
-        } else if ("social".equalsIgnoreCase(hitType)) {
+        } else if (Constants.HIT_SOCIAL.equalsIgnoreCase(hitType)) {
             stats.socialHit();
 
-        } else if ("timing".equalsIgnoreCase(hitType)) {
+        } else if (Constants.HIT_TIMING.equalsIgnoreCase(hitType)) {
             stats.timingHit();
         }
     }
@@ -248,21 +247,6 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
     @Override
     public void resetStats() {
         stats = new GoogleAnalyticsStatsImpl();
-    }
-
-    @Override
-    public AppViewHit appView() {
-        return (AppViewHit) new AppViewHit().setExecutor(this);
-    }
-
-    @Override
-    public AppViewHit appView(String contentDescription) {
-        return appView().contentDescription(contentDescription);
-    }
-
-    @Override
-    public AppViewHit appView(String appName, String appVersion, String contentDescription) {
-        return appView().applicationName(appName).applicationVersion(appVersion).contentDescription(contentDescription);
     }
 
     @Override

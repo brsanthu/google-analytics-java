@@ -39,12 +39,12 @@ public class GoogleAnalyticsTest {
         ga.pageView().post();
         ga.pageView().post();
         ga.pageView().post();
-        ga.appView().post();
-        ga.appView().post();
+        ga.screenView().post();
+        ga.screenView().post();
         ga.item().post();
 
         assertEquals(0, ga.getStats().getPageViewHits());
-        assertEquals(0, ga.getStats().getAppViewHits());
+        assertEquals(0, ga.getStats().getScreenViewHits());
         assertEquals(0, ga.getStats().getItemHits());
 
         ga.getConfig().setGatherStats(true);
@@ -52,12 +52,12 @@ public class GoogleAnalyticsTest {
         ga.pageView().post();
         ga.pageView().post();
         ga.pageView().post();
-        ga.appView().post();
-        ga.appView().post();
+        ga.screenView().post();
+        ga.screenView().post();
         ga.item().post();
 
         assertEquals(3, ga.getStats().getPageViewHits());
-        assertEquals(2, ga.getStats().getAppViewHits());
+        assertEquals(2, ga.getStats().getScreenViewHits());
         assertEquals(1, ga.getStats().getItemHits());
     }
 

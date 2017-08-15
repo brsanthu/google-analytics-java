@@ -47,6 +47,7 @@ import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.USER
 
 import java.util.UUID;
 
+import com.brsanthu.googleanalytics.internal.Constants;
 import com.brsanthu.googleanalytics.internal.GaUtils;
 import com.brsanthu.googleanalytics.internal.GoogleAnalyticsImpl;
 
@@ -70,7 +71,7 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
     }
 
     public DefaultRequest(String hitType, String trackingId, String appName, String appVersion) {
-        hitType(GaUtils.isBlank(hitType) ? "pageview" : hitType);
+        hitType(GaUtils.isBlank(hitType) ? Constants.HIT_PAGEVIEW : hitType);
         trackingId(trackingId);
         applicationName(appName);
         applicationVersion(appVersion);

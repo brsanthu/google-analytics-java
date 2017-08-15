@@ -6,7 +6,7 @@ public interface GoogleAnalyticsStats {
 
     long getEventHits();
 
-    long getAppViewHits();
+    long getScreenViewHits();
 
     long getItemHits();
 
@@ -16,4 +16,5 @@ public interface GoogleAnalyticsStats {
 
     long getSocialHits();
 
+    long getExceptionHits();
 }

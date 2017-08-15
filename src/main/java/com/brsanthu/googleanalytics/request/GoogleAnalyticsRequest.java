@@ -58,6 +58,7 @@ import java.util.concurrent.Future;
 import java.util.function.Supplier;
 
 import com.brsanthu.googleanalytics.GoogleAnalyticsExecutor;
+import com.brsanthu.googleanalytics.internal.Constants;
 import com.brsanthu.googleanalytics.internal.GaUtils;
 
 /**
@@ -88,7 +89,7 @@ public class GoogleAnalyticsRequest<T> {
     }
 
     public GoogleAnalyticsRequest(String hitType, String trackingId, String appName, String appVersion) {
-        hitType(GaUtils.isBlank(hitType) ? "pageview" : hitType);
+        hitType(GaUtils.isBlank(hitType) ? Constants.HIT_PAGEVIEW : hitType);
         trackingId(trackingId);
         applicationName(appName);
         applicationVersion(appVersion);

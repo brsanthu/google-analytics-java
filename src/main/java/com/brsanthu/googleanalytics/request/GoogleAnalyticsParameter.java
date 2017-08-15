@@ -13,6 +13,18 @@
  */
 package com.brsanthu.googleanalytics.request;
 
+import static com.brsanthu.googleanalytics.internal.Constants.HIT_EVENT;
+import static com.brsanthu.googleanalytics.internal.Constants.HIT_EXCEPTION;
+import static com.brsanthu.googleanalytics.internal.Constants.HIT_ITEM;
+import static com.brsanthu.googleanalytics.internal.Constants.HIT_SCREENVIEW;
+import static com.brsanthu.googleanalytics.internal.Constants.HIT_SOCIAL;
+import static com.brsanthu.googleanalytics.internal.Constants.HIT_TIMING;
+import static com.brsanthu.googleanalytics.internal.Constants.HIT_TXN;
+import static com.brsanthu.googleanalytics.internal.Constants.TYPE_BOOLEAN;
+import static com.brsanthu.googleanalytics.internal.Constants.TYPE_CURRENCY;
+import static com.brsanthu.googleanalytics.internal.Constants.TYPE_INTEGER;
+import static com.brsanthu.googleanalytics.internal.Constants.TYPE_TEXT;
+
 /**
  * Google Analytics Measurement Protocol Parameters.
  *
@@ -28,8 +40,8 @@ public enum GoogleAnalyticsParameter {
     // General
     PROTOCOL_VERSION("v", true),
     TRACKING_ID("tid", true),
-    ANONYMIZE_IP("aip", "boolean"),
-    QUEUE_TIME("qt", "integer"),
+    ANONYMIZE_IP("aip", TYPE_BOOLEAN),
+    QUEUE_TIME("qt", TYPE_INTEGER),
     CACHE_BUSTER("z"),
     DATA_SOURCE("ds"),
 
@@ -62,7 +74,7 @@ public enum GoogleAnalyticsParameter {
     DOCUMENT_ENCODING("de", 20),
     SCREEN_COLORS("sd", 20),
     USER_LANGUAGE("ul", 20),
-    JAVA_ENABLED("je", "boolean"),
+    JAVA_ENABLED("je", TYPE_BOOLEAN),
     FLASH_VERSION("fl", 20),
 
     // Hit
@@ -86,55 +98,55 @@ public enum GoogleAnalyticsParameter {
     APPLICATION_INSTALLER_ID("aiid", 150),
 
     // Event Tracking
-    EVENT_CATEGORY("ec", new String[] { "event" }, 150),
-    EVENT_ACTION("ea", new String[] { "event" }, 500),
-    EVENT_LABEL("el", new String[] { "event" }, 500),
-    EVENT_VALUE("ev", false, "integer", new String[] { "event" }),
+    EVENT_CATEGORY("ec", new String[] { HIT_EVENT }, 150),
+    EVENT_ACTION("ea", new String[] { HIT_EVENT }, 500),
+    EVENT_LABEL("el", new String[] { HIT_EVENT }, 500),
+    EVENT_VALUE("ev", false, TYPE_INTEGER, new String[] { HIT_EVENT }),
 
     // E-Commerce
-    TRANSACTION_ID("ti", new String[] { "transaction", "item" }, 500),
-    TRANSACTION_AFFILIATION("ta", new String[] { "transaction" }, 500),
-    TRANSACTION_REVENUE("tr", false, "currency", new String[] { "transaction" }),
-    TRANSACTION_SHIPPING("ts", false, "currency", new String[] { "transaction" }),
-    TRANSACTION_TAX("tt", false, "currency", new String[] { "transaction" }),
-    ITEM_NAME("in", new String[] { "item" }, 500),
-    ITEM_PRICE("ip", false, "currency", new String[] { "item" }),
-    ITEM_QUANTITY("iq", false, "integer", new String[] { "item" }),
-    ITEM_CODE("ic", new String[] { "item" }, 500),
-    ITEM_CATEGORY("iv", new String[] { "item" }, 500),
-    CURRENCY_CODE("cu", new String[] { "transaction", "item" }, 10),
+    TRANSACTION_ID("ti", new String[] { HIT_TXN, HIT_ITEM }, 500),
+    TRANSACTION_AFFILIATION("ta", new String[] { HIT_TXN }, 500),
+    TRANSACTION_REVENUE("tr", false, TYPE_CURRENCY, new String[] { HIT_TXN }),
+    TRANSACTION_SHIPPING("ts", false, TYPE_CURRENCY, new String[] { HIT_TXN }),
+    TRANSACTION_TAX("tt", false, TYPE_CURRENCY, new String[] { HIT_TXN }),
+    ITEM_NAME("in", new String[] { HIT_ITEM }, 500),
+    ITEM_PRICE("ip", false, TYPE_CURRENCY, new String[] { HIT_ITEM }),
+    ITEM_QUANTITY("iq", false, TYPE_INTEGER, new String[] { HIT_ITEM }),
+    ITEM_CODE("ic", new String[] { HIT_ITEM }, 500),
+    ITEM_CATEGORY("iv", new String[] { HIT_ITEM }, 500),
+    CURRENCY_CODE("cu", new String[] { HIT_TXN, HIT_ITEM }, 10),
 
     // Social Interactions
-    SOCIAL_NETWORK("sn", new String[] { "social" }, 50),
-    SOCIAL_ACTION("sa", new String[] { "social" }, 50),
-    SOCIAL_ACTION_TARGET("st", new String[] { "social" }, 2048),
+    SOCIAL_NETWORK("sn", new String[] { HIT_SOCIAL }, 50),
+    SOCIAL_ACTION("sa", new String[] { HIT_SOCIAL }, 50),
+    SOCIAL_ACTION_TARGET("st", new String[] { HIT_SOCIAL }, 2048),
 
     // Timing
-    USER_TIMING_CATEGORY("utc", new String[] { "timing" }, 150),
-    USER_TIMING_VARIABLE_NAME("utv", new String[] { "timing" }, 500),
-    USER_TIMING_TIME("utt", false, "integer", new String[] { "timing" }),
-    USER_TIMING_LABEL("utl", new String[] { "timing" }, 500),
-    PAGE_LOAD_TIME("plt", false, "integer", new String[] { "timing" }),
-    DNS_TIME("dns", false, "integer", new String[] { "timing" }),
-    PAGE_DOWNLOAD_TIME("pdt", false, "integer", new String[] { "timing" }),
-    REDIRECT_RESPONSE_TIME("rrt", false, "integer", new String[] { "timing" }),
-    TCP_CONNECT_TIME("tcp", false, "integer", new String[] { "timing" }),
-    SERVER_RESPONSE_TIME("srt", false, "integer", new String[] { "timing" }),
+    USER_TIMING_CATEGORY("utc", new String[] { HIT_TIMING }, 150),
+    USER_TIMING_VARIABLE_NAME("utv", new String[] { HIT_TIMING }, 500),
+    USER_TIMING_TIME("utt", false, TYPE_INTEGER, new String[] { HIT_TIMING }),
+    USER_TIMING_LABEL("utl", new String[] { HIT_TIMING }, 500),
+    PAGE_LOAD_TIME("plt", false, TYPE_INTEGER, new String[] { HIT_TIMING }),
+    DNS_TIME("dns", false, TYPE_INTEGER, new String[] { HIT_TIMING }),
+    PAGE_DOWNLOAD_TIME("pdt", false, TYPE_INTEGER, new String[] { HIT_TIMING }),
+    REDIRECT_RESPONSE_TIME("rrt", false, TYPE_INTEGER, new String[] { HIT_TIMING }),
+    TCP_CONNECT_TIME("tcp", false, TYPE_INTEGER, new String[] { HIT_TIMING }),
+    SERVER_RESPONSE_TIME("srt", false, TYPE_INTEGER, new String[] { HIT_TIMING }),
 
     // Exceptions
-    EXCEPTION_DESCRIPTION("exd", new String[] { "exception" }, 150),
-    EXCEPTION_FATAL("exf", false, "boolean", new String[] { "exception" }),
+    EXCEPTION_DESCRIPTION("exd", new String[] { HIT_EXCEPTION }, 150),
+    EXCEPTION_FATAL("exf", false, TYPE_BOOLEAN, new String[] { HIT_EXCEPTION }),
 
     // Experiment Variations
     EXPERIMENT_ID("xid", 40),
     EXPERIMENT_VARIANT("xvar"),
 
     // Screen view parameters
-    SCREEN_NAME("cd", true, "text", new String[] { "screenview" }, 2048);
+    SCREEN_NAME("cd", true, TYPE_TEXT, new String[] { HIT_SCREENVIEW }, 2048);
 
     private String parameterName = null;
     private boolean required = false;
-    private String type = "text";
+    private String type = TYPE_TEXT;
     private String[] supportedHitTypes = null;
     private int maxLength = 0;
 
@@ -147,7 +159,7 @@ public enum GoogleAnalyticsParameter {
     }
 
     private GoogleAnalyticsParameter(String name, boolean required) {
-        this(name, required, "text", null, 0);
+        this(name, required, TYPE_TEXT, null, 0);
     }
 
     private GoogleAnalyticsParameter(String name, String type) {
@@ -155,11 +167,11 @@ public enum GoogleAnalyticsParameter {
     }
 
     private GoogleAnalyticsParameter(String name, String[] supportedHitTypes) {
-        this(name, false, "text", supportedHitTypes, 0);
+        this(name, false, TYPE_TEXT, supportedHitTypes, 0);
     }
 
     private GoogleAnalyticsParameter(String name, String[] supportedHitTypes, int maxLength) {
-        this(name, false, "text", supportedHitTypes, maxLength);
+        this(name, false, TYPE_TEXT, supportedHitTypes, maxLength);
     }
 
     private GoogleAnalyticsParameter(String name, boolean required, String type, String[] supportedHitTypes) {
@@ -170,7 +182,7 @@ public enum GoogleAnalyticsParameter {
         this.parameterName = name;
         this.required = required;
         if (type == null) {
-            type = "text";
+            type = TYPE_TEXT;
         }
         this.type = type;
         this.supportedHitTypes = supportedHitTypes;
