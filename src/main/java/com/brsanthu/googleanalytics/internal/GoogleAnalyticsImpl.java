@@ -15,8 +15,9 @@ package com.brsanthu.googleanalytics.internal;
 
 import static com.brsanthu.googleanalytics.internal.GaUtils.isEmpty;
 
-import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -28,6 +29,8 @@ import com.brsanthu.googleanalytics.GoogleAnalytics;
 import com.brsanthu.googleanalytics.GoogleAnalyticsConfig;
 import com.brsanthu.googleanalytics.GoogleAnalyticsExecutor;
 import com.brsanthu.googleanalytics.GoogleAnalyticsStats;
+import com.brsanthu.googleanalytics.httpclient.HttpBatchRequest;
+import com.brsanthu.googleanalytics.httpclient.HttpBatchResponse;
 import com.brsanthu.googleanalytics.httpclient.HttpClient;
 import com.brsanthu.googleanalytics.httpclient.HttpRequest;
 import com.brsanthu.googleanalytics.httpclient.HttpResponse;
@@ -65,6 +68,7 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
     protected final HttpClient httpClient;
     protected final ExecutorService executor;
     protected GoogleAnalyticsStatsImpl stats = new GoogleAnalyticsStatsImpl();
+    protected List<HttpRequest> currentBatch = new ArrayList<>();
 
     public GoogleAnalyticsImpl(GoogleAnalyticsConfig config, DefaultRequest defaultRequest, HttpClient httpClient, ExecutorService executor) {
         this.config = config;
@@ -83,45 +87,94 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
     }
 
     @Override
-    @SuppressWarnings({ "rawtypes" })
-    public GoogleAnalyticsResponse post(GoogleAnalyticsRequest request) {
+    public Future<GoogleAnalyticsResponse> postAsync(GoogleAnalyticsRequest<?> request) {
+        if (!config.isEnabled()) {
+            return null;
+        }
+
+        return executor.submit(() -> post(request));
+    }
+
+    @Override
+    public GoogleAnalyticsResponse post(GoogleAnalyticsRequest<?> gaReq) {
         GoogleAnalyticsResponse response = new GoogleAnalyticsResponse();
         if (!config.isEnabled()) {
             return response;
         }
 
-        HttpResponse httpResp = null;
         try {
-            HttpRequest req = new HttpRequest(config.getUrl());
-
-            // Process the parameters
-            processParameters(request, req);
-
-            // Process custom dimensions
-            processCustomDimensionParameters(request, req);
-
-            // Process custom metrics
-            processCustomMetricParameters(request, req);
-
-            logger.debug("Processed all parameters and sending the request " + req);
-
-            httpResp = httpClient.post(req);
-            response.setStatusCode(httpResp.getStatusCode());
-            response.setRequestParams(req.getBodyParams());
-
-            if (config.isGatherStats()) {
-                gatherStats(request);
+            if (config.isBatchingEnabled()) {
+                response = postBatch(gaReq);
+            } else {
+                response = postSingle(gaReq);
             }
 
         } catch (Exception e) {
-            if (e instanceof UnknownHostException) {
-                logger.warn("Couldn't connect to Google Analytics. Internet may not be available. " + e.toString());
-            } else {
-                logger.warn("Exception while sending the Google Analytics tracker request " + request, e);
-            }
+            logger.warn("Exception while sending the Google Analytics tracker request " + gaReq, e);
         }
 
         return response;
+    }
+
+    protected GoogleAnalyticsResponse postBatch(GoogleAnalyticsRequest<?> gaReq) {
+        GoogleAnalyticsResponse resp = new GoogleAnalyticsResponse();
+        HttpRequest httpReq = createHttpRequest(gaReq);
+        resp.setRequestParams(httpReq.getBodyParams());
+
+        if (config.isGatherStats()) {
+            gatherStats(gaReq);
+        }
+
+        synchronized (currentBatch) {
+            currentBatch.add(httpReq);
+
+            // If the batch size has reached the configured max,
+            // then send the batch to google then clear the batch to start a new batch
+            submitBatchIfFull(resp);
+        }
+
+        return resp;
+    }
+
+    private void submitBatchIfFull(GoogleAnalyticsResponse resp) {
+        if (currentBatch.size() >= config.getBatchSize()) {
+            logger.debug("Submitting a batch of " + currentBatch.size() + " requests to GA");
+
+            HttpBatchResponse httpResp = httpClient.postBatch(new HttpBatchRequest().setUrl(config.getBatchUrl()).setRequests(currentBatch));
+            resp.setStatusCode(httpResp.getStatusCode());
+            currentBatch.clear();
+        }
+    }
+
+    protected GoogleAnalyticsResponse postSingle(GoogleAnalyticsRequest<?> gaReq) {
+
+        HttpRequest httpReq = createHttpRequest(gaReq);
+        HttpResponse httpResp = httpClient.post(httpReq);
+
+        GoogleAnalyticsResponse response = new GoogleAnalyticsResponse();
+        response.setStatusCode(httpResp.getStatusCode());
+        response.setRequestParams(httpReq.getBodyParams());
+
+        if (config.isGatherStats()) {
+            gatherStats(gaReq);
+        }
+
+        return response;
+    }
+
+    private HttpRequest createHttpRequest(GoogleAnalyticsRequest<?> gaReq) {
+        HttpRequest httpReq = new HttpRequest(config.getUrl());
+
+        // Process the parameters
+        processParameters(gaReq, httpReq);
+
+        // Process custom dimensions
+        processCustomDimensionParameters(gaReq, httpReq);
+
+        // Process custom metrics
+        processCustomMetricParameters(gaReq, httpReq);
+
+        return httpReq;
     }
 
     protected void processParameters(GoogleAnalyticsRequest<?> request, HttpRequest req) {
@@ -194,34 +247,27 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
         if (Constants.HIT_PAGEVIEW.equalsIgnoreCase(hitType)) {
             stats.pageViewHit();
 
-        } else if (Constants.HIT_SCREENVIEW.equalsIgnoreCase(hitType)) {
+        } else if (Constants.HIT_SCREENVIEW.equals(hitType)) {
             stats.screenViewHit();
 
-        } else if (Constants.HIT_EVENT.equalsIgnoreCase(hitType)) {
+        } else if (Constants.HIT_EVENT.equals(hitType)) {
             stats.eventHit();
 
-        } else if (Constants.HIT_ITEM.equalsIgnoreCase(hitType)) {
+        } else if (Constants.HIT_ITEM.equals(hitType)) {
             stats.itemHit();
 
-        } else if (Constants.HIT_TXN.equalsIgnoreCase(hitType)) {
+        } else if (Constants.HIT_TXN.equals(hitType)) {
             stats.transactionHit();
 
-        } else if (Constants.HIT_SOCIAL.equalsIgnoreCase(hitType)) {
+        } else if (Constants.HIT_SOCIAL.equals(hitType)) {
             stats.socialHit();
 
-        } else if (Constants.HIT_TIMING.equalsIgnoreCase(hitType)) {
+        } else if (Constants.HIT_TIMING.equals(hitType)) {
             stats.timingHit();
-        }
-    }
 
-    @Override
-    @SuppressWarnings("rawtypes")
-    public Future<GoogleAnalyticsResponse> postAsync(final GoogleAnalyticsRequest request) {
-        if (!config.isEnabled()) {
-            return null;
+        } else if (Constants.HIT_EXCEPTION.equals(hitType)) {
+            stats.exceptionHit();
         }
-
-        return executor.submit(() -> post(request));
     }
 
     @Override

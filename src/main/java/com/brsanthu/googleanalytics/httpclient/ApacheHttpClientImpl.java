@@ -7,11 +7,14 @@ import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -34,41 +37,6 @@ public class ApacheHttpClientImpl implements HttpClient {
 
     public ApacheHttpClientImpl(GoogleAnalyticsConfig config) {
         apacheHttpClient = createHttpClient(config);
-    }
-
-    @Override
-    public HttpResponse post(HttpRequest req) {
-
-        HttpResponse resp = new HttpResponse();
-
-        CloseableHttpResponse httpResp = null;
-        try {
-            HttpPost httpPost = new HttpPost(req.getUrl());
-            List<NameValuePair> parmas = new ArrayList<>();
-            req.getBodyParams().forEach((key, value) -> parmas.add(new BasicNameValuePair(key, value)));
-
-            httpPost.setEntity(new UrlEncodedFormEntity(parmas, StandardCharsets.UTF_8));
-
-            httpResp = apacheHttpClient.execute(httpPost);
-            resp.setStatusCode(httpResp.getStatusLine().getStatusCode());
-
-        } catch (Exception e) {
-            if (e instanceof UnknownHostException) {
-                logger.warn("Couldn't connect to Google Analytics. Internet may not be available. " + e.toString());
-            } else {
-                logger.warn("Exception while sending the Google Analytics tracker request " + req, e);
-            }
-
-        } finally {
-            EntityUtils.consumeQuietly(httpResp.getEntity());
-            try {
-                httpResp.close();
-            } catch (Exception e2) {
-                // ignore
-            }
-        }
-
-        return resp;
     }
 
     @Override
@@ -109,8 +77,76 @@ public class ApacheHttpClientImpl implements HttpClient {
         return true;
     }
 
+    protected CloseableHttpResponse execute(String url, HttpEntity entity) throws ClientProtocolException, IOException {
+
+        HttpPost httpPost = new HttpPost(url);
+
+        httpPost.setEntity(entity);
+
+        return apacheHttpClient.execute(httpPost);
+    }
+
+    protected List<NameValuePair> createNameValuePairs(HttpRequest req) {
+        List<NameValuePair> parmas = new ArrayList<>();
+        req.getBodyParams().forEach((key, value) -> parmas.add(new BasicNameValuePair(key, value)));
+        return parmas;
+    }
+
+    @Override
+    public HttpResponse post(HttpRequest req) {
+        HttpResponse resp = new HttpResponse();
+        CloseableHttpResponse httpResp = null;
+
+        try {
+
+            httpResp = execute(req.getUrl(), new UrlEncodedFormEntity(createNameValuePairs(req), StandardCharsets.UTF_8));
+            resp.setStatusCode(httpResp.getStatusLine().getStatusCode());
+
+        } catch (Exception e) {
+            if (e instanceof UnknownHostException) {
+                logger.warn("Couldn't connect to Google Analytics. Internet may not be available. " + e.toString());
+            } else {
+                logger.warn("Exception while sending the Google Analytics tracker request " + req, e);
+            }
+
+        } finally {
+            EntityUtils.consumeQuietly(httpResp.getEntity());
+            try {
+                httpResp.close();
+            } catch (Exception e2) {
+                // ignore
+            }
+        }
+
+        return resp;
+    }
+
     @Override
     public HttpBatchResponse postBatch(HttpBatchRequest req) {
-        return null;
+        HttpBatchResponse resp = new HttpBatchResponse();
+        CloseableHttpResponse httpResp = null;
+
+        try {
+            List<List<NameValuePair>> listOfReqPairs = req.getRequests().stream().map(this::createNameValuePairs).collect(Collectors.toList());
+            httpResp = execute(req.getUrl(), new BatchUrlEncodedFormEntity(listOfReqPairs));
+            resp.setStatusCode(httpResp.getStatusLine().getStatusCode());
+
+        } catch (Exception e) {
+            if (e instanceof UnknownHostException) {
+                logger.warn("Couldn't connect to Google Analytics. Internet may not be available. " + e.toString());
+            } else {
+                logger.warn("Exception while sending the Google Analytics tracker request " + req, e);
+            }
+
+        } finally {
+            EntityUtils.consumeQuietly(httpResp.getEntity());
+            try {
+                httpResp.close();
+            } catch (Exception e2) {
+                // ignore
+            }
+        }
+
+        return resp;
     }
 }

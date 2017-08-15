@@ -14,4 +14,6 @@ public interface Constants {
     String TYPE_TEXT = "text";
     String TYPE_BOOLEAN = "boolean";
     String TYPE_CURRENCY = "currency";
+
+    String TEST_TRACKING_ID = "UA-612100-12";
 }
