@@ -162,12 +162,6 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.0.13</version>
-            <optional>true</optional>
-        </dependency>
     </dependencies>
     <name>Google Analytics Java API</name>
     <url>https://github.com/brsanthu/google-analytics-java</url>
