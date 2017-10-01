@@ -126,10 +126,11 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
 
         synchronized (currentBatch) {
             currentBatch.add(httpReq);
-            // If the batch size has reached the configured max,
-            // then send the batch to google then clear the batch to start a new batch
-            submitBatch(false);
         }
+
+        // If the batch size has reached the configured max,
+        // then send the batch to google then clear the batch to start a new batch
+        submitBatch(false);
 
         return resp;
     }
@@ -139,12 +140,26 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
             return;
         }
 
-        if (force || currentBatch.size() >= config.getBatchSize()) {
-            logger.debug("Submitting a batch of " + currentBatch.size() + " requests to GA");
+        if (isSubmitBatch(force)) {
 
-            httpClient.postBatch(new HttpBatchRequest().setUrl(config.getBatchUrl()).setRequests(currentBatch));
-            currentBatch.clear();
+            // Synchronized block is to ensure only one of the writers will actually write the batch.
+            synchronized (currentBatch) {
+
+                // If two threads pass the if condition and then one of them actually writes,
+                // other will do the same since they were blocked sync block. this ensures that
+                // others will not post it even if multiple threads were to wait at sync block at same time
+                // https://en.wikipedia.org/wiki/Double-checked_locking
+                if (isSubmitBatch(force)) {
+                    logger.debug("Submitting a batch of " + currentBatch.size() + " requests to GA");
+                    httpClient.postBatch(new HttpBatchRequest().setUrl(config.getBatchUrl()).setRequests(currentBatch));
+                    currentBatch.clear();
+                }
+            }
         }
+    }
+
+    private boolean isSubmitBatch(boolean force) {
+        return force || currentBatch.size() >= config.getBatchSize();
     }
 
     protected GoogleAnalyticsResponse postSingle(GoogleAnalyticsRequest<?> gaReq) {
