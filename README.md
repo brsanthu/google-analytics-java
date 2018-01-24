@@ -18,7 +18,9 @@ Maven:
 
 Gradle:
 
-    compile("com.brsanthu:google-analytics-java:2.0.0")
+    compile 'com.brsanthu:google-analytics-java:2.0.0'
+
+Others: [Check Here](https://search.maven.org/#artifactdetails%7Ccom.brsanthu%7Cgoogle-analytics-java%7C2.0.0%7Cjar)
 
 To get a local build, do
 
