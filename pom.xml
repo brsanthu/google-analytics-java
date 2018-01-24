@@ -8,7 +8,7 @@
 
     <groupId>com.brsanthu</groupId>
     <artifactId>google-analytics-java</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -175,7 +175,7 @@
         <url>https://github.com/brsanthu/google-analytics-java</url>
         <connection>scm:git:git@github.com:brsanthu/google-analytics-java</connection>
         <developerConnection>scm:git:git@github.com:brsanthu/google-analytics-java</developerConnection>
-      <tag>google-analytics-java-2.0.0</tag>
+      <tag>google-analytics-java-1.1.2</tag>
   </scm>
     <issueManagement>
         <system>github.com</system>
