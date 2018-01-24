@@ -9,7 +9,7 @@ public class GoogleAnalyticsConfigTest {
     @Test
     public void testDefaultConfig() throws Exception {
         GoogleAnalyticsConfig config = new GoogleAnalyticsConfig();
-        assertEquals("googleanalytics-thread-{0}", config.getThreadNameFormat());
+        assertEquals("googleanalyticsjava-thread-{0}", config.getThreadNameFormat());
         assertEquals(0, config.getMinThreads());
         assertEquals(5, config.getMaxThreads());
         assertEquals("http://www.google-analytics.com/collect", config.getHttpUrl());
