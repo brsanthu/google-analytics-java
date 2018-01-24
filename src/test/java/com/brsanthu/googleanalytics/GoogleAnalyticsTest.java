@@ -21,27 +21,27 @@ public class GoogleAnalyticsTest {
 
     @Test
     public void testPageView() throws Exception {
-        ga.pageView("http://www.google.com", "Search").post();
-        ga.pageView("http://www.google.com", "Search").postAsync();
+        ga.pageView("http://www.google.com", "Search").send();
+        ga.pageView("http://www.google.com", "Search").sendAsync();
     }
 
     @Test
     public void testSocial() throws Exception {
-        ga.social("Facebook", "Like", "https://www.google.com").post();
-        ga.social("Google+", "Post", "It is a comment").post();
-        ga.social("Twitter", "Repost", "Post").post();
+        ga.social("Facebook", "Like", "https://www.google.com").send();
+        ga.social("Google+", "Post", "It is a comment").send();
+        ga.social("Twitter", "Repost", "Post").send();
     }
 
     @Test
     public void testGatherStats() throws Exception {
         ga.getConfig().setGatherStats(false);
         ga.resetStats();
-        ga.pageView().post();
-        ga.pageView().post();
-        ga.pageView().post();
-        ga.screenView().post();
-        ga.screenView().post();
-        ga.item().post();
+        ga.pageView().send();
+        ga.pageView().send();
+        ga.pageView().send();
+        ga.screenView().send();
+        ga.screenView().send();
+        ga.item().send();
 
         assertEquals(0, ga.getStats().getPageViewHits());
         assertEquals(0, ga.getStats().getScreenViewHits());
@@ -49,12 +49,12 @@ public class GoogleAnalyticsTest {
 
         ga.getConfig().setGatherStats(true);
         ga.resetStats();
-        ga.pageView().post();
-        ga.pageView().post();
-        ga.pageView().post();
-        ga.screenView().post();
-        ga.screenView().post();
-        ga.item().post();
+        ga.pageView().send();
+        ga.pageView().send();
+        ga.pageView().send();
+        ga.screenView().send();
+        ga.screenView().send();
+        ga.item().send();
 
         assertEquals(3, ga.getStats().getPageViewHits());
         assertEquals(2, ga.getStats().getScreenViewHits());
@@ -71,7 +71,7 @@ public class GoogleAnalyticsTest {
         GoogleAnalytics lga = GoogleAnalytics.builder().withDefaultRequest(defaultRequest).withTrackingId(TEST_TRACKING_ID).build();
 
         GoogleAnalyticsResponse response = lga.pageView("http://www.google.com", "Search").customDimension(2, "bob").customDimension(5, "alice")
-                .post();
+                .send();
 
         assertEquals("foo", response.getRequestParams().get("cd1"));
         assertEquals("bob", response.getRequestParams().get("cd2"));
@@ -86,7 +86,7 @@ public class GoogleAnalyticsTest {
 
         GoogleAnalytics lga = GoogleAnalytics.builder().withDefaultRequest(defaultRequest).withTrackingId(TEST_TRACKING_ID).build();
 
-        GoogleAnalyticsResponse response = lga.pageView("http://www.google.com", "Search").customMetric(2, "bob").customMetric(5, "alice").post();
+        GoogleAnalyticsResponse response = lga.pageView("http://www.google.com", "Search").customMetric(2, "bob").customMetric(5, "alice").send();
 
         assertEquals("foo", response.getRequestParams().get("cm1"));
         assertEquals("bob", response.getRequestParams().get("cm2"));
@@ -102,7 +102,7 @@ public class GoogleAnalyticsTest {
         GoogleAnalytics lga = GoogleAnalytics.builder().withDefaultRequest(defaultRequest).withTrackingId(TEST_TRACKING_ID).build();
 
         GoogleAnalyticsResponse response = lga.pageView("http://www.google.com", "Search").userIp("1.2.3.5")
-                .userAgent("Chrome/9.80 (Windows NT 6.0) Presto/2.12.388 Version/12.14").post();
+                .userAgent("Chrome/9.80 (Windows NT 6.0) Presto/2.12.388 Version/12.14").send();
 
         assertEquals("1.2.3.5", response.getRequestParams().get("uip"));
         assertEquals("Chrome/9.80 (Windows NT 6.0) Presto/2.12.388 Version/12.14", response.getRequestParams().get("ua"));
@@ -110,7 +110,7 @@ public class GoogleAnalyticsTest {
 
     @Test
     public void testUserDetails() throws Exception {
-        GoogleAnalyticsResponse response = ga.pageView("http://www.google.com", "Search").post();
+        GoogleAnalyticsResponse response = ga.pageView("http://www.google.com", "Search").send();
         assertNotNull(response.getRequestParams().get("cid"));
 
         DefaultRequest defaultRequest = new DefaultRequest();
@@ -119,11 +119,11 @@ public class GoogleAnalyticsTest {
 
         GoogleAnalytics lga = GoogleAnalytics.builder().withDefaultRequest(defaultRequest).withTrackingId(TEST_TRACKING_ID).build();
 
-        response = lga.pageView("http://www.google.com", "Search").post();
+        response = lga.pageView("http://www.google.com", "Search").send();
         assertEquals("1234", response.getRequestParams().get("cid"));
         assertEquals("user1", response.getRequestParams().get("uid"));
 
-        response = lga.pageView("http://www.google.com", "Search").clientId("12345").userId("user2").post();
+        response = lga.pageView("http://www.google.com", "Search").clientId("12345").userId("user2").send();
         assertEquals("12345", response.getRequestParams().get("cid"));
         assertEquals("user2", response.getRequestParams().get("uid"));
     }

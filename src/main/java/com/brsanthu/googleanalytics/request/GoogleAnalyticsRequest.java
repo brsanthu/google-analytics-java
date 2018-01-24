@@ -1860,11 +1860,11 @@ public class GoogleAnalyticsRequest<T> {
         return getString(GoogleAnalyticsParameter.GEOID);
     }
 
-    public GoogleAnalyticsResponse post() {
+    public GoogleAnalyticsResponse send() {
         return execute(() -> delegateExecutor.post(this));
     }
 
-    public Future<GoogleAnalyticsResponse> postAsync() {
+    public Future<GoogleAnalyticsResponse> sendAsync() {
         return execute(() -> delegateExecutor.postAsync(this));
     }
 

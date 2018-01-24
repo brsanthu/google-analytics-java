@@ -1,15 +1,12 @@
 /*
- * Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package com.brsanthu.googleanalytics;
 
@@ -33,7 +30,7 @@ import com.brsanthu.googleanalytics.internal.GoogleAnalyticsStatsImpl;
  * @author Santhosh Kumar
  */
 public class GoogleAnalyticsConfig {
-    private String threadNameFormat = "googleanalytics-thread-{0}";
+    private String threadNameFormat = "googleanalyticsjava-thread-{0}";
     private boolean enabled = true;
     private int minThreads = 0;
     private int maxThreads = 5;
@@ -66,9 +63,8 @@ public class GoogleAnalyticsConfig {
      * etc.
      *
      * Please make sure you also enable the discovery using {@link #setDiscoverRequestParameters(boolean)}
-     * 
-     * @param requestParameterDiscoverer
-     *            can be null and is so, parameters will not be discovered.
+     *
+     * @param requestParameterDiscoverer can be null and is so, parameters will not be discovered.
      * @return
      */
     public GoogleAnalyticsConfig setRequestParameterDiscoverer(RequestParameterDiscoverer requestParameterDiscoverer) {
@@ -99,8 +95,7 @@ public class GoogleAnalyticsConfig {
      * Default is "googleanalytics-thread-{0}" where {0} is the thread counter. If you specify a custom format, make
      * sure {0} is there somewhere otherwise all threads will be nameed same and can be an issue for troubleshooting.
      *
-     * @param threadNameFormat
-     *            non-null string for thread name.
+     * @param threadNameFormat non-null string for thread name.
      */
     public GoogleAnalyticsConfig setThreadNameFormat(String threadNameFormat) {
         this.threadNameFormat = threadNameFormat;
@@ -113,7 +108,7 @@ public class GoogleAnalyticsConfig {
 
     /**
      * Deprecated since 1.0.6
-     * 
+     *
      * @deprecated Use {@link #setDiscoverRequestParameters(boolean)} instead
      */
     @Deprecated
@@ -240,7 +235,7 @@ public class GoogleAnalyticsConfig {
 
     /**
      * Maximum threads to use to process the asynchronous event posting and Http client connection pooling. Default is
-     * 
+     *
      * <p>
      * This is <strong>initialization</strong> level configuration (must be set while creating GoogleAnalytics object).
      * </p>
@@ -308,7 +303,7 @@ public class GoogleAnalyticsConfig {
      * <p>
      * Default value is <code>http://www.google-analytics.com/collect</code>
      * </p>
-     * 
+     *
      * <p>
      * This is <strong>request</strong> level configuration (can be changed any time).
      * </p>

@@ -20,7 +20,7 @@ public class GoogleAnalyticsBatchTest {
     @Test
     public void testPageView() throws Exception {
         IntStream.range(0, 50).forEach(i -> {
-            ga.pageView("http://www.google.com", "Search").post();
+            ga.pageView("http://www.google.com", "Search").send();
         });
     }
 }
