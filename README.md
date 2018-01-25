@@ -169,9 +169,10 @@ Library abstracts http client interaction via `HttpClient` interface with defaul
 
 Release Notes
 ==
-Version 2.2 - Jan 24 2018
+Version 2.0.0 - Jan 24 2018
 --
 * API redesign based on builder and fluent pattern
+* Added support for batching requests
 
 Version 1.1.2 - Apr 29 2015
 --
