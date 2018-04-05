@@ -13,6 +13,8 @@
  */
 package com.brsanthu.googleanalytics.request;
 
+import com.brsanthu.googleanalytics.httpclient.HttpResponse;
+
 import java.util.Map;
 
 /**
@@ -23,6 +25,7 @@ import java.util.Map;
 public class GoogleAnalyticsResponse {
     private int statusCode = 200;
     private Map<String, String> requestParams = null;
+    private HttpResponse httpResponse = null;
 
     public Map<String, String> getRequestParams() {
         return requestParams;
@@ -38,6 +41,14 @@ public class GoogleAnalyticsResponse {
 
     public int getStatusCode() {
         return statusCode;
+    }
+
+    public HttpResponse getHttpResponse() {
+        return httpResponse;
+    }
+
+    public void setHttpResponse(HttpResponse httpResponse) {
+        this.httpResponse = httpResponse;
     }
 
     @Override

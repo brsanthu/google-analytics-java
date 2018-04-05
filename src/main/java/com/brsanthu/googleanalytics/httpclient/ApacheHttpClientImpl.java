@@ -101,6 +101,7 @@ public class ApacheHttpClientImpl implements HttpClient {
 
             httpResp = execute(req.getUrl(), new UrlEncodedFormEntity(createNameValuePairs(req), StandardCharsets.UTF_8));
             resp.setStatusCode(httpResp.getStatusLine().getStatusCode());
+            resp.setOriginalResponse(EntityUtils.toString(httpResp.getEntity(), "UTF-8"));
 
         } catch (Exception e) {
             if (e instanceof UnknownHostException) {
