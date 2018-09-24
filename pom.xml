@@ -16,6 +16,7 @@
         <slf4j-version>1.7.25</slf4j-version>
         <junit.version>4.11</junit.version>
         <httpclient-version>4.5.3</httpclient-version>
+        <okhttp-version>3.11.0</okhttp-version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -161,6 +162,11 @@
                     <groupId>commons-logging</groupId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${okhttp-version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
