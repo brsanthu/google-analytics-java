@@ -30,13 +30,16 @@ import com.brsanthu.googleanalytics.internal.GoogleAnalyticsStatsImpl;
  * @author Santhosh Kumar
  */
 public class GoogleAnalyticsConfig {
+
+    public static final int DEFAULT_MAX_HTTP_CONNECTIONS_PER_ROUTE = 10;
+
     private String threadNameFormat = "googleanalyticsjava-thread-{0}";
     private boolean enabled = true;
     private int minThreads = 0;
     private int maxThreads = 5;
     private int threadTimeoutSecs = 300;
     private int threadQueueSize = 1000;
-    private int maxHttpConnectionsPerRoute = 10;
+    private int maxHttpConnectionsPerRoute = DEFAULT_MAX_HTTP_CONNECTIONS_PER_ROUTE;
     private boolean useHttps = true;
     private boolean validate = true;
     private boolean batchingEnabled = false;
