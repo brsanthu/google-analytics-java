@@ -9,3 +9,6 @@ env:
 
 before_install:
   - "sh -e /etc/init.d/xvfb start"
+
+script:
+  - mvn package
