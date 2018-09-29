@@ -77,9 +77,8 @@
 
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.6</version>
+                <version>3.1.0</version>
                 <configuration>
-                    <useDefaultManifestFile>true</useDefaultManifestFile>
                     <archive>
                         <index>true</index>
                         <manifest>
