@@ -11,30 +11,30 @@ The library is available in Maven Central. Add the following dependency and you 
 Maven:
 
     <dependency>
-        <groupId>com.brsanthu</groupId>
+        <groupId>net.mikehardy</groupId>
         <artifactId>google-analytics-java</artifactId>
-        <version>2.0.0</version>
+        <version>2.0.1</version>
     </dependency>
 
 Gradle:
 
-    compile 'com.brsanthu:google-analytics-java:2.0.0'
+    implementation 'net.mikehardy:google-analytics-java:2.0.1'
 
-Others: [Check Here](https://search.maven.org/#artifactdetails%7Ccom.brsanthu%7Cgoogle-analytics-java%7C2.0.0%7Cjar)
+Others: [Check Here](https://search.maven.org/#artifactdetails%7Cnet.mikehardy%7Cgoogle-analytics-java%7C2.0.0%7Cjar)
 
 To get a local build, do
 
-    git clone https://github.com/brsanthu/google-analytics-java.git
+    git clone https://github.com/mikehardy/google-analytics-java.git
     mvn install
 
-View Javadocs [here](https://www.javadoc.io/doc/com.brsanthu/google-analytics-java) 
+View Javadocs [here](https://www.javadoc.io/doc/net.mikehardy/google-analytics-java) 
 
 1.x vs 2.x
 ==
 Note that Version 2.x has different api than 1.x. Version 2.x is refactoring of majority of structure of the library with goal of making library
 easy to use and make it feel fluently. It is based on Java 1.8.
 
-Here is [V1 Readme](https://github.com/brsanthu/google-analytics-java/wiki/V1-Readme)
+Here is [V1 Readme](https://github.com/net.mikehardy/google-analytics-java/wiki/V1-Readme)
 
 Features
 ==
