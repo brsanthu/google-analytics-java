@@ -10,8 +10,7 @@ env:
 before_install:
   - "sh -e /etc/init.d/xvfb start"
 
-install:
-  - mvn install -DskipTests=true -Dgpg.skip=true -Dmaven.javadoc.skip=true -B -V 
+install: true
 
 script:
   - mvn package -Dgpg.skip=true
