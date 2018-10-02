@@ -10,5 +10,15 @@ env:
 before_install:
   - "sh -e /etc/init.d/xvfb start"
 
+install:
+  - mvn install -DskipTests=true -Dgpg.skip=true -Dmaven.javadoc.skip=true -B -V 
+
 script:
-  - mvn package
+  - mvn package -Dgpg.skip=true
+
+before_cache:
+  - rm -fr $HOME/.m2/repository/net/mikehardy/google-analytics-java
+
+cache:
+  directories:
+    - $HOME/.m2
