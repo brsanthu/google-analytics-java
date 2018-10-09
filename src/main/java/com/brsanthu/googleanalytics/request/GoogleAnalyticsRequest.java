@@ -103,7 +103,7 @@ public class GoogleAnalyticsRequest<T> {
      *
      * @param parameter
      * @param value
-     * @return
+     * @return this - with parameter set or cleared
      */
     protected T setString(GoogleAnalyticsParameter parameter, String value) {
         if (value == null) {
@@ -652,7 +652,7 @@ public class GoogleAnalyticsRequest<T> {
      * </div>
      *
      * @param value
-     * @return
+     * @return this - with USER_ID parameter set
      */
     public T userId(String value) {
         setString(USER_ID, value);

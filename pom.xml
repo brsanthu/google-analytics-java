@@ -56,9 +56,9 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.0.1</version>
                 <configuration>
-                    <excludePackageNames>*.internal.*</excludePackageNames>
+                    <!--  <excludePackageNames>*.internal.*</excludePackageNames> -->
                     <failOnError>false</failOnError>
-                    <additionalparam>-Xdoclint:none</additionalparam>
+                    <doclint>none</doclint>
                 </configuration>
                 <executions>
                     <execution>

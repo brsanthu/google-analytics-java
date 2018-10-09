@@ -68,7 +68,7 @@ public class GoogleAnalyticsConfig {
      * Please make sure you also enable the discovery using {@link #setDiscoverRequestParameters(boolean)}
      *
      * @param requestParameterDiscoverer can be null and is so, parameters will not be discovered.
-     * @return
+     * @return GoogleAnalyticsConfig with requestParameterDiscoverer set
      */
     public GoogleAnalyticsConfig setRequestParameterDiscoverer(RequestParameterDiscoverer requestParameterDiscoverer) {
         this.requestParameterDiscoverer = requestParameterDiscoverer;
@@ -85,7 +85,7 @@ public class GoogleAnalyticsConfig {
      * {@link GoogleAnalyticsImpl#getStats()}
      *
      * @param gatherStats
-     * @return
+     * @return GoogleAnalyticsConfig with gatherStats set
      */
     public GoogleAnalyticsConfig setGatherStats(boolean gatherStats) {
         this.gatherStats = gatherStats;

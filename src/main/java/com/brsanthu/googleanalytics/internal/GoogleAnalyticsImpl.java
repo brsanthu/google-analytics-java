@@ -214,7 +214,7 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
      * Processes the custom dimensions and adds the values to list of parameters, which would be posted to GA.
      *
      * @param request
-     * @param postParms
+     * @param req
      */
     protected void processCustomDimensionParameters(GoogleAnalyticsRequest<?> request, HttpRequest req) {
         Map<String, String> customDimParms = new HashMap<String, String>();
@@ -236,7 +236,7 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
      * Processes the custom metrics and adds the values to list of parameters, which would be posted to GA.
      *
      * @param request
-     * @param postParms
+     * @param req
      */
     protected void processCustomMetricParameters(GoogleAnalyticsRequest<?> request, HttpRequest req) {
         Map<String, String> customMetricParms = new HashMap<String, String>();
