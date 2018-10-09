@@ -47,7 +47,7 @@ This library implements the measurement protocol with following features.
 * Synchronous or Asynchronous Event Processing.
 * Support for delayed request construction.
 * Asynchronous processing uses Java Concurrent Executor Service.
-* Uses the latest Apache Http Client (4.3) for high performing event posting.
+* Uses the latest Apache Http or OkHttp client for high performing event posting.
 * Event posting can be enabled/disabled at run time at configuration level.
 * Supports connections via Proxy
 * Gathers some basic information from the underlying Jvm (File Encoding, User Language, Screen Size, Color Depth etc)
@@ -169,6 +169,14 @@ Library abstracts http client interaction via `HttpClient` interface with defaul
 
 Release Notes
 ==
+Version 2.0.2-SNAPSHOT
+--
+Fixed #11 - not closing OkHttp response body in postBatch()
+
+Version 2.0.1 - Oct 02 2018
+--
+* Implement OkHttp transport as an option
+
 Version 2.0.0 - Jan 24 2018
 --
 * API redesign based on builder and fluent pattern
@@ -201,6 +209,11 @@ Version 1.0.3 - Jan 20 2014
 
 Other Implementations
 ==
+
+This is a fork or what I still consider the "upstream" version here: https://github.com/brsanthu/google-analytics-java
+
+Santosh Kumar created what I believe is the best open-source Java google analytics client. My only reason for forking was a desire for a large number of changes rapidly and I didn't see PRs being accepted in the main repo - no other reason and an eventual merge would be fine. Please fork this repo and move forward if I don't respond to you :-)
+
 There are few Java implementation of Google Analytics api, but found some issues (or protocol mismatch) with each of them.
 
 https://github.com/nhnopensource/universal-analytics-java
