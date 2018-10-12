@@ -40,6 +40,7 @@ public class GoogleAnalyticsConfig {
     private int threadTimeoutSecs = 300;
     private int threadQueueSize = 1000;
     private int maxHttpConnectionsPerRoute = DEFAULT_MAX_HTTP_CONNECTIONS_PER_ROUTE;
+    private int samplePercentage = 100;
     private boolean useHttps = true;
     private boolean validate = true;
     private boolean batchingEnabled = false;
@@ -348,11 +349,26 @@ public class GoogleAnalyticsConfig {
         return this;
     }
 
+    /**
+     * The sample percentage to apply to all analytics. Integer between 0 and 100, every time an analytics implementation
+     * is initialized, a random number will be compared to the sample percentage, allowing or disallowing analytics
+     * from the initialized instance
+     * @return int between 1 and 100
+     */
+    public int getSamplePercentage() {
+        return samplePercentage;
+    }
+
+    public GoogleAnalyticsConfig setSamplePercentage(int samplePercentage) {
+        this.samplePercentage = samplePercentage;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "GoogleAnalyticsConfig [threadNameFormat=" + threadNameFormat + ", enabled=" + enabled + ", minThreads=" + minThreads + ", maxThreads="
                 + maxThreads + ", threadTimeoutSecs=" + threadTimeoutSecs + ", threadQueueSize=" + threadQueueSize + ", maxHttpConnectionsPerRoute="
-                + maxHttpConnectionsPerRoute + ", useHttps=" + useHttps + ", validate=" + validate + ", httpUrl=" + httpUrl + ", httpsUrl=" + httpsUrl
+                + maxHttpConnectionsPerRoute + ", samplePercentage=" + samplePercentage + ", useHttps=" + useHttps + ", validate=" + validate + ", httpUrl=" + httpUrl + ", httpsUrl=" + httpsUrl
                 + ", userAgent=" + userAgent + ", proxyHost=" + proxyHost + ", proxyPort=" + proxyPort + ", proxyUserName=" + proxyUserName
                 + ", proxyPassword=" + mask(proxyPassword) + ", discoverRequestParameters=" + discoverRequestParameters + ", gatherStats="
                 + gatherStats + ", requestParameterDiscoverer=" + requestParameterDiscoverer + "]";

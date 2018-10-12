@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +72,19 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
         this.defaultRequest = defaultRequest;
         this.httpClient = httpClient;
         this.executor = executor;
+
+        // As we are constructed, determine if we should be in the sample or not
+        if (config.getSamplePercentage() < 100) {
+            int randomNum = ThreadLocalRandom.current().nextInt(1, 101);
+            if (randomNum > config.getSamplePercentage()) {
+                logger.info("This session will not participate in the analytics sample, sample percantage vs random: " +
+                        config.getSamplePercentage() + " " + randomNum);
+                this.config.setEnabled(false);
+            } else {
+                logger.info("This session will participate in the analytics sample, sample percentage vs random: " +
+                        config.getSamplePercentage() + " " + randomNum);
+            }
+        }
     }
 
     @Override
