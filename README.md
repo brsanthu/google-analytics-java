@@ -13,12 +13,12 @@ Maven:
     <dependency>
         <groupId>net.mikehardy</groupId>
         <artifactId>google-analytics-java</artifactId>
-        <version>2.0.1</version>
+        <version>2.0.2</version>
     </dependency>
 
 Gradle:
 
-    implementation 'net.mikehardy:google-analytics-java:2.0.1'
+    implementation 'net.mikehardy:google-analytics-java:2.0.2'
 
 Others: [Check Here](https://search.maven.org/#artifactdetails%7Cnet.mikehardy%7Cgoogle-analytics-java%7C2.0.0%7Cjar)
 
@@ -169,9 +169,12 @@ Library abstracts http client interaction via `HttpClient` interface with defaul
 
 Release Notes
 ==
-Version 2.0.2-SNAPSHOT
+Version 2.0.2
 --
-Fixed #11 - not closing OkHttp response body in postBatch()
+Error - Fixed #11 - not closing OkHttp response body in postBatch()
+Enhancement - Fixed #16 - implemented basic sampling strategy with GoogleAnalyticsConfig.setSamplePercentage(int)
+Enhancement - request parameters are alphabetically ordered so they are predictable now 
+Build - fix javadoc generation on JDK10+
 
 Version 2.0.1 - Oct 02 2018
 --
