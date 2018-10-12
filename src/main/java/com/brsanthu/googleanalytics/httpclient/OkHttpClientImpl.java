@@ -137,7 +137,7 @@ public class OkHttpClientImpl implements HttpClient {
             if (logger.isTraceEnabled()) logger.trace("postBatch() starting new request line");
             Map<String, String> reqParams = request.getBodyParams();
             for (String key : reqParams.keySet()) {
-                if (logger.isTraceEnabled()) logger.trace("post() adding POST param " + key + " = " + reqParams.get(key));
+                if (logger.isTraceEnabled()) logger.trace("postBatch() adding POST param " + key + " = " + reqParams.get(key));
                 formBuilder.add(key, reqParams.get(key));
             }
             if (logger.isTraceEnabled()) logger.trace("postBatch() finishing request line");
@@ -151,17 +151,17 @@ public class OkHttpClientImpl implements HttpClient {
         }
 
         Request request = new Request.Builder().url(batchReq.getUrl()).post(RequestBody.create(null, bodyBuffer.readUtf8())).build();
-        if (logger.isDebugEnabled()) logger.debug("HttpClient.post() url/body: " + request.url() + " / " + renderBody(request.body()));
+        if (logger.isDebugEnabled()) logger.debug("HttpClient.postBatch() url/body: " + request.url() + " / " + renderBody(request.body()));
 
         try {
 
             Response okResp = client.newCall(request).execute();
-            if (logger.isDebugEnabled()) logger.debug("post() response code/success: " + okResp.code() + " / " + okResp.isSuccessful());
+            if (logger.isDebugEnabled()) logger.debug("postBatch() response code/success: " + okResp.code() + " / " + okResp.isSuccessful());
 
             resp.setStatusCode(okResp.code());
-
+            okResp.close(); // this marks the response as consumed, and allows the connection to be re-used
         } catch (Exception e) {
-            logger.warn("OkHttpClientImpl.post()/OkHttpClient.newCall() error", e);
+            logger.warn("OkHttpClientImpl.postBatch()/OkHttpClient.newCall() error", e);
         }
 
         return resp;
