@@ -13,12 +13,12 @@ Maven:
     <dependency>
         <groupId>net.mikehardy</groupId>
         <artifactId>google-analytics-java</artifactId>
-        <version>2.0.2</version>
+        <version>2.0.3</version>
     </dependency>
 
 Gradle:
 
-    implementation 'net.mikehardy:google-analytics-java:2.0.2'
+    implementation 'net.mikehardy:google-analytics-java:2.0.3'
 
 Others: [Check Here](https://search.maven.org/#artifactdetails%7Cnet.mikehardy%7Cgoogle-analytics-java%7C2.0.0%7Cjar)
 
@@ -169,6 +169,10 @@ Library abstracts http client interaction via `HttpClient` interface with defaul
 
 Release Notes
 ==
+Version 2.0.3
+--
+Compatibility - Altered Core and OkHttpClientImpl so it worked with minSDK / API15 on Android
+
 Version 2.0.2
 --
 Error - Fixed #11 - not closing OkHttp response body in postBatch()

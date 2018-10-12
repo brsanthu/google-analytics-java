@@ -5,7 +5,7 @@ import static com.brsanthu.googleanalytics.internal.GaUtils.isNotEmpty;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -100,7 +100,7 @@ public class OkHttpClientImpl implements HttpClient {
     public HttpResponse post(HttpRequest req) {
         HttpResponse resp = new HttpResponse();
 
-        FormBody.Builder formBuilder = new FormBody.Builder(StandardCharsets.UTF_8);
+        FormBody.Builder formBuilder = new FormBody.Builder(Charset.forName("UTF-8"));
         Map<String, String> reqParams = req.getBodyParams();
         for (String key : reqParams.keySet()) {
             if (logger.isTraceEnabled()) logger.trace("post() adding POST param " + key + " = " + reqParams.get(key));
@@ -133,7 +133,7 @@ public class OkHttpClientImpl implements HttpClient {
         // For each request in the batch, build up the encoded form string, and add it
         // to the buffer
         for (HttpRequest request : batchReq.getRequests()) {
-            FormBody.Builder formBuilder = new FormBody.Builder(StandardCharsets.UTF_8);
+            FormBody.Builder formBuilder = new FormBody.Builder(Charset.forName("UTF-8"));
             if (logger.isTraceEnabled()) logger.trace("postBatch() starting new request line");
             Map<String, String> reqParams = request.getBodyParams();
             for (String key : reqParams.keySet()) {
@@ -147,7 +147,7 @@ public class OkHttpClientImpl implements HttpClient {
             } catch (IOException ioe) {
                 logger.warn("postBatch() error while rendering batch entry", ioe);
             }
-            bodyBuffer.writeString("\r\n", StandardCharsets.UTF_8);
+            bodyBuffer.writeString("\r\n", Charset.forName("UTF-8"));
         }
 
         Request request = new Request.Builder().url(batchReq.getUrl()).post(RequestBody.create(null, bodyBuffer.readUtf8())).build();
