@@ -1,13 +1,13 @@
 package com.brsanthu.googleanalytics.httpclient;
 
-import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.Map;
 
 public class HttpRequest {
     private String contentType;
     private String method;
     private String url;
-    private Map<String, String> bodyParams = new HashMap<>();
+    private Map<String, String> bodyParams = new TreeMap<>();
 
     public HttpRequest(String url) {
         this.setUrl(url);
