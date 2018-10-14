@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
@@ -71,6 +72,19 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
         this.defaultRequest = defaultRequest;
         this.httpClient = httpClient;
         this.executor = executor;
+
+        // As we are constructed, determine if we should be in the sample or not
+        if (config.getSamplePercentage() < 100) {
+            int randomNum = new Random().nextInt(100) + 1;
+            if (randomNum > config.getSamplePercentage()) {
+                logger.info("This session will not participate in the analytics sample, sample percantage vs random: " +
+                        config.getSamplePercentage() + " " + randomNum);
+                this.config.setEnabled(false);
+            } else {
+                logger.info("This session will participate in the analytics sample, sample percentage vs random: " +
+                        config.getSamplePercentage() + " " + randomNum);
+            }
+        }
     }
 
     @Override
@@ -214,7 +228,7 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
      * Processes the custom dimensions and adds the values to list of parameters, which would be posted to GA.
      *
      * @param request
-     * @param postParms
+     * @param req
      */
     protected void processCustomDimensionParameters(GoogleAnalyticsRequest<?> request, HttpRequest req) {
         Map<String, String> customDimParms = new HashMap<String, String>();
@@ -236,7 +250,7 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
      * Processes the custom metrics and adds the values to list of parameters, which would be posted to GA.
      *
      * @param request
-     * @param postParms
+     * @param req
      */
     protected void processCustomMetricParameters(GoogleAnalyticsRequest<?> request, HttpRequest req) {
         Map<String, String> customMetricParms = new HashMap<String, String>();

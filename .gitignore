@@ -1,5 +1,8 @@
 *.class
 
+# Maven publish settings
+settings.xml
+
 # Package Files #
 *.jar
 *.war
@@ -66,4 +69,3 @@ nohup.out
 
 core-search-service
 core-dns-service
-/.gitignore

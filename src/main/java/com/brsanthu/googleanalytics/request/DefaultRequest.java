@@ -54,7 +54,7 @@ import com.brsanthu.googleanalytics.internal.GoogleAnalyticsImpl;
 /**
  * Default request that captures default value for any of the parameters. Create an instance of this object and specify
  * as constructor parameter to {@link GoogleAnalyticsImpl} or set one any time using
- * {@link GoogleAnalyticsImpl#setDefaultRequest(DefaultRequest)} method.
+ * GoogleAnalyticsBuilder#withDefaultRequest(DefaultRequest) method.
  *
  * @author Santhosh Kumar
  */
