@@ -11,6 +11,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.time.ZonedDateTime;
+import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -224,5 +225,34 @@ public class GoogleAnalyticsTest {
         assertThat(screenhit1).isNotSameAs(screenhit2);
         assertThat(screenhit1.adwordsId()).isEqualTo("test1updated");
         assertThat(screenhit2.adwordsId()).isEqualTo("test1");
+    }
+
+    @Test
+    void testStats() throws Exception {
+        HttpClient client = mock(HttpClient.class);
+        when(client.post(ArgumentMatchers.any())).thenReturn(new HttpResponse().setStatusCode(200));
+
+        GoogleAnalytics ga = GoogleAnalytics.builder().withHttpClient(client).withConfig(
+                new GoogleAnalyticsConfig().setGatherStats(true).setBatchingEnabled(true).setBatchSize(2)).build();
+
+        IntStream.rangeClosed(1, 1).forEach(val -> ga.pageView().send());
+        IntStream.rangeClosed(1, 2).forEach(val -> ga.event().send());
+        IntStream.rangeClosed(1, 3).forEach(val -> ga.screenView().send());
+        IntStream.rangeClosed(1, 4).forEach(val -> ga.item().send());
+        IntStream.rangeClosed(1, 5).forEach(val -> ga.transaction().send());
+        IntStream.rangeClosed(1, 6).forEach(val -> ga.timing().send());
+        IntStream.rangeClosed(1, 7).forEach(val -> ga.social().send());
+        IntStream.rangeClosed(1, 8).forEach(val -> ga.exception().send());
+
+        assertThat(ga.getStats().getPageViewHits()).isEqualTo(1);
+        assertThat(ga.getStats().getEventHits()).isEqualTo(2);
+        assertThat(ga.getStats().getScreenViewHits()).isEqualTo(3);
+        assertThat(ga.getStats().getItemHits()).isEqualTo(4);
+        assertThat(ga.getStats().getTransactionHits()).isEqualTo(5);
+        assertThat(ga.getStats().getTimingHits()).isEqualTo(6);
+        assertThat(ga.getStats().getSocialHits()).isEqualTo(7);
+        assertThat(ga.getStats().getExceptionHits()).isEqualTo(8);
+        assertThat(ga.getStats().getTotalHits()).isEqualTo(36);
+
     }
 }
