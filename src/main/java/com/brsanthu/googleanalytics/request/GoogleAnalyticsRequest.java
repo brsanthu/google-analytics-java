@@ -306,7 +306,17 @@ public class GoogleAnalyticsRequest<T> {
         return customDimensions;
     }
 
+    /**
+     * This method name has typo hence has been deprecated.
+     *
+     * @deprecated please use {@link #customMetrics}
+     */
+    @Deprecated
     public Map<String, String> custommMetrics() {
+        return customMetrics;
+    }
+
+    public Map<String, String> customMetrics() {
         return customMetrics;
     }
 

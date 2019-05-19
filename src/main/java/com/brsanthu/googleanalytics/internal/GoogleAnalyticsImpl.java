@@ -291,11 +291,11 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
      */
     protected void processCustomMetricParameters(GoogleAnalyticsRequest<?> request, HttpRequest req) {
         Map<String, String> customMetricParms = new HashMap<>();
-        for (String defaultCustomMetricKey : defaultRequest.custommMetrics().keySet()) {
-            customMetricParms.put(defaultCustomMetricKey, defaultRequest.custommMetrics().get(defaultCustomMetricKey));
+        for (String defaultCustomMetricKey : defaultRequest.customMetrics().keySet()) {
+            customMetricParms.put(defaultCustomMetricKey, defaultRequest.customMetrics().get(defaultCustomMetricKey));
         }
 
-        Map<String, String> requestCustomMetrics = request.custommMetrics();
+        Map<String, String> requestCustomMetrics = request.customMetrics();
         for (String requestCustomDimKey : requestCustomMetrics.keySet()) {
             customMetricParms.put(requestCustomDimKey, requestCustomMetrics.get(requestCustomDimKey));
         }
