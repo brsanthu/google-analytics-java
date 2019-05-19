@@ -21,6 +21,7 @@ import com.brsanthu.googleanalytics.httpclient.HttpResponse;
 import com.brsanthu.googleanalytics.request.DefaultRequest;
 import com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter;
 import com.brsanthu.googleanalytics.request.GoogleAnalyticsResponse;
+import com.brsanthu.googleanalytics.request.ScreenViewHit;
 
 public class GoogleAnalyticsTest {
 
@@ -213,4 +214,15 @@ public class GoogleAnalyticsTest {
         assertThat(Integer.parseInt(resp2.getRequestParams().get(QUEUE_TIME.getParameterName()))).isCloseTo(0, within(100));
     }
 
+    @Test
+    void testDeepClone() throws Exception {
+        ScreenViewHit screenhit1 = ga.screenView().adwordsId("test1");
+        ScreenViewHit screenhit2 = screenhit1.deepClone();
+
+        screenhit1.adwordsId("test1updated");
+
+        assertThat(screenhit1).isNotSameAs(screenhit2);
+        assertThat(screenhit1.adwordsId()).isEqualTo("test1updated");
+        assertThat(screenhit2.adwordsId()).isEqualTo("test1");
+    }
 }

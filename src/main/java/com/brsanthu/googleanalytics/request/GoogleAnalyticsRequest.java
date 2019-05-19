@@ -1891,4 +1891,29 @@ public class GoogleAnalyticsRequest<T> {
     public ZonedDateTime occurredAt() {
         return occurredAt;
     }
+
+    /**
+     * Deep clones this hit and returns new request of same type. Any changes made to this request after this call, will
+     * not be reflected in the returned instance.
+     */
+    public T deepClone() {
+        try {
+            GoogleAnalyticsRequest<T> clonedReq = this.getClass().newInstance();
+            clonedReq.occurredAt = ZonedDateTime.now();
+            clonedReq.parms = cloneMap(parms);
+            clonedReq.customDimensions = cloneMap(customDimensions);
+            clonedReq.customMetrics = cloneMap(customMetrics);
+            clonedReq.delegateExecutor = delegateExecutor;
+
+            return (T) clonedReq;
+        } catch (Exception e) {
+            throw new RuntimeException("Exception while deep cloning " + this, e);
+        }
+    }
+
+    private <K, V> Map<K, V> cloneMap(Map<K, V> input) {
+        Map<K, V> output = new HashMap<>();
+        output.putAll(input);
+        return output;
+    }
 }
