@@ -1,15 +1,12 @@
 /*
- * Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package com.brsanthu.googleanalytics.request;
 
@@ -52,6 +49,7 @@ import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.USER
 import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.USER_LANGUAGE;
 import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.VIEWPORT_SIZE;
 
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -74,11 +72,11 @@ import com.brsanthu.googleanalytics.internal.GaUtils;
 @SuppressWarnings("unchecked")
 public class GoogleAnalyticsRequest<T> {
 
-    protected Map<GoogleAnalyticsParameter, String> parms = new HashMap<GoogleAnalyticsParameter, String>();
-    protected Map<String, String> customDimensions = new HashMap<String, String>();
-    protected Map<String, String> customMetrics = new HashMap<String, String>();
-
+    protected Map<GoogleAnalyticsParameter, String> parms = new HashMap<>();
+    protected Map<String, String> customDimensions = new HashMap<>();
+    protected Map<String, String> customMetrics = new HashMap<>();
     protected GoogleAnalyticsExecutor delegateExecutor = null;
+    private ZonedDateTime occurredAt = ZonedDateTime.now();
 
     public GoogleAnalyticsRequest() {
         this(null, null, null, null);
@@ -644,11 +642,11 @@ public class GoogleAnalyticsRequest<T> {
      * </tbody>
      * </table>
      *
-     * 
+     *
      * <div> Example value: <code>as8eknlll</code><br>
      * Example usage: <code>uid=as8eknlll</code> </div>
-     * 
-     * 
+     *
+     *
      * </div>
      *
      * @param value
@@ -1741,7 +1739,7 @@ public class GoogleAnalyticsRequest<T> {
      * <div class="ind">
      * <p>
      * Optional.
-     * 
+     *
      * </p>
      * <p>
      * This parameter specifies that this visitor has been exposed to an experiment with the given ID. It should be sent
@@ -1765,8 +1763,8 @@ public class GoogleAnalyticsRequest<T> {
      * </tr>
      * </tbody>
      * </table>
-     * 
-     * 
+     *
+     *
      * <div> Example value: <code>Qp0gahJ3RAO3DJ18b0XoUQ</code><br>
      * Example usage: <code>xid=Qp0gahJ3RAO3DJ18b0XoUQ</code> </div> </div>
      */
@@ -1783,7 +1781,7 @@ public class GoogleAnalyticsRequest<T> {
      * <div class="ind">
      * <p>
      * Optional.
-     * 
+     *
      * </p>
      * <p>
      * This parameter specifies that this visitor has been exposed to a particular variation of an experiment. It should
@@ -1879,5 +1877,18 @@ public class GoogleAnalyticsRequest<T> {
     public GoogleAnalyticsRequest<T> setExecutor(GoogleAnalyticsExecutor delegateExecutor) {
         this.delegateExecutor = delegateExecutor;
         return this;
+    }
+
+    /**
+     * Indicates the datetime at which this event occurred. This is used to report the <code>qt</code> parameter, if one
+     * is not set. The <code>occurredAt</code> defaults to datetime when this request was instantiated.
+     */
+    public T occurredAt(ZonedDateTime value) {
+        this.occurredAt = value;
+        return (T) this;
+    }
+
+    public ZonedDateTime occurredAt() {
+        return occurredAt;
     }
 }

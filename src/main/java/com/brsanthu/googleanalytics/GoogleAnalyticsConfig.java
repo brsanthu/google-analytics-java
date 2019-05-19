@@ -53,6 +53,7 @@ public class GoogleAnalyticsConfig {
     private boolean gatherStats = false;
     private RequestParameterDiscoverer requestParameterDiscoverer = new DefaultRequestParameterDiscoverer();
     private GoogleAnalyticsExceptionHandler exceptionHandler;
+    private boolean autoQueueTimeEnabled = true;
 
     public RequestParameterDiscoverer getRequestParameterDiscoverer() {
         return requestParameterDiscoverer;
@@ -415,6 +416,21 @@ public class GoogleAnalyticsConfig {
      */
     public GoogleAnalyticsConfig setExceptionHandler(GoogleAnalyticsExceptionHandler exceptionHandler) {
         this.exceptionHandler = exceptionHandler;
+        return this;
+    }
+
+    public boolean isAutoQueueTimeEnabled() {
+        return autoQueueTimeEnabled;
+    }
+
+    /**
+     * If enabled, library will calculate the queue time (qt) at the time request is being posted to GA based on when
+     * hit request was created and when it is posted to GA. Defaults to <code>true</code>.
+     *
+     * @since 2.1
+     */
+    public GoogleAnalyticsConfig setAutoQueueTimeEnabled(boolean autoQueueTimeEnabled) {
+        this.autoQueueTimeEnabled = autoQueueTimeEnabled;
         return this;
     }
 

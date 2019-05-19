@@ -11,7 +11,10 @@
 package com.brsanthu.googleanalytics.internal;
 
 import static com.brsanthu.googleanalytics.internal.GaUtils.isEmpty;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.QUEUE_TIME;
 
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -94,6 +97,8 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
     @Override
     public GoogleAnalyticsResponse post(GoogleAnalyticsRequest<?> gaReq) {
         GoogleAnalyticsResponse response = new GoogleAnalyticsResponse();
+        response.setGoogleAnalyticsRequest(gaReq);
+
         if (!config.isEnabled()) {
             return response;
         }
@@ -118,6 +123,8 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
 
     protected GoogleAnalyticsResponse postBatch(GoogleAnalyticsRequest<?> gaReq) {
         GoogleAnalyticsResponse resp = new GoogleAnalyticsResponse();
+        resp.setGoogleAnalyticsRequest(gaReq);
+
         HttpRequest httpReq = createHttpRequest(gaReq);
         resp.setRequestParams(httpReq.getBodyParams());
 
@@ -151,11 +158,52 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
                 // others will not post it even if multiple threads were to wait at sync block at same time
                 // https://en.wikipedia.org/wiki/Double-checked_locking
                 if (isSubmitBatch(force)) {
+                    processAutoQueueTime(currentBatch);
+
                     logger.debug("Submitting a batch of " + currentBatch.size() + " requests to GA");
                     httpClient.postBatch(new HttpBatchRequest().setUrl(config.getBatchUrl()).setRequests(currentBatch));
                     currentBatch.clear();
                 }
             }
+        }
+    }
+
+    protected HttpRequest processAutoQueueTime(HttpRequest request) {
+        if (!config.isAutoQueueTimeEnabled()) {
+            return request;
+        }
+
+        List<HttpRequest> requests = new ArrayList<>();
+        requests.add(request);
+
+        processAutoQueueTime(requests);
+
+        return request;
+    }
+
+    protected void processAutoQueueTime(List<HttpRequest> requests) {
+        if (!config.isAutoQueueTimeEnabled()) {
+            return;
+        }
+
+        // If there is no queue time specified, then set the queue time to time since event occurred to current time
+        // (time at which event being posted). This is helpful for batched requests as request may be sitting in queue
+        // for a while and we need to calculate the time.
+        for (HttpRequest req : requests) {
+            if (req.getGoogleAnalyticsRequest() == null || req.getGoogleAnalyticsRequest().occurredAt() == null) {
+                continue;
+            }
+
+            String qtParamName = QUEUE_TIME.getParameterName();
+
+            Map<String, String> params = req.getBodyParams();
+
+            int millis = (int) ChronoUnit.MILLIS.between(req.getGoogleAnalyticsRequest().occurredAt(), ZonedDateTime.now());
+            int qtMillis = params.containsKey(qtParamName) ? millis + Integer.parseInt(params.get(qtParamName)) : millis;
+
+            params.put(qtParamName, String.valueOf(qtMillis));
+
+            req.getGoogleAnalyticsRequest().queueTime(qtMillis);
         }
     }
 
@@ -165,7 +213,7 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
 
     protected GoogleAnalyticsResponse postSingle(GoogleAnalyticsRequest<?> gaReq) {
 
-        HttpRequest httpReq = createHttpRequest(gaReq);
+        HttpRequest httpReq = processAutoQueueTime(createHttpRequest(gaReq));
         HttpResponse httpResp = httpClient.post(httpReq);
 
         GoogleAnalyticsResponse response = new GoogleAnalyticsResponse();
@@ -182,13 +230,12 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
     private HttpRequest createHttpRequest(GoogleAnalyticsRequest<?> gaReq) {
         HttpRequest httpReq = new HttpRequest(config.getUrl());
 
-        // Process the parameters
+        httpReq.setGoogleAnalyticsRequest(gaReq);
+
         processParameters(gaReq, httpReq);
 
-        // Process custom dimensions
         processCustomDimensionParameters(gaReq, httpReq);
 
-        // Process custom metrics
         processCustomMetricParameters(gaReq, httpReq);
 
         return httpReq;

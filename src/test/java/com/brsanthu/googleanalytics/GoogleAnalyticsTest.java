@@ -1,18 +1,25 @@
 package com.brsanthu.googleanalytics;
 
 import static com.brsanthu.googleanalytics.internal.Constants.TEST_TRACKING_ID;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.QUEUE_TIME;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.within;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import java.time.ZonedDateTime;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 
 import com.brsanthu.googleanalytics.httpclient.HttpClient;
+import com.brsanthu.googleanalytics.httpclient.HttpResponse;
 import com.brsanthu.googleanalytics.request.DefaultRequest;
+import com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter;
 import com.brsanthu.googleanalytics.request.GoogleAnalyticsResponse;
 
 public class GoogleAnalyticsTest {
@@ -150,4 +157,60 @@ public class GoogleAnalyticsTest {
 
         assertThatThrownBy(() -> propagatingGa.screenView().sendAsync().get()).hasMessageContaining("Testing Exception");
     }
+
+    @Test
+    void testAutoQueueTime() throws Exception {
+
+        HttpClient client = mock(HttpClient.class);
+        when(client.post(ArgumentMatchers.any())).thenReturn(new HttpResponse().setStatusCode(200));
+
+        // By default queue time is added based on when hit was created and posted. In this test case, it should be
+        // close to 0
+        GoogleAnalytics gaAutoTimeEnabled = GoogleAnalytics.builder().withHttpClient(client).withConfig(new GoogleAnalyticsConfig()).build();
+        GoogleAnalyticsResponse respEnabled = gaAutoTimeEnabled.screenView().send();
+        assertThat(Integer.parseInt(respEnabled.getRequestParams().get(GoogleAnalyticsParameter.QUEUE_TIME.getParameterName()))).isCloseTo(0,
+                within(100));
+
+        // We can set occurred at to a past value and if so, it will be used to calcualte queue time.
+        GoogleAnalytics gaAutoTimeEnabledOccurredAt = GoogleAnalytics.builder().withHttpClient(client).withConfig(
+                new GoogleAnalyticsConfig()).build();
+        GoogleAnalyticsResponse respEnabledOccurredAt = gaAutoTimeEnabledOccurredAt.screenView().occurredAt(
+                ZonedDateTime.now().minusSeconds(5)).send();
+        assertThat(Integer.parseInt(respEnabledOccurredAt.getRequestParams().get(GoogleAnalyticsParameter.QUEUE_TIME.getParameterName()))).isCloseTo(
+                5000, within(100));
+
+        // We can set both occurredAt and queue time, then time based on occurred at will be added to set queue time.
+        GoogleAnalyticsResponse respEnabledWithSetQueueTime = gaAutoTimeEnabled.screenView().occurredAt(
+                ZonedDateTime.now().minusSeconds(5)).queueTime(1000).send();
+        assertThat(Integer.parseInt(
+                respEnabledWithSetQueueTime.getRequestParams().get(GoogleAnalyticsParameter.QUEUE_TIME.getParameterName()))).isCloseTo(6000,
+                        within(100));
+
+        // If we disable auto queue time, then queue time is not calculated
+        GoogleAnalytics gaAutoTimeDisabled = GoogleAnalytics.builder().withHttpClient(client).withConfig(
+                new GoogleAnalyticsConfig().setAutoQueueTimeEnabled(false)).build();
+        GoogleAnalyticsResponse respDisabled = gaAutoTimeDisabled.screenView().occurredAt(ZonedDateTime.now().minusSeconds(5)).send();
+        assertThat(respDisabled.getRequestParams().get(GoogleAnalyticsParameter.QUEUE_TIME.getParameterName())).isNull();
+    }
+
+    @Test
+    void testAutoQueueTimeBatch() throws Exception {
+        HttpClient client = mock(HttpClient.class);
+        when(client.post(ArgumentMatchers.any())).thenReturn(new HttpResponse().setStatusCode(200));
+
+        GoogleAnalytics gaAutoTimeEnabled = GoogleAnalytics.builder().withHttpClient(client).withConfig(
+                new GoogleAnalyticsConfig().setBatchingEnabled(true).setBatchSize(2)).build();
+
+        // First request will add to batch.
+        GoogleAnalyticsResponse resp1 = gaAutoTimeEnabled.screenView().send();
+
+        Thread.sleep(500);
+
+        GoogleAnalyticsResponse resp2 = gaAutoTimeEnabled.screenView().send();
+
+        assertThat(Integer.parseInt(resp1.getRequestParams().get(QUEUE_TIME.getParameterName()))).isCloseTo(500, within(100));
+
+        assertThat(Integer.parseInt(resp2.getRequestParams().get(QUEUE_TIME.getParameterName()))).isCloseTo(0, within(100));
+    }
+
 }
