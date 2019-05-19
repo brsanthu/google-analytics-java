@@ -4,17 +4,17 @@ import static com.brsanthu.googleanalytics.internal.Constants.TEST_TRACKING_ID;
 
 import java.util.stream.IntStream;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class GoogleAnalyticsBatchTest {
 
     private static GoogleAnalytics ga = null;
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() {
-        ga = GoogleAnalytics.builder().withTrackingId(TEST_TRACKING_ID).withAppName("Junit Test").withAppVersion("1.0.0")
-                .withConfig(new GoogleAnalyticsConfig().setBatchingEnabled(true).setBatchSize(10)).build();
+        ga = GoogleAnalytics.builder().withTrackingId(TEST_TRACKING_ID).withAppName("Junit Test").withAppVersion("1.0.0").withConfig(
+                new GoogleAnalyticsConfig().setBatchingEnabled(true).setBatchSize(10)).build();
     }
 
     @Test

@@ -1,12 +1,17 @@
 package com.brsanthu.googleanalytics;
 
 import static com.brsanthu.googleanalytics.internal.Constants.TEST_TRACKING_ID;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 
+import com.brsanthu.googleanalytics.httpclient.HttpClient;
 import com.brsanthu.googleanalytics.request.DefaultRequest;
 import com.brsanthu.googleanalytics.request.GoogleAnalyticsResponse;
 
@@ -14,7 +19,7 @@ public class GoogleAnalyticsTest {
 
     private static GoogleAnalytics ga = null;
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() {
         ga = GoogleAnalytics.builder().withTrackingId(TEST_TRACKING_ID).withAppName("Junit Test").withAppVersion("1.0.0").build();
     }
@@ -70,8 +75,8 @@ public class GoogleAnalyticsTest {
         // Local ga
         GoogleAnalytics lga = GoogleAnalytics.builder().withDefaultRequest(defaultRequest).withTrackingId(TEST_TRACKING_ID).build();
 
-        GoogleAnalyticsResponse response = lga.pageView("http://www.google.com", "Search").customDimension(2, "bob").customDimension(5, "alice")
-                .send();
+        GoogleAnalyticsResponse response = lga.pageView("http://www.google.com", "Search").customDimension(2, "bob").customDimension(5,
+                "alice").send();
 
         assertEquals("foo", response.getRequestParams().get("cd1"));
         assertEquals("bob", response.getRequestParams().get("cd2"));
@@ -101,8 +106,8 @@ public class GoogleAnalyticsTest {
 
         GoogleAnalytics lga = GoogleAnalytics.builder().withDefaultRequest(defaultRequest).withTrackingId(TEST_TRACKING_ID).build();
 
-        GoogleAnalyticsResponse response = lga.pageView("http://www.google.com", "Search").userIp("1.2.3.5")
-                .userAgent("Chrome/9.80 (Windows NT 6.0) Presto/2.12.388 Version/12.14").send();
+        GoogleAnalyticsResponse response = lga.pageView("http://www.google.com", "Search").userIp("1.2.3.5").userAgent(
+                "Chrome/9.80 (Windows NT 6.0) Presto/2.12.388 Version/12.14").send();
 
         assertEquals("1.2.3.5", response.getRequestParams().get("uip"));
         assertEquals("Chrome/9.80 (Windows NT 6.0) Presto/2.12.388 Version/12.14", response.getRequestParams().get("ua"));
