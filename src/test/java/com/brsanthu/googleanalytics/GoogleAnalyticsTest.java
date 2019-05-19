@@ -132,4 +132,22 @@ public class GoogleAnalyticsTest {
         assertEquals("12345", response.getRequestParams().get("cid"));
         assertEquals("user2", response.getRequestParams().get("uid"));
     }
+
+    @Test
+    void testExceptionHandler() throws Exception {
+        HttpClient client = mock(HttpClient.class);
+        when(client.post(ArgumentMatchers.any())).thenThrow(new RuntimeException("Testing Exception"));
+
+        GoogleAnalytics ga = GoogleAnalytics.builder().withHttpClient(client).withConfig(new GoogleAnalyticsConfig()).build();
+
+        // Since default behavior is to log exception, this function call should work fine.
+        ga.screenView().send();
+
+        GoogleAnalytics propagatingGa = GoogleAnalytics.builder().withHttpClient(client).withConfig(
+                new GoogleAnalyticsConfig().setExceptionHandler(new PropagatingExceptionHandler())).build();
+
+        assertThatThrownBy(() -> propagatingGa.screenView().send()).hasMessage("Testing Exception");
+
+        assertThatThrownBy(() -> propagatingGa.screenView().sendAsync().get()).hasMessageContaining("Testing Exception");
+    }
 }

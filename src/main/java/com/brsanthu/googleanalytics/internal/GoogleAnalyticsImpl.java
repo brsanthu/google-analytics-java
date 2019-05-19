@@ -105,8 +105,12 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
                 response = postSingle(gaReq);
             }
 
-        } catch (Exception e) {
-            logger.warn("Exception while sending the Google Analytics tracker request " + gaReq, e);
+        } catch (Throwable e) {
+            if (config.getExceptionHandler() != null) {
+                config.getExceptionHandler().handle(e);
+            } else {
+                logger.warn("Exception while sending the Google Analytics tracker request " + gaReq, e);
+            }
         }
 
         return response;
@@ -217,7 +221,7 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
      * @param postParms
      */
     protected void processCustomDimensionParameters(GoogleAnalyticsRequest<?> request, HttpRequest req) {
-        Map<String, String> customDimParms = new HashMap<String, String>();
+        Map<String, String> customDimParms = new HashMap<>();
         for (String defaultCustomDimKey : defaultRequest.customDimensions().keySet()) {
             customDimParms.put(defaultCustomDimKey, defaultRequest.customDimensions().get(defaultCustomDimKey));
         }
@@ -239,7 +243,7 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
      * @param postParms
      */
     protected void processCustomMetricParameters(GoogleAnalyticsRequest<?> request, HttpRequest req) {
-        Map<String, String> customMetricParms = new HashMap<String, String>();
+        Map<String, String> customMetricParms = new HashMap<>();
         for (String defaultCustomMetricKey : defaultRequest.custommMetrics().keySet()) {
             customMetricParms.put(defaultCustomMetricKey, defaultRequest.custommMetrics().get(defaultCustomMetricKey));
         }

@@ -52,6 +52,7 @@ public class GoogleAnalyticsConfig {
     private boolean discoverRequestParameters = true;
     private boolean gatherStats = false;
     private RequestParameterDiscoverer requestParameterDiscoverer = new DefaultRequestParameterDiscoverer();
+    private GoogleAnalyticsExceptionHandler exceptionHandler;
 
     public RequestParameterDiscoverer getRequestParameterDiscoverer() {
         return requestParameterDiscoverer;
@@ -125,7 +126,7 @@ public class GoogleAnalyticsConfig {
      * </p>
      */
     public GoogleAnalyticsConfig setDiscoverRequestParameters(boolean discoverSystemParameters) {
-        this.discoverRequestParameters = discoverSystemParameters;
+        discoverRequestParameters = discoverSystemParameters;
         return this;
     }
 
@@ -401,6 +402,19 @@ public class GoogleAnalyticsConfig {
 
     public GoogleAnalyticsConfig setBatchSize(int batchSize) {
         this.batchSize = batchSize;
+        return this;
+    }
+
+    public GoogleAnalyticsExceptionHandler getExceptionHandler() {
+        return exceptionHandler;
+    }
+
+    /**
+     * Set an exception handler which will implement the behavior in case of any exceptions. If not set, default
+     * behavior is to log a warning message.
+     */
+    public GoogleAnalyticsConfig setExceptionHandler(GoogleAnalyticsExceptionHandler exceptionHandler) {
+        this.exceptionHandler = exceptionHandler;
         return this;
     }
 
