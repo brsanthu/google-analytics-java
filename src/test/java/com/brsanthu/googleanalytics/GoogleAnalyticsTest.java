@@ -217,7 +217,7 @@ public class GoogleAnalyticsTest {
     @Test
     void testDeepClone() throws Exception {
         ScreenViewHit screenhit1 = ga.screenView().adwordsId("test1");
-        ScreenViewHit screenhit2 = screenhit1.deepClone();
+        ScreenViewHit screenhit2 = screenhit1.clone();
 
         screenhit1.adwordsId("test1updated");
 
@@ -259,7 +259,7 @@ public class GoogleAnalyticsTest {
         anyhit1.adwordsId("adsid456");
         assertThat(sv.adwordsId()).isEqualTo(anyhit1.adwordsId());
 
-        AnyHit anyhit2 = sv.deepClone().asAnyHit();
+        AnyHit anyhit2 = sv.clone().asAnyHit();
         anyhit2.adwordsId("adsid789");
         assertThat(sv.adwordsId()).isNotEqualTo(anyhit2.adwordsId());
     }

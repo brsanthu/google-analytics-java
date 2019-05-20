@@ -70,7 +70,7 @@ import com.brsanthu.googleanalytics.internal.GaUtils;
  * @author Santhosh Kumar
  */
 @SuppressWarnings("unchecked")
-public class GoogleAnalyticsRequest<T> {
+public class GoogleAnalyticsRequest<T> implements Cloneable {
 
     public static final String HIT_SCREENVIEW = "screenview";
     public static final String HIT_PAGEVIEW = "pageview";
@@ -1915,7 +1915,8 @@ public class GoogleAnalyticsRequest<T> {
      * Deep clones this hit and returns new request of same type. Any changes made to this request after this call, will
      * not be reflected in the returned instance.
      */
-    public T deepClone() {
+    @Override
+    public T clone() {
         try {
             GoogleAnalyticsRequest<T> clonedReq = this.getClass().newInstance();
             clonedReq.occurredAt = ZonedDateTime.now();
