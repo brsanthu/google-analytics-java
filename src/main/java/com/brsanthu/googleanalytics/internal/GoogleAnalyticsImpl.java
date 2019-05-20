@@ -13,6 +13,8 @@ package com.brsanthu.googleanalytics.internal;
 import static com.brsanthu.googleanalytics.internal.GaUtils.isEmpty;
 import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.QUEUE_TIME;
 
+import java.net.Inet6Address;
+import java.net.InetAddress;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -241,9 +243,9 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
         return httpReq;
     }
 
-    protected void processParameters(GoogleAnalyticsRequest<?> request, HttpRequest req) {
+    protected void processParameters(GoogleAnalyticsRequest<?> gaReq, HttpRequest httpReq) {
 
-        Map<GoogleAnalyticsParameter, String> requestParms = request.getParameters();
+        Map<GoogleAnalyticsParameter, String> requestParms = gaReq.getParameters();
         Map<GoogleAnalyticsParameter, String> defaultParms = defaultRequest.getParameters();
 
         for (GoogleAnalyticsParameter parm : defaultParms.keySet()) {
@@ -256,8 +258,29 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
             }
         }
 
+        anonymizeUserIp(gaReq, httpReq);
+
         for (GoogleAnalyticsParameter key : requestParms.keySet()) {
-            req.addBodyParam(key.getParameterName(), requestParms.get(key));
+            httpReq.addBodyParam(key.getParameterName(), requestParms.get(key));
+        }
+    }
+
+    private void anonymizeUserIp(GoogleAnalyticsRequest<?> gaReq, HttpRequest httpReq) {
+        if (config.isAnonymizeUserIp() && gaReq.userIp() != null) {
+            try {
+                InetAddress ip = InetAddress.getByName(gaReq.userIp());
+                byte[] address = ip.getAddress();
+                int anonymizedBytes = ip instanceof Inet6Address ? 10 : 1;
+
+                for (int i = 0; i < anonymizedBytes; ++i) {
+                    address[address.length - i - 1] = 0;
+                }
+
+                String anonymizedIp = InetAddress.getByAddress(address).getHostAddress();
+                gaReq.userIp(anonymizedIp);
+            } catch (Exception e) {
+                logger.warn("Error anonymizing user ip", e);
+            }
         }
     }
 

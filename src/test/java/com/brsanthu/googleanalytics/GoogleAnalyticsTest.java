@@ -28,10 +28,13 @@ import com.brsanthu.googleanalytics.request.ScreenViewHit;
 public class GoogleAnalyticsTest {
 
     private static GoogleAnalytics ga = null;
+    private static HttpClient client;
 
     @BeforeAll
     public static void setup() {
         ga = GoogleAnalytics.builder().withTrackingId(TEST_TRACKING_ID).withAppName("Junit Test").withAppVersion("1.0.0").build();
+        client = mock(HttpClient.class);
+        when(client.post(ArgumentMatchers.any())).thenReturn(new HttpResponse().setStatusCode(200));
     }
 
     @Test
@@ -163,10 +166,6 @@ public class GoogleAnalyticsTest {
 
     @Test
     void testAutoQueueTime() throws Exception {
-
-        HttpClient client = mock(HttpClient.class);
-        when(client.post(ArgumentMatchers.any())).thenReturn(new HttpResponse().setStatusCode(200));
-
         // By default queue time is added based on when hit was created and posted. In this test case, it should be
         // close to 0
         GoogleAnalytics gaAutoTimeEnabled = GoogleAnalytics.builder().withHttpClient(client).withConfig(new GoogleAnalyticsConfig()).build();
@@ -198,9 +197,6 @@ public class GoogleAnalyticsTest {
 
     @Test
     void testAutoQueueTimeBatch() throws Exception {
-        HttpClient client = mock(HttpClient.class);
-        when(client.post(ArgumentMatchers.any())).thenReturn(new HttpResponse().setStatusCode(200));
-
         GoogleAnalytics gaAutoTimeEnabled = GoogleAnalytics.builder().withHttpClient(client).withConfig(
                 new GoogleAnalyticsConfig().setBatchingEnabled(true).setBatchSize(2)).build();
 
@@ -230,9 +226,6 @@ public class GoogleAnalyticsTest {
 
     @Test
     void testStats() throws Exception {
-        HttpClient client = mock(HttpClient.class);
-        when(client.post(ArgumentMatchers.any())).thenReturn(new HttpResponse().setStatusCode(200));
-
         GoogleAnalytics ga = GoogleAnalytics.builder().withHttpClient(client).withConfig(
                 new GoogleAnalyticsConfig().setGatherStats(true).setBatchingEnabled(true).setBatchSize(2)).build();
 
@@ -267,5 +260,20 @@ public class GoogleAnalyticsTest {
         AnyHit anyhit2 = sv.deepClone().asAnyHit();
         anyhit2.adwordsId("adsid789");
         assertThat(sv.adwordsId()).isNotEqualTo(anyhit2.adwordsId());
+    }
+
+    @Test
+    void testAnonymizeUserIp() throws Exception {
+        String userIp = "176.134.201.004";
+
+        GoogleAnalytics ga = GoogleAnalytics.builder().withHttpClient(client).withConfig(new GoogleAnalyticsConfig()).build();
+        GoogleAnalyticsResponse resp = ga.screenView().userIp(userIp).send();
+        assertThat(resp.getRequestParams().get(GoogleAnalyticsParameter.USER_IP.getParameterName())).isEqualTo(userIp);
+
+        GoogleAnalytics ga2 = GoogleAnalytics.builder().withHttpClient(client).withConfig(
+                new GoogleAnalyticsConfig().setAnonymizeUserIp(true)).build();
+        GoogleAnalyticsResponse resp2 = ga2.screenView().userIp(userIp).send();
+        assertThat(resp2.getRequestParams().get(GoogleAnalyticsParameter.USER_IP.getParameterName())).isEqualTo("176.134.201.0");
+
     }
 }

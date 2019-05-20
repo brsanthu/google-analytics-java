@@ -54,6 +54,7 @@ public class GoogleAnalyticsConfig {
     private RequestParameterDiscoverer requestParameterDiscoverer = new DefaultRequestParameterDiscoverer();
     private GoogleAnalyticsExceptionHandler exceptionHandler;
     private boolean autoQueueTimeEnabled = true;
+    private boolean anonymizeUserIp = false;
 
     public RequestParameterDiscoverer getRequestParameterDiscoverer() {
         return requestParameterDiscoverer;
@@ -413,6 +414,8 @@ public class GoogleAnalyticsConfig {
     /**
      * Set an exception handler which will implement the behavior in case of any exceptions. If not set, default
      * behavior is to log a warning message.
+     *
+     * @since 2.1
      */
     public GoogleAnalyticsConfig setExceptionHandler(GoogleAnalyticsExceptionHandler exceptionHandler) {
         this.exceptionHandler = exceptionHandler;
@@ -431,6 +434,25 @@ public class GoogleAnalyticsConfig {
      */
     public GoogleAnalyticsConfig setAutoQueueTimeEnabled(boolean autoQueueTimeEnabled) {
         this.autoQueueTimeEnabled = autoQueueTimeEnabled;
+        return this;
+    }
+
+    public boolean isAnonymizeUserIp() {
+        return anonymizeUserIp;
+    }
+
+    /**
+     * If true, and if <code>userIp</code> GA parameter is set, then that ip will be anonymized using same logic that is
+     * used at GA end. Defaults to <code>false</code>.
+     * <p>
+     * See for more info:
+     * <ul>
+     * <li>https://github.com/brsanthu/google-analytics-java/issues/57
+     * <li>https://support.google.com/analytics/answer/2763052?hl=en
+     * </ul>
+     */
+    public GoogleAnalyticsConfig setAnonymizeUserIp(boolean anonymizeUserIp) {
+        this.anonymizeUserIp = anonymizeUserIp;
         return this;
     }
 
