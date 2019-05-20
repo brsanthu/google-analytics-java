@@ -72,11 +72,20 @@ import com.brsanthu.googleanalytics.internal.GaUtils;
 @SuppressWarnings("unchecked")
 public class GoogleAnalyticsRequest<T> {
 
+    public static final String HIT_SCREENVIEW = "screenview";
+    public static final String HIT_PAGEVIEW = "pageview";
+    public static final String HIT_EVENT = "event";
+    public static final String HIT_ITEM = "item";
+    public static final String HIT_TXN = "transaction";
+    public static final String HIT_SOCIAL = "social";
+    public static final String HIT_TIMING = "timing";
+    public static final String HIT_EXCEPTION = "exception";
+
     protected Map<GoogleAnalyticsParameter, String> parms = new HashMap<>();
     protected Map<String, String> customDimensions = new HashMap<>();
     protected Map<String, String> customMetrics = new HashMap<>();
     protected GoogleAnalyticsExecutor delegateExecutor = null;
-    private ZonedDateTime occurredAt = ZonedDateTime.now();
+    protected ZonedDateTime occurredAt = ZonedDateTime.now();
 
     public GoogleAnalyticsRequest() {
         this(null, null, null, null);
@@ -1925,5 +1934,20 @@ public class GoogleAnalyticsRequest<T> {
         Map<K, V> output = new HashMap<>();
         output.putAll(input);
         return output;
+    }
+
+    /**
+     * Creates a anyhit wrapper for current request with state shared between this instance and returned {@link AnyHit}.
+     * If you want a copy, then call {@link #deepClone()} first and then this method.
+     */
+    public AnyHit asAnyHit() {
+        AnyHit anyHit = new AnyHit();
+        anyHit.customDimensions = customDimensions;
+        anyHit.customMetrics = customMetrics;
+        anyHit.delegateExecutor = delegateExecutor;
+        anyHit.parms = parms;
+        anyHit.occurredAt = occurredAt;
+
+        return anyHit;
     }
 }

@@ -19,6 +19,7 @@ import org.mockito.ArgumentMatchers;
 
 import com.brsanthu.googleanalytics.httpclient.HttpClient;
 import com.brsanthu.googleanalytics.httpclient.HttpResponse;
+import com.brsanthu.googleanalytics.request.AnyHit;
 import com.brsanthu.googleanalytics.request.DefaultRequest;
 import com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter;
 import com.brsanthu.googleanalytics.request.GoogleAnalyticsResponse;
@@ -253,6 +254,18 @@ public class GoogleAnalyticsTest {
         assertThat(ga.getStats().getSocialHits()).isEqualTo(7);
         assertThat(ga.getStats().getExceptionHits()).isEqualTo(8);
         assertThat(ga.getStats().getTotalHits()).isEqualTo(36);
+    }
 
+    @Test
+    void testAnyHit() throws Exception {
+        ScreenViewHit sv = ga.screenView().adwordsId("adsid123");
+
+        AnyHit anyhit1 = sv.asAnyHit();
+        anyhit1.adwordsId("adsid456");
+        assertThat(sv.adwordsId()).isEqualTo(anyhit1.adwordsId());
+
+        AnyHit anyhit2 = sv.deepClone().asAnyHit();
+        anyhit2.adwordsId("adsid789");
+        assertThat(sv.adwordsId()).isNotEqualTo(anyhit2.adwordsId());
     }
 }
