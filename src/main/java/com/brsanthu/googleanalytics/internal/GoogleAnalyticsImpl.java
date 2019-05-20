@@ -219,8 +219,11 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
         HttpResponse httpResp = httpClient.post(httpReq);
 
         GoogleAnalyticsResponse response = new GoogleAnalyticsResponse();
+        response.setGoogleAnalyticsRequest(gaReq);
         response.setStatusCode(httpResp.getStatusCode());
         response.setRequestParams(httpReq.getBodyParams());
+        response.setHttpRequest(httpReq);
+        response.setHttpResponse(httpResp);
 
         if (config.isGatherStats()) {
             gatherStats(gaReq);

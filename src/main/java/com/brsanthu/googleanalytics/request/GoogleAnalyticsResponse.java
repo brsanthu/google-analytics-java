@@ -12,6 +12,9 @@ package com.brsanthu.googleanalytics.request;
 
 import java.util.Map;
 
+import com.brsanthu.googleanalytics.httpclient.HttpRequest;
+import com.brsanthu.googleanalytics.httpclient.HttpResponse;
+
 /**
  * Response for GA tracking request.
  *
@@ -21,6 +24,8 @@ public class GoogleAnalyticsResponse {
     private int statusCode = 200;
     private GoogleAnalyticsRequest<?> googleAnalyticsRequest;
     private Map<String, String> requestParams = null;
+    private HttpRequest httpRequest;
+    private HttpResponse httpResponse;
 
     public Map<String, String> getRequestParams() {
         return requestParams;
@@ -53,6 +58,24 @@ public class GoogleAnalyticsResponse {
 
     public GoogleAnalyticsResponse setGoogleAnalyticsRequest(GoogleAnalyticsRequest<?> googleAnalyticsRequest) {
         this.googleAnalyticsRequest = googleAnalyticsRequest;
+        return this;
+    }
+
+    public HttpResponse getHttpResponse() {
+        return httpResponse;
+    }
+
+    public GoogleAnalyticsResponse setHttpResponse(HttpResponse httpResponse) {
+        this.httpResponse = httpResponse;
+        return this;
+    }
+
+    public HttpRequest getHttpRequest() {
+        return httpRequest;
+    }
+
+    public GoogleAnalyticsResponse setHttpRequest(HttpRequest httpRequest) {
+        this.httpRequest = httpRequest;
         return this;
     }
 }
