@@ -20,6 +20,12 @@ public class GoogleAnalyticsBuilder {
     private DefaultRequest defaultRequest = new DefaultRequest();
     private HttpClient httpClient;
     private ExecutorService executor;
+    private GoogleAnalyticsExecutor googleAnalyticsExecutor;
+
+    public GoogleAnalyticsBuilder withGoogleAnalyticsExecutor(GoogleAnalyticsExecutor googleAnalyticsExecutor) {
+        this.googleAnalyticsExecutor = googleAnalyticsExecutor;
+        return this;
+    }
 
     public GoogleAnalyticsBuilder withConfig(GoogleAnalyticsConfig config) {
         this.config = GaUtils.firstNotNull(config, new GoogleAnalyticsConfig());
@@ -64,7 +70,7 @@ public class GoogleAnalyticsBuilder {
             discoverer.discoverParameters(config, defaultRequest);
         }
 
-        return new GoogleAnalyticsImpl(config, defaultRequest, createHttpClient(), createExecutor());
+        return new GoogleAnalyticsImpl(config, defaultRequest, createHttpClient(), createExecutor(), googleAnalyticsExecutor);
     }
 
     protected HttpClient createHttpClient() {

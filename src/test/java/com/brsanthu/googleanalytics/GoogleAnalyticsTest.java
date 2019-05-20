@@ -11,6 +11,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.time.ZonedDateTime;
+import java.util.concurrent.Future;
 import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -22,6 +23,7 @@ import com.brsanthu.googleanalytics.httpclient.HttpResponse;
 import com.brsanthu.googleanalytics.request.AnyHit;
 import com.brsanthu.googleanalytics.request.DefaultRequest;
 import com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter;
+import com.brsanthu.googleanalytics.request.GoogleAnalyticsRequest;
 import com.brsanthu.googleanalytics.request.GoogleAnalyticsResponse;
 import com.brsanthu.googleanalytics.request.ScreenViewHit;
 
@@ -274,6 +276,25 @@ public class GoogleAnalyticsTest {
                 new GoogleAnalyticsConfig().setAnonymizeUserIp(true)).build();
         GoogleAnalyticsResponse resp2 = ga2.screenView().userIp(userIp).send();
         assertThat(resp2.getRequestParams().get(GoogleAnalyticsParameter.USER_IP.getParameterName())).isEqualTo("176.134.201.0");
+    }
+
+    @Test
+    void testCustomExecutor() throws Exception {
+        GoogleAnalyticsExecutor exector = new GoogleAnalyticsExecutor() {
+            @Override
+            public Future<GoogleAnalyticsResponse> postAsync(GoogleAnalyticsRequest<?> request) {
+                return null;
+            }
+
+            @Override
+            public GoogleAnalyticsResponse post(GoogleAnalyticsRequest<?> request) {
+                return new GoogleAnalyticsResponse().setStatusCode(400);
+            }
+        };
+
+        GoogleAnalytics ga = GoogleAnalytics.builder().withGoogleAnalyticsExecutor(exector).build();
+        GoogleAnalyticsResponse resp = ga.screenView().send();
+        assertThat(resp.getStatusCode()).isEqualTo(400);
 
     }
 }

@@ -68,14 +68,17 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
     protected final DefaultRequest defaultRequest;
     protected final HttpClient httpClient;
     protected final ExecutorService executor;
+    protected final GoogleAnalyticsExecutor googleAnalyticsExecutor;
     protected GoogleAnalyticsStatsImpl stats = new GoogleAnalyticsStatsImpl();
     protected List<HttpRequest> currentBatch = new ArrayList<>();
 
-    public GoogleAnalyticsImpl(GoogleAnalyticsConfig config, DefaultRequest defaultRequest, HttpClient httpClient, ExecutorService executor) {
+    public GoogleAnalyticsImpl(GoogleAnalyticsConfig config, DefaultRequest defaultRequest, HttpClient httpClient, ExecutorService executor,
+            GoogleAnalyticsExecutor googleAnalyticsExecutor) {
         this.config = config;
         this.defaultRequest = defaultRequest;
         this.httpClient = httpClient;
         this.executor = executor;
+        this.googleAnalyticsExecutor = googleAnalyticsExecutor;
     }
 
     @Override
@@ -88,16 +91,24 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
     }
 
     @Override
-    public Future<GoogleAnalyticsResponse> postAsync(GoogleAnalyticsRequest<?> request) {
+    public Future<GoogleAnalyticsResponse> postAsync(GoogleAnalyticsRequest<?> gaReq) {
+        if (googleAnalyticsExecutor != null) {
+            return googleAnalyticsExecutor.postAsync(gaReq);
+        }
+
         if (!config.isEnabled()) {
             return null;
         }
 
-        return executor.submit(() -> post(request));
+        return executor.submit(() -> post(gaReq));
     }
 
     @Override
     public GoogleAnalyticsResponse post(GoogleAnalyticsRequest<?> gaReq) {
+        if (googleAnalyticsExecutor != null) {
+            return googleAnalyticsExecutor.post(gaReq);
+        }
+
         GoogleAnalyticsResponse response = new GoogleAnalyticsResponse();
         response.setGoogleAnalyticsRequest(gaReq);
 

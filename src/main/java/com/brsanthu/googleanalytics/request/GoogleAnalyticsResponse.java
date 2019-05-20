@@ -31,12 +31,14 @@ public class GoogleAnalyticsResponse {
         return requestParams;
     }
 
-    public void setRequestParams(Map<String, String> postedParms) {
+    public GoogleAnalyticsResponse setRequestParams(Map<String, String> postedParms) {
         requestParams = postedParms;
+        return this;
     }
 
-    public void setStatusCode(int statusCode) {
+    public GoogleAnalyticsResponse setStatusCode(int statusCode) {
         this.statusCode = statusCode;
+        return this;
     }
 
     public int getStatusCode() {
