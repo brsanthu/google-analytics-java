@@ -3,14 +3,17 @@ package com.brsanthu.googleanalytics.httpclient;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.brsanthu.googleanalytics.request.GoogleAnalyticsRequest;
+
 public class HttpRequest {
     private String contentType;
     private String method;
     private String url;
     private Map<String, String> bodyParams = new HashMap<>();
+    private GoogleAnalyticsRequest<?> googleAnalyticsRequest;
 
     public HttpRequest(String url) {
-        this.setUrl(url);
+        setUrl(url);
     }
 
     public HttpRequest post() {
@@ -51,6 +54,15 @@ public class HttpRequest {
 
     public HttpRequest setUrl(String url) {
         this.url = url;
+        return this;
+    }
+
+    public GoogleAnalyticsRequest<?> getGoogleAnalyticsRequest() {
+        return googleAnalyticsRequest;
+    }
+
+    public HttpRequest setGoogleAnalyticsRequest(GoogleAnalyticsRequest<?> googleAnalyticsRequest) {
+        this.googleAnalyticsRequest = googleAnalyticsRequest;
         return this;
     }
 }

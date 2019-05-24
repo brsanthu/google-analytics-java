@@ -11,7 +11,12 @@
 package com.brsanthu.googleanalytics.internal;
 
 import static com.brsanthu.googleanalytics.internal.GaUtils.isEmpty;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.QUEUE_TIME;
 
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,14 +68,17 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
     protected final DefaultRequest defaultRequest;
     protected final HttpClient httpClient;
     protected final ExecutorService executor;
+    protected final GoogleAnalyticsExecutor googleAnalyticsExecutor;
     protected GoogleAnalyticsStatsImpl stats = new GoogleAnalyticsStatsImpl();
     protected List<HttpRequest> currentBatch = new ArrayList<>();
 
-    public GoogleAnalyticsImpl(GoogleAnalyticsConfig config, DefaultRequest defaultRequest, HttpClient httpClient, ExecutorService executor) {
+    public GoogleAnalyticsImpl(GoogleAnalyticsConfig config, DefaultRequest defaultRequest, HttpClient httpClient, ExecutorService executor,
+            GoogleAnalyticsExecutor googleAnalyticsExecutor) {
         this.config = config;
         this.defaultRequest = defaultRequest;
         this.httpClient = httpClient;
         this.executor = executor;
+        this.googleAnalyticsExecutor = googleAnalyticsExecutor;
     }
 
     @Override
@@ -83,17 +91,27 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
     }
 
     @Override
-    public Future<GoogleAnalyticsResponse> postAsync(GoogleAnalyticsRequest<?> request) {
+    public Future<GoogleAnalyticsResponse> postAsync(GoogleAnalyticsRequest<?> gaReq) {
+        if (googleAnalyticsExecutor != null) {
+            return googleAnalyticsExecutor.postAsync(gaReq);
+        }
+
         if (!config.isEnabled()) {
             return null;
         }
 
-        return executor.submit(() -> post(request));
+        return executor.submit(() -> post(gaReq));
     }
 
     @Override
     public GoogleAnalyticsResponse post(GoogleAnalyticsRequest<?> gaReq) {
+        if (googleAnalyticsExecutor != null) {
+            return googleAnalyticsExecutor.post(gaReq);
+        }
+
         GoogleAnalyticsResponse response = new GoogleAnalyticsResponse();
+        response.setGoogleAnalyticsRequest(gaReq);
+
         if (!config.isEnabled()) {
             return response;
         }
@@ -105,8 +123,12 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
                 response = postSingle(gaReq);
             }
 
-        } catch (Exception e) {
-            logger.warn("Exception while sending the Google Analytics tracker request " + gaReq, e);
+        } catch (Throwable e) {
+            if (config.getExceptionHandler() != null) {
+                config.getExceptionHandler().handle(e);
+            } else {
+                logger.warn("Exception while sending the Google Analytics tracker request " + gaReq, e);
+            }
         }
 
         return response;
@@ -114,6 +136,8 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
 
     protected GoogleAnalyticsResponse postBatch(GoogleAnalyticsRequest<?> gaReq) {
         GoogleAnalyticsResponse resp = new GoogleAnalyticsResponse();
+        resp.setGoogleAnalyticsRequest(gaReq);
+
         HttpRequest httpReq = createHttpRequest(gaReq);
         resp.setRequestParams(httpReq.getBodyParams());
 
@@ -147,11 +171,52 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
                 // others will not post it even if multiple threads were to wait at sync block at same time
                 // https://en.wikipedia.org/wiki/Double-checked_locking
                 if (isSubmitBatch(force)) {
+                    processAutoQueueTime(currentBatch);
+
                     logger.debug("Submitting a batch of " + currentBatch.size() + " requests to GA");
                     httpClient.postBatch(new HttpBatchRequest().setUrl(config.getBatchUrl()).setRequests(currentBatch));
                     currentBatch.clear();
                 }
             }
+        }
+    }
+
+    protected HttpRequest processAutoQueueTime(HttpRequest request) {
+        if (!config.isAutoQueueTimeEnabled()) {
+            return request;
+        }
+
+        List<HttpRequest> requests = new ArrayList<>();
+        requests.add(request);
+
+        processAutoQueueTime(requests);
+
+        return request;
+    }
+
+    protected void processAutoQueueTime(List<HttpRequest> requests) {
+        if (!config.isAutoQueueTimeEnabled()) {
+            return;
+        }
+
+        // If there is no queue time specified, then set the queue time to time since event occurred to current time
+        // (time at which event being posted). This is helpful for batched requests as request may be sitting in queue
+        // for a while and we need to calculate the time.
+        for (HttpRequest req : requests) {
+            if (req.getGoogleAnalyticsRequest() == null || req.getGoogleAnalyticsRequest().occurredAt() == null) {
+                continue;
+            }
+
+            String qtParamName = QUEUE_TIME.getParameterName();
+
+            Map<String, String> params = req.getBodyParams();
+
+            int millis = (int) ChronoUnit.MILLIS.between(req.getGoogleAnalyticsRequest().occurredAt(), ZonedDateTime.now());
+            int qtMillis = params.containsKey(qtParamName) ? millis + Integer.parseInt(params.get(qtParamName)) : millis;
+
+            params.put(qtParamName, String.valueOf(qtMillis));
+
+            req.getGoogleAnalyticsRequest().queueTime(qtMillis);
         }
     }
 
@@ -161,12 +226,15 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
 
     protected GoogleAnalyticsResponse postSingle(GoogleAnalyticsRequest<?> gaReq) {
 
-        HttpRequest httpReq = createHttpRequest(gaReq);
+        HttpRequest httpReq = processAutoQueueTime(createHttpRequest(gaReq));
         HttpResponse httpResp = httpClient.post(httpReq);
 
         GoogleAnalyticsResponse response = new GoogleAnalyticsResponse();
+        response.setGoogleAnalyticsRequest(gaReq);
         response.setStatusCode(httpResp.getStatusCode());
         response.setRequestParams(httpReq.getBodyParams());
+        response.setHttpRequest(httpReq);
+        response.setHttpResponse(httpResp);
 
         if (config.isGatherStats()) {
             gatherStats(gaReq);
@@ -178,21 +246,20 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
     private HttpRequest createHttpRequest(GoogleAnalyticsRequest<?> gaReq) {
         HttpRequest httpReq = new HttpRequest(config.getUrl());
 
-        // Process the parameters
+        httpReq.setGoogleAnalyticsRequest(gaReq);
+
         processParameters(gaReq, httpReq);
 
-        // Process custom dimensions
         processCustomDimensionParameters(gaReq, httpReq);
 
-        // Process custom metrics
         processCustomMetricParameters(gaReq, httpReq);
 
         return httpReq;
     }
 
-    protected void processParameters(GoogleAnalyticsRequest<?> request, HttpRequest req) {
+    protected void processParameters(GoogleAnalyticsRequest<?> gaReq, HttpRequest httpReq) {
 
-        Map<GoogleAnalyticsParameter, String> requestParms = request.getParameters();
+        Map<GoogleAnalyticsParameter, String> requestParms = gaReq.getParameters();
         Map<GoogleAnalyticsParameter, String> defaultParms = defaultRequest.getParameters();
 
         for (GoogleAnalyticsParameter parm : defaultParms.keySet()) {
@@ -205,8 +272,29 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
             }
         }
 
+        anonymizeUserIp(gaReq, httpReq);
+
         for (GoogleAnalyticsParameter key : requestParms.keySet()) {
-            req.addBodyParam(key.getParameterName(), requestParms.get(key));
+            httpReq.addBodyParam(key.getParameterName(), requestParms.get(key));
+        }
+    }
+
+    private void anonymizeUserIp(GoogleAnalyticsRequest<?> gaReq, HttpRequest httpReq) {
+        if (config.isAnonymizeUserIp() && gaReq.userIp() != null) {
+            try {
+                InetAddress ip = InetAddress.getByName(gaReq.userIp());
+                byte[] address = ip.getAddress();
+                int anonymizedBytes = ip instanceof Inet6Address ? 10 : 1;
+
+                for (int i = 0; i < anonymizedBytes; ++i) {
+                    address[address.length - i - 1] = 0;
+                }
+
+                String anonymizedIp = InetAddress.getByAddress(address).getHostAddress();
+                gaReq.userIp(anonymizedIp);
+            } catch (Exception e) {
+                logger.warn("Error anonymizing user ip", e);
+            }
         }
     }
 
@@ -217,7 +305,7 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
      * @param postParms
      */
     protected void processCustomDimensionParameters(GoogleAnalyticsRequest<?> request, HttpRequest req) {
-        Map<String, String> customDimParms = new HashMap<String, String>();
+        Map<String, String> customDimParms = new HashMap<>();
         for (String defaultCustomDimKey : defaultRequest.customDimensions().keySet()) {
             customDimParms.put(defaultCustomDimKey, defaultRequest.customDimensions().get(defaultCustomDimKey));
         }
@@ -239,12 +327,12 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
      * @param postParms
      */
     protected void processCustomMetricParameters(GoogleAnalyticsRequest<?> request, HttpRequest req) {
-        Map<String, String> customMetricParms = new HashMap<String, String>();
-        for (String defaultCustomMetricKey : defaultRequest.custommMetrics().keySet()) {
-            customMetricParms.put(defaultCustomMetricKey, defaultRequest.custommMetrics().get(defaultCustomMetricKey));
+        Map<String, String> customMetricParms = new HashMap<>();
+        for (String defaultCustomMetricKey : defaultRequest.customMetrics().keySet()) {
+            customMetricParms.put(defaultCustomMetricKey, defaultRequest.customMetrics().get(defaultCustomMetricKey));
         }
 
-        Map<String, String> requestCustomMetrics = request.custommMetrics();
+        Map<String, String> requestCustomMetrics = request.customMetrics();
         for (String requestCustomDimKey : requestCustomMetrics.keySet()) {
             customMetricParms.put(requestCustomDimKey, requestCustomMetrics.get(requestCustomDimKey));
         }

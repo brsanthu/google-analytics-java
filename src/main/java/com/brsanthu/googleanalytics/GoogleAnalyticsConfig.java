@@ -43,6 +43,8 @@ public class GoogleAnalyticsConfig {
     private int batchSize = 20;
     private String httpUrl = "http://www.google-analytics.com/collect";
     private String httpsUrl = "https://www.google-analytics.com/collect";
+    private String httpDebugUrl = "http://www.google-analytics.com/debug/collect";
+    private String httpsDebugUrl = "https://www.google-analytics.com/debug/collect";
     private String batchUrl = "https://www.google-analytics.com/batch";
     private String userAgent = null;
     private String proxyHost = null;
@@ -52,6 +54,10 @@ public class GoogleAnalyticsConfig {
     private boolean discoverRequestParameters = true;
     private boolean gatherStats = false;
     private RequestParameterDiscoverer requestParameterDiscoverer = new DefaultRequestParameterDiscoverer();
+    private GoogleAnalyticsExceptionHandler exceptionHandler;
+    private boolean autoQueueTimeEnabled = true;
+    private boolean anonymizeUserIp = false;
+    private boolean hitDebug = false;
 
     public RequestParameterDiscoverer getRequestParameterDiscoverer() {
         return requestParameterDiscoverer;
@@ -125,7 +131,7 @@ public class GoogleAnalyticsConfig {
      * </p>
      */
     public GoogleAnalyticsConfig setDiscoverRequestParameters(boolean discoverSystemParameters) {
-        this.discoverRequestParameters = discoverSystemParameters;
+        discoverRequestParameters = discoverSystemParameters;
         return this;
     }
 
@@ -274,6 +280,9 @@ public class GoogleAnalyticsConfig {
         return this;
     }
 
+    /**
+     * Future use and not used at the moment.
+     */
     public boolean isValidate() {
         return validate;
     }
@@ -332,7 +341,15 @@ public class GoogleAnalyticsConfig {
         return this;
     }
 
+    /**
+     * Returns the effective url to which we need to post the GA request to based on if hit debug is enabled and if
+     * https is enabled.
+     */
     public String getUrl() {
+        if (isHitDebug()) {
+            return useHttps ? httpsDebugUrl : httpDebugUrl;
+        }
+
         return useHttps ? httpsUrl : httpUrl;
     }
 
@@ -401,6 +418,97 @@ public class GoogleAnalyticsConfig {
 
     public GoogleAnalyticsConfig setBatchSize(int batchSize) {
         this.batchSize = batchSize;
+        return this;
+    }
+
+    public GoogleAnalyticsExceptionHandler getExceptionHandler() {
+        return exceptionHandler;
+    }
+
+    /**
+     * Set an exception handler which will implement the behavior in case of any exceptions. If not set, default
+     * behavior is to log a warning message.
+     *
+     * @since 2.1
+     */
+    public GoogleAnalyticsConfig setExceptionHandler(GoogleAnalyticsExceptionHandler exceptionHandler) {
+        this.exceptionHandler = exceptionHandler;
+        return this;
+    }
+
+    public boolean isAutoQueueTimeEnabled() {
+        return autoQueueTimeEnabled;
+    }
+
+    /**
+     * If enabled, library will calculate the queue time (qt) at the time request is being posted to GA based on when
+     * hit request was created and when it is posted to GA. Defaults to <code>true</code>.
+     *
+     * @since 2.1
+     */
+    public GoogleAnalyticsConfig setAutoQueueTimeEnabled(boolean autoQueueTimeEnabled) {
+        this.autoQueueTimeEnabled = autoQueueTimeEnabled;
+        return this;
+    }
+
+    public boolean isAnonymizeUserIp() {
+        return anonymizeUserIp;
+    }
+
+    /**
+     * If true, and if <code>userIp</code> GA parameter is set, then that ip will be anonymized using same logic that is
+     * used at GA end. Defaults to <code>false</code>.
+     * <p>
+     * See for more info:
+     * <ul>
+     * <li>https://github.com/brsanthu/google-analytics-java/issues/57
+     * <li>https://support.google.com/analytics/answer/2763052?hl=en
+     * </ul>
+     */
+    public GoogleAnalyticsConfig setAnonymizeUserIp(boolean anonymizeUserIp) {
+        this.anonymizeUserIp = anonymizeUserIp;
+        return this;
+    }
+
+    public String getHttpDebugUrl() {
+        return httpDebugUrl;
+    }
+
+    public GoogleAnalyticsConfig setHttpDebugUrl(String httpDebugUrl) {
+        this.httpDebugUrl = httpDebugUrl;
+        return this;
+    }
+
+    public String getHttpsDebugUrl() {
+        return httpsDebugUrl;
+    }
+
+    public GoogleAnalyticsConfig setHttpsDebugUrl(String httpsDebugUrl) {
+        this.httpsDebugUrl = httpsDebugUrl;
+        return this;
+    }
+
+    public boolean isHitDebug() {
+        return hitDebug;
+    }
+
+    /**
+     * If set to true, then library will use debug urls instead of normal GA urls (<code>debugHttpUrl</code> and
+     * <code>debugHttpsUrl</code>) which should return the hit validation response as part of http response. This would
+     * be captured as part of {@link GoogleAnalyticsResponse#getHttpResponse().getBody()}.
+     * <p>
+     * Library provides convenient validation response models at <code>com.brsanthu.googleanalytics.debug</code> package
+     * to deserialize http response (which will be in json format) into.
+     * <p>
+     * Note that to hit debug, disable batching as hit debug is not supported in batch mode.
+     * <p>
+     * Deserialization itself is not part of the library to avoid the dependency.
+     * <p>
+     * See <a href="https://developers.google.com/analytics/devguides/collection/protocol/v1/validating-hits">this</a>
+     * for more info.
+     */
+    public GoogleAnalyticsConfig setHitDebug(boolean validateHits) {
+        hitDebug = validateHits;
         return this;
     }
 

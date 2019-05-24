@@ -1,14 +1,3 @@
-/*
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
- */
-
 package com.brsanthu.googleanalytics.request;
 
 import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.CURRENCY_CODE;
@@ -27,6 +16,7 @@ import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.ITEM
 import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.PAGE_DOWNLOAD_TIME;
 import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.PAGE_LOAD_TIME;
 import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.REDIRECT_RESPONSE_TIME;
+import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.SCREEN_NAME;
 import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.SERVER_RESPONSE_TIME;
 import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.SOCIAL_ACTION;
 import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.SOCIAL_ACTION_TARGET;
@@ -42,38 +32,12 @@ import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.USER
 import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.USER_TIMING_TIME;
 import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.USER_TIMING_VARIABLE_NAME;
 
-import java.util.UUID;
-
-import com.brsanthu.googleanalytics.internal.GaUtils;
-import com.brsanthu.googleanalytics.internal.GoogleAnalyticsImpl;
-
 /**
- * Default request that captures default value for any of the parameters. Create an instance of this object and specify
- * as constructor parameter to {@link GoogleAnalyticsImpl} or set one any time using
- * {@link GoogleAnalyticsImpl#setDefaultRequest(DefaultRequest)} method.
- *
- * @author Santhosh Kumar
+ * Represents a generic GA hit which provides access all supported GA parameters as typed accessors. You can use this
+ * hit type if you want to set GA hit type as dynamic parameter instead of dealing with constructing hit type specific
+ * instance.
  */
-public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
-
-    private final static String DEFAULT_CLIENT_ID = UUID.randomUUID().toString();
-
-    public DefaultRequest() {
-        this(null, null, null, null);
-    }
-
-    public DefaultRequest(String hitType) {
-        this(hitType, null, null, null);
-    }
-
-    public DefaultRequest(String hitType, String trackingId, String appName, String appVersion) {
-        hitType(GaUtils.isBlank(hitType) ? HIT_PAGEVIEW : hitType);
-        trackingId(trackingId);
-        applicationName(appName);
-        applicationVersion(appVersion);
-
-        clientId(DEFAULT_CLIENT_ID);
-    }
+public class AnyHit extends GoogleAnalyticsRequest<AnyHit> {
 
     /**
      * <h2 id="events">Event Tracking</h2> <div class="ind">
@@ -104,7 +68,7 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
      * <div> Example value: <code>Category</code><br>
      * Example usage: <code>ec=Category</code> </div> </div>
      */
-    public DefaultRequest eventCategory(String value) {
+    public AnyHit eventCategory(String value) {
         setString(EVENT_CATEGORY, value);
         return this;
     }
@@ -142,7 +106,7 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
      * <div> Example value: <code>Action</code><br>
      * Example usage: <code>ea=Action</code> </div> </div>
      */
-    public DefaultRequest eventAction(String value) {
+    public AnyHit eventAction(String value) {
         setString(EVENT_ACTION, value);
         return this;
     }
@@ -180,7 +144,7 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
      * <div> Example value: <code>Label</code><br>
      * Example usage: <code>el=Label</code> </div> </div>
      */
-    public DefaultRequest eventLabel(String value) {
+    public AnyHit eventLabel(String value) {
         setString(EVENT_LABEL, value);
         return this;
     }
@@ -218,7 +182,7 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
      * <div> Example value: <code>55</code><br>
      * Example usage: <code>ev=55</code> </div> </div>
      */
-    public DefaultRequest eventValue(Integer value) {
+    public AnyHit eventValue(Integer value) {
         setInteger(EVENT_VALUE, value);
         return this;
     }
@@ -256,7 +220,7 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
      * <div> Example value: <code>DatabaseError</code><br>
      * Example usage: <code>exd=DatabaseError</code> </div> </div>
      */
-    public DefaultRequest exceptionDescription(String value) {
+    public AnyHit exceptionDescription(String value) {
         setString(EXCEPTION_DESCRIPTION, value);
         return this;
     }
@@ -294,13 +258,53 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
      * <div> Example value: <code>0</code><br>
      * Example usage: <code>exf=0</code> </div> </div>
      */
-    public DefaultRequest exceptionFatal(Boolean value) {
+    public AnyHit exceptionFatal(Boolean value) {
         setBoolean(EXCEPTION_FATAL, value);
         return this;
     }
 
     public Boolean exceptionFatal() {
         return getBoolean(EXCEPTION_FATAL);
+    }
+
+    /**
+     * <div class="ind">
+     * <p>
+     * <strong>Required for transaction hit type.</strong> <br>
+     * <strong>Required for item hit type.</strong>
+     * </p>
+     * <p>
+     * A unique identifier for the transaction. This value should be the same for both the Transaction hit and Items
+     * hits associated to the particular transaction.
+     * </p>
+     * <table border="1">
+     * <tbody>
+     * <tr>
+     * <th>Parameter</th>
+     * <th>Value Type</th>
+     * <th>Default Value</th>
+     * <th>Max Length</th>
+     * <th>Supported Hit Types</th>
+     * </tr>
+     * <tr>
+     * <td><code>ti</code></td>
+     * <td>text</td>
+     * <td><span class="none">None</span></td>
+     * <td>500 Bytes</td>
+     * <td>transaction, item</td>
+     * </tr>
+     * </tbody>
+     * </table>
+     * <div> Example value: <code>OD564</code><br>
+     * Example usage: <code>ti=OD564</code> </div> </div>
+     */
+    public AnyHit txId(String value) {
+        setString(TRANSACTION_ID, value);
+        return this;
+    }
+
+    public String txId() {
+        return getString(TRANSACTION_ID);
     }
 
     /**
@@ -332,7 +336,7 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
      * <div> Example value: <code>Shoe</code><br>
      * Example usage: <code>in=Shoe</code> </div> </div>
      */
-    public DefaultRequest itemName(String value) {
+    public AnyHit itemName(String value) {
         setString(ITEM_NAME, value);
         return this;
     }
@@ -370,7 +374,7 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
      * <div> Example value: <code>3.50</code><br>
      * Example usage: <code>ip=3.50</code> </div> </div>
      */
-    public DefaultRequest itemPrice(Double value) {
+    public AnyHit itemPrice(Double value) {
         setDouble(ITEM_PRICE, value);
         return this;
     }
@@ -408,7 +412,7 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
      * <div> Example value: <code>4</code><br>
      * Example usage: <code>iq=4</code> </div> </div>
      */
-    public DefaultRequest itemQuantity(Integer value) {
+    public AnyHit itemQuantity(Integer value) {
         setInteger(ITEM_QUANTITY, value);
         return this;
     }
@@ -446,7 +450,7 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
      * <div> Example value: <code>SKU47</code><br>
      * Example usage: <code>ic=SKU47</code> </div> </div>
      */
-    public DefaultRequest itemCode(String value) {
+    public AnyHit itemCode(String value) {
         setString(ITEM_CODE, value);
         return this;
     }
@@ -484,7 +488,7 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
      * <div> Example value: <code>Blue</code><br>
      * Example usage: <code>iv=Blue</code> </div> </div>
      */
-    public DefaultRequest itemCategory(String value) {
+    public AnyHit itemCategory(String value) {
         setString(ITEM_CATEGORY, value);
         return this;
     }
@@ -523,13 +527,22 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
      * <div> Example value: <code>EUR</code><br>
      * Example usage: <code>cu=EUR</code> </div> </div>
      */
-    public DefaultRequest currencyCode(String value) {
+    public AnyHit currencyCode(String value) {
         setString(CURRENCY_CODE, value);
         return this;
     }
 
     public String currencyCode() {
         return getString(CURRENCY_CODE);
+    }
+
+    public AnyHit screenName(String value) {
+        setString(SCREEN_NAME, value);
+        return this;
+    }
+
+    public String screenName() {
+        return getString(SCREEN_NAME);
     }
 
     /**
@@ -561,7 +574,7 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
      * <div> Example value: <code>facebook</code><br>
      * Example usage: <code>sn=facebook</code> </div> </div>
      */
-    public DefaultRequest socialNetwork(String value) {
+    public AnyHit socialNetwork(String value) {
         setString(SOCIAL_NETWORK, value);
         return this;
     }
@@ -600,7 +613,7 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
      * <div> Example value: <code>like</code><br>
      * Example usage: <code>sa=like</code> </div> </div>
      */
-    public DefaultRequest socialAction(String value) {
+    public AnyHit socialAction(String value) {
         setString(SOCIAL_ACTION, value);
         return this;
     }
@@ -638,7 +651,7 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
      * <div> Example value: <code>http://foo.com</code><br>
      * Example usage: <code>st=http%3A%2F%2Ffoo.com</code> </div> </div>
      */
-    public DefaultRequest socialActionTarget(String value) {
+    public AnyHit socialActionTarget(String value) {
         setString(SOCIAL_ACTION_TARGET, value);
         return this;
     }
@@ -676,7 +689,7 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
      * <div> Example value: <code>category</code><br>
      * Example usage: <code>utc=category</code> </div> </div>
      */
-    public DefaultRequest userTimingCategory(String value) {
+    public AnyHit userTimingCategory(String value) {
         setString(USER_TIMING_CATEGORY, value);
         return this;
     }
@@ -714,7 +727,7 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
      * <div> Example value: <code>lookup</code><br>
      * Example usage: <code>utv=lookup</code> </div> </div>
      */
-    public DefaultRequest userTimingVariableName(String value) {
+    public AnyHit userTimingVariableName(String value) {
         setString(USER_TIMING_VARIABLE_NAME, value);
         return this;
     }
@@ -752,7 +765,7 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
      * <div> Example value: <code>123</code><br>
      * Example usage: <code>utt=123</code> </div> </div>
      */
-    public DefaultRequest userTimingTime(Integer value) {
+    public AnyHit userTimingTime(Integer value) {
         setInteger(USER_TIMING_TIME, value);
         return this;
     }
@@ -790,7 +803,7 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
      * <div> Example value: <code>label</code><br>
      * Example usage: <code>utl=label</code> </div> </div>
      */
-    public DefaultRequest userTimingLabel(String value) {
+    public AnyHit userTimingLabel(String value) {
         setString(USER_TIMING_LABEL, value);
         return this;
     }
@@ -828,7 +841,7 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
      * <div> Example value: <code>3554</code><br>
      * Example usage: <code>plt=3554</code> </div> </div>
      */
-    public DefaultRequest pageLoadTime(Integer value) {
+    public AnyHit pageLoadTime(Integer value) {
         setInteger(PAGE_LOAD_TIME, value);
         return this;
     }
@@ -866,7 +879,7 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
      * <div> Example value: <code>43</code><br>
      * Example usage: <code>dns=43</code> </div> </div>
      */
-    public DefaultRequest dnsTime(Integer value) {
+    public AnyHit dnsTime(Integer value) {
         setInteger(DNS_TIME, value);
         return this;
     }
@@ -904,7 +917,7 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
      * <div> Example value: <code>500</code><br>
      * Example usage: <code>pdt=500</code> </div> </div>
      */
-    public DefaultRequest pageDownloadTime(Integer value) {
+    public AnyHit pageDownloadTime(Integer value) {
         setInteger(PAGE_DOWNLOAD_TIME, value);
         return this;
     }
@@ -942,7 +955,7 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
      * <div> Example value: <code>500</code><br>
      * Example usage: <code>rrt=500</code> </div> </div>
      */
-    public DefaultRequest redirectResponseTime(Integer value) {
+    public AnyHit redirectResponseTime(Integer value) {
         setInteger(REDIRECT_RESPONSE_TIME, value);
         return this;
     }
@@ -980,7 +993,7 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
      * <div> Example value: <code>500</code><br>
      * Example usage: <code>tcp=500</code> </div> </div>
      */
-    public DefaultRequest tcpConnectTime(Integer value) {
+    public AnyHit tcpConnectTime(Integer value) {
         setInteger(TCP_CONNECT_TIME, value);
         return this;
     }
@@ -1018,53 +1031,13 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
      * <div> Example value: <code>500</code><br>
      * Example usage: <code>srt=500</code> </div> </div>
      */
-    public DefaultRequest serverResponseTime(Integer value) {
+    public AnyHit serverResponseTime(Integer value) {
         setInteger(SERVER_RESPONSE_TIME, value);
         return this;
     }
 
     public Integer serverResponseTime() {
         return getInteger(SERVER_RESPONSE_TIME);
-    }
-
-    /**
-     * <div class="ind">
-     * <p>
-     * <strong>Required for transaction hit type.</strong> <br>
-     * <strong>Required for item hit type.</strong>
-     * </p>
-     * <p>
-     * A unique identifier for the transaction. This value should be the same for both the Transaction hit and Items
-     * hits associated to the particular transaction.
-     * </p>
-     * <table border="1">
-     * <tbody>
-     * <tr>
-     * <th>Parameter</th>
-     * <th>Value Type</th>
-     * <th>Default Value</th>
-     * <th>Max Length</th>
-     * <th>Supported Hit Types</th>
-     * </tr>
-     * <tr>
-     * <td><code>ti</code></td>
-     * <td>text</td>
-     * <td><span class="none">None</span></td>
-     * <td>500 Bytes</td>
-     * <td>transaction, item</td>
-     * </tr>
-     * </tbody>
-     * </table>
-     * <div> Example value: <code>OD564</code><br>
-     * Example usage: <code>ti=OD564</code> </div> </div>
-     */
-    public DefaultRequest txId(String value) {
-        setString(TRANSACTION_ID, value);
-        return this;
-    }
-
-    public String txId() {
-        return getString(TRANSACTION_ID);
     }
 
     /**
@@ -1096,7 +1069,7 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
      * <div> Example value: <code>Member</code><br>
      * Example usage: <code>ta=Member</code> </div> </div>
      */
-    public DefaultRequest txAffiliation(String value) {
+    public AnyHit txAffiliation(String value) {
         setString(TRANSACTION_AFFILIATION, value);
         return this;
     }
@@ -1134,7 +1107,7 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
      * <div> Example value: <code>15.47</code><br>
      * Example usage: <code>tr=15.47</code> </div> </div>
      */
-    public DefaultRequest txRevenue(Double value) {
+    public AnyHit txRevenue(Double value) {
         setDouble(TRANSACTION_REVENUE, value);
         return this;
     }
@@ -1172,7 +1145,7 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
      * <div> Example value: <code>3.50</code><br>
      * Example usage: <code>ts=3.50</code> </div> </div>
      */
-    public DefaultRequest txShipping(Double value) {
+    public AnyHit txShipping(Double value) {
         setDouble(TRANSACTION_SHIPPING, value);
         return this;
     }
@@ -1210,7 +1183,7 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest> {
      * <div> Example value: <code>11.20</code><br>
      * Example usage: <code>tt=11.20</code> </div> </div>
      */
-    public DefaultRequest txTax(Double value) {
+    public AnyHit txTax(Double value) {
         setDouble(TRANSACTION_TAX, value);
         return this;
     }

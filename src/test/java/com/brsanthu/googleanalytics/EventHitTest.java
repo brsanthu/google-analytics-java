@@ -2,12 +2,12 @@ package com.brsanthu.googleanalytics;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.brsanthu.googleanalytics.request.EventHit;
 
 public class EventHitTest {
-    
+
     @Test
     public void testEventHit() throws Exception {
         EventHit eventHit = new EventHit("eventCategory", "eventAction", "eventLabel", 10);

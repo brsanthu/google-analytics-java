@@ -2,7 +2,7 @@ package com.brsanthu.googleanalytics;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.brsanthu.googleanalytics.request.PageViewHit;
 

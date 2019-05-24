@@ -1,6 +1,7 @@
 package com.brsanthu.googleanalytics;
 
 public interface GoogleAnalyticsStats {
+    long getTotalHits();
 
     long getPageViewHits();
 

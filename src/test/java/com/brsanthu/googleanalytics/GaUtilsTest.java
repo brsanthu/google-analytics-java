@@ -1,13 +1,13 @@
 package com.brsanthu.googleanalytics;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.brsanthu.googleanalytics.internal.GaUtils;
 
 public class GaUtilsTest {
-    
+
     @Test
     public void testIsEmpty() throws Exception {
         assertEquals(true, GaUtils.isEmpty(null));
@@ -16,7 +16,7 @@ public class GaUtilsTest {
         assertEquals(false, GaUtils.isEmpty("value"));
         assertEquals(false, GaUtils.isEmpty(" value "));
     }
-    
+
     @Test
     public void isNotEmpty() throws Exception {
         assertEquals(false, GaUtils.isNotEmpty(null));
@@ -25,7 +25,7 @@ public class GaUtilsTest {
         assertEquals(true, GaUtils.isNotEmpty("value"));
         assertEquals(true, GaUtils.isNotEmpty(" value "));
     }
-    
+
     @Test
     public void testAppendSystemProperty() throws Exception {
         System.setProperty("test", "test");
